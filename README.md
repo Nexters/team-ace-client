@@ -1,2 +1,2 @@
-# team-ace-android
-Anger Control Expert Android
+# team-ace-client
+Anger Control Expert Client (Compose Multiplatform)
