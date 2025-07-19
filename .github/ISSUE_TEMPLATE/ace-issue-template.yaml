@@ -1,6 +1,8 @@
 name: 피처 템플릿
 description: 피처 구현을 위한 이슈를 작성하세요.
 title: "[prefix] 이슈 제목을 입력하세요."
+assignees:
+  - "$USER"
 body:
   - type: input
     attributes:
