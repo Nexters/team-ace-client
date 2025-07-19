@@ -1,6 +1,6 @@
 name: 피처 템플릿
 description: 피처 구현을 위한 이슈를 작성하세요.
-title: ""
+title: " "
 body:
   - type: input
     attributes:
