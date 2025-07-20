@@ -80,17 +80,22 @@ jobs:
 
       - name: Slack 알림 (Google Play 프로덕션 배포 성공)
         if: success()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "🚀 Google Play 프로덕션 배포 성공! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions'
-          SLACK_MESSAGE: "🚀 Google Play 프로덕션 배포 성공! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
 
       - name: Slack 알림 (Google Play 프로덕션 배포 실패)
         if: failure()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "🚨 Google Play 프로덕션 배포 실패! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions'
-          SLACK_MESSAGE: "🚨 Google Play 프로덕션 배포 실패! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
-          SLACK_COLOR: 'danger'
