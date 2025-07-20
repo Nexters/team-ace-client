@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # - name: local.properties 설정
+        # - name: local.properties 설정
         # 프로젝트의 local.properties 파일에 필요한 환경 변수를 설정합니다. 이후, 서버가 배포되면 주석 해제하여 사용합니다.
         # run: |
         #   echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
@@ -48,18 +48,23 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Slack 알림 (빌드 성공)
-        # 빌드 성공 시 Slack으로 알림을 보냅니다.
         if: success()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "✅ CI 빌드 성공! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`" # 메시지 내용
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: "#client-actions" # 알림을 받을 Slack 채널
-          SLACK_MESSAGE: "✅ CI 빌드 성공! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`"
 
       - name: Slack 알림 (빌드 실패)
         if: failure()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "❌ CI 빌드 실패! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: "#client-actions"
-          SLACK_MESSAGE: "❌ CI 빌드 실패! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`"
