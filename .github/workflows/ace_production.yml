@@ -1,0 +1,96 @@
+# CD-GooglePlay-Production.yml - Google Play Console 프로덕션 배포 워크플로우
+name: Google Play Production Release CD
+
+## 워크플로우 트리거 설정
+#on:
+#  push:
+#    tags:
+#      - 'v*' # 'v'로 시작하는 태그(예: v1.0.0)가 푸시되었을 때만 트리거
+
+jobs:
+  google_play_production:
+    name: Google Play Production Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle 캐시 설정
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: local.properties 설정
+        run: |
+          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
+          echo "cloud.vision.api.key=\"${{ secrets.CLOUD_VISION_API_KEY }}\"" >> local.properties
+
+      - name: google-services.json 설정
+        # Firebase 서비스에 필요한 google-services.json 파일을 Secrets에서 가져옵니다.
+        run: |
+          echo "google-services.json 파일을 설정합니다..."
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+          if [ -f ./app/google-services.json ]; then
+            echo "google-services.json이 ./app/google-services.json에 성공적으로 생성되었습니다."
+          else
+            echo "오류: ./app/google-services.json에서 google-services.json을 찾을 수 없습니다."
+            exit 1
+          fi
+        shell: bash
+
+      - name: 출시 서명 키 설정
+        # Android App Bundle 서명을 위한 키스토어 파일을 Base64로 인코딩된 Secrets에서 디코딩하여 생성합니다.
+        run: |
+          echo "${{ secrets.SIGNING_KEY_BASE64 }}" | base64 --decode > android_signing_key.jks
+
+      - name: gradlew 실행 권한 부여
+        run: chmod +x ./gradlew
+
+      - name: 릴리스 AAB 빌드 (Google Play 프로덕션용)
+        # Google Play Console 배포를 위해 릴리스 AAB를 빌드합니다.
+        run: ./gradlew bundleRelease
+        env:
+          # 서명 환경 변수
+          ORG_GRADLE_PROJECT_signingStoreFile: android_signing_key.jks
+          ORG_GRADLE_PROJECT_signingKeyAlias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          ORG_GRADLE_PROJECT_signingKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingStorePassword: ${{ secrets.SIGNING_STORE_PASSWORD }}
+
+      - name: Google Play Console 프로덕션 배포
+        # 빌드된 릴리스 AAB를 Google Play Console 프로덕션 트랙으로 배포합니다.
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+          packageName: your.package.name # 서비스명 확정 후 앱의 실제 패키지 이름으로 변경해야 합니다.
+          releaseFile: app/build/outputs/bundle/release/app-release.aab
+          track: production # 프로덕션 트랙으로 지정
+          status: completed # 출시 상태를 'completed'로 설정하여 즉시 출시되도록 합니다.
+
+      - name: Slack 알림 (Google Play 프로덕션 배포 성공)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: '#client-actions'
+          SLACK_MESSAGE: "🚀 Google Play 프로덕션 배포 성공! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
+
+      - name: Slack 알림 (Google Play 프로덕션 배포 실패)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: '#client-actions'
+          SLACK_MESSAGE: "🚨 Google Play 프로덕션 배포 실패! 태그: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
+          SLACK_COLOR: 'danger'
