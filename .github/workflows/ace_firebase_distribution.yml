@@ -1,0 +1,84 @@
+# CD-Firebase.yml - Firebase App Distribution 배포 워크플로우
+name: Firebase App Distribution CD
+
+# 워크플로우 트리거 설정
+#on:
+#  push:
+#    branches:
+#      - develop
+
+jobs:
+  firebase_distribution:
+    name: Firebase App Distribution
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Gradle 캐시 설정
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+#      - name: local.properties 설정
+#        run: |
+#          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
+
+      - name: google-services.json 설정
+        # Firebase 서비스에 필요한 google-services.json 파일을 Secrets에서 가져와 복원합니다.
+        run: |
+          echo "google-services.json 파일을 설정합니다..."
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+          if [ -f ./app/google-services.json ]; then
+            echo "google-services.json이 ./app/google-services.json에 성공적으로 생성되었습니다."
+          else
+            echo "오류: ./app/google-services.json에서 google-services.json을 찾을 수 없습니다."
+            exit 1
+          fi
+        shell: bash
+
+      - name: gradlew 실행 권한 부여
+        # gradlew 스크립트에 실행 권한이 없으면 빌드가 실패할 수 있으므로 권한을 부여합니다.
+        run: chmod +x ./gradlew
+
+      - name: 릴리스 APK 빌드 (Firebase App Distribution용)
+        # Firebase App Distribution을 위해 릴리스 APK를 빌드합니다.
+        run: ./gradlew assembleRelease
+
+      - name: Firebase App Distribution 업로드
+        # 빌드된 릴리스 APK를 Firebase App Distribution으로 업로드합니다.
+        uses: wzieba/Firebase-App-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          group: 'testers' # Firebase 콘솔에서 설정된 테스터 그룹 이름 지정해야됩니다.
+          file: app/build/outputs/apk/release/app-release.apk
+
+      - name: Slack 알림 (Firebase 배포 성공)
+        if: success()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: '#client-actions'
+          SLACK_MESSAGE: "🚀 Firebase App Distribution 배포 성공! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
+
+      - name: Slack 알림 (Firebase 배포 실패)
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: '#client-actions'
+          SLACK_MESSAGE: "🚨 Firebase App Distribution 배포 실패! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
+          SLACK_COLOR: 'danger'
