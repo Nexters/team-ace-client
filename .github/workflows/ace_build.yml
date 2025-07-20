@@ -4,7 +4,7 @@ name: Ace Client CI
 # 워크플로우 트리거 설정
 on:
   pull_request:
-    # 어떤 브랜치에서 시작하여 어떤 브랜치를 향하든 모든 Pull Request에 대해 트리거.
+    # 어떤 브랜치에서 시작하여 어떤 브랜치를 향하든 모든 Pull Request에 대해 트리거
     types: [ opened, synchronize, reopened ]
 
 jobs:
