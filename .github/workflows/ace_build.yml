@@ -53,7 +53,7 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions' # 알림을 받을 Slack 채널
+          SLACK_CHANNEL: "#client-actions" # 알림을 받을 Slack 채널
           SLACK_MESSAGE: "✅ CI 빌드 성공! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`"
 
       - name: Slack 알림 (빌드 실패)
@@ -61,6 +61,5 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions'
+          SLACK_CHANNEL: "#client-actions"
           SLACK_MESSAGE: "❌ CI 빌드 실패! PR: #${{ github.event.pull_request.number }} - `${{ github.event.pull_request.title }}`"
-          SLACK_COLOR: 'danger'
