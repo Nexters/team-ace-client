@@ -31,9 +31,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-#      - name: local.properties 설정
-#        run: |
-#          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
+      #      - name: local.properties 설정
+      #        run: |
+      #          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
 
       - name: google-services.json 설정
         # Firebase 서비스에 필요한 google-services.json 파일을 Secrets에서 가져옵니다.
@@ -78,19 +78,24 @@ jobs:
           releaseFile: app/build/outputs/bundle/release/app-release.aab
           track: internal
 
-      - name: Slack 알림 (Google Play 내부 테스트 성공)
+      - name: Slack 알림 (내부 테스트 배포 성공)
         if: success()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: success
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "🚀 Google Play 내부 테스트 배포 성공! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions'
-          SLACK_MESSAGE: "🚀 Google Play 내부 테스트 배포 성공! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
 
-      - name: Slack 알림 (Google Play 내부 테스트 실패)
+      - name: Slack 알림 (내부 테스트 배포 실패)
         if: failure()
-        uses: rtCamp/action-slack-notify@v2
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          fields: workflow,job,commit,repo,author,took,ref
+          author_name: GitHub Actions
+          text: "🚨 Google Play 내부 테스트 배포 실패! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_CHANNEL: '#client-actions'
-          SLACK_MESSAGE: "🚨 Google Play 내부 테스트 배포 실패! 브랜치: `${{ github.ref_name }}` 커밋: `${{ github.sha }}`"
-          SLACK_COLOR: 'danger'
