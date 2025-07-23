@@ -1,4 +1,4 @@
-package org.nexters.ace
+package com.nexters.ace
 
 class Greeting {
     private val platform = getPlatform()
