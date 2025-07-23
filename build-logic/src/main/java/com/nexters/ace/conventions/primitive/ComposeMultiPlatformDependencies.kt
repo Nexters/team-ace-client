@@ -13,6 +13,7 @@ internal fun Project.composeMultiplatformDependencies() {
         sourceSets.apply {
             commonMain {
                 dependencies {
+                    implementation(composeDependencies.material3)
                     implementation(composeDependencies.runtime)
                     implementation(composeDependencies.foundation)
                     implementation(composeDependencies.ui)
