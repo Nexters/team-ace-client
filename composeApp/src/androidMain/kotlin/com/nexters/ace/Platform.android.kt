@@ -1,4 +1,4 @@
-package org.nexters.ace
+package com.nexters.ace
 
 import android.os.Build
 
