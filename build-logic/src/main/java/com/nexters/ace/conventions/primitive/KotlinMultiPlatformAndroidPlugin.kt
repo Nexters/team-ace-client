@@ -21,7 +21,7 @@ class KotlinMultiPlatformAndroidPlugin : Plugin<Project> {
             }
 
             defaultConfig {
-                minSdk = libs.findVersion("android.minSdk").get().requiredVersion.toInt()
+                minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
             }
 
             compileOptions {
