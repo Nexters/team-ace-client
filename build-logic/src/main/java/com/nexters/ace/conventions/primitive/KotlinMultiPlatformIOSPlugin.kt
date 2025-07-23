@@ -31,7 +31,11 @@ class KotlinMultiPlatformIOSPlugin : Plugin<Project> {
                 }
             }
             targets.withType<KotlinNativeTarget> {
-                compilations["main"].kotlinOptions.freeCompilerArgs += "-Xexport-kdoc"
+                compilations["main"].compileTaskProvider.configure {
+                    compilerOptions {
+                        freeCompilerArgs.add("-Xexport-kdoc")
+                    }
+                }
             }
         }
     }
