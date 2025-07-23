@@ -42,3 +42,8 @@ composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "k
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+# Custom Gradle Plugins
+ace-kotlin-multiplatform = { id = "ace.kotlin.multiplatform", version = "unspecified" }
+ace-compose-multiplatform = { id = "ace.compose.multiplatform", version = "unspecified" }
+ace-feature = { id = "ace.feature", version = "unspecified" }
