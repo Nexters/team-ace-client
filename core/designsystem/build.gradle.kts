@@ -9,6 +9,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.bundles.coil)
         }
+
     }
 }
 
