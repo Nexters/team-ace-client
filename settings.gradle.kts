@@ -31,4 +31,4 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 include(":core:designsystem")
-include(":core:fairybook")
+include(":core:model:fairybook")
