@@ -13,10 +13,21 @@ androidx-testExt = "1.2.1"
 composeMultiplatform = "1.8.2"
 junit = "4.13.2"
 kotlin = "2.2.0"
+kotlinx-immutable = "0.4.0"
+kotlinx-serialization-json = "1.9.0"
+kotlinx-coroutines = "1.10.2"
+material = "1.12.0"
+coil = "3.3.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+
+# KotlinX
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-immutable" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
@@ -26,6 +37,13 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+# Coil
+coil = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+coil-test = { module = "io.coil-kt.coil3:coil-test", version.ref = "coil" }
+
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 # Gradle Plugins
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -47,3 +65,9 @@ kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ace-kotlin-multiplatform = { id = "ace.kotlin.multiplatform", version = "unspecified" }
 ace-compose-multiplatform = { id = "ace.compose.multiplatform", version = "unspecified" }
 ace-feature = { id = "ace.feature", version = "unspecified" }
+
+[bundles]
+coil = [
+    "coil",
+    "coil-network"
+]
