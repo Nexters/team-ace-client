@@ -26,8 +26,9 @@ kotlin {
         
         commonMain.dependencies {
             implementation(projects.core.designsystem)
-
             implementation(projects.feature.main)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }
