@@ -23,8 +23,11 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
+        
         commonMain.dependencies {
-            // TODO : core 모듈 추가
+            implementation(projects.core.designsystem)
+
+            implementation(projects.feature.main)
         }
     }
 }
