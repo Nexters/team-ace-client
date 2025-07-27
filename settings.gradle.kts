@@ -33,5 +33,6 @@ include(":composeApp")
 
 include(":core:designsystem")
 include(":core:model:fairybook")
+include(":core:data")
 
 include(":feature:main")
