@@ -9,7 +9,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain)
-
+            implementation(projects.core.network)
             implementation(libs.koin.core)
         }
 
