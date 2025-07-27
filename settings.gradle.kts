@@ -38,5 +38,4 @@ include(":core:domain")
 include(":core:network")
 
 include(":feature:main")
-include(":core:fairybook")
-include(":core:model:fairybook")
+
