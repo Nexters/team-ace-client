@@ -12,7 +12,7 @@ val dataModule =
     module {
         // DataSource 주입
         singleOf(::ChattingRemoteDataSourceImpl).bind<ChattingRemoteDataSource>()
-        
+
         // Repository 주입
         singleOf(::ChattingRepositoryImpl).bind<ChattingRepsitory>()
     }
