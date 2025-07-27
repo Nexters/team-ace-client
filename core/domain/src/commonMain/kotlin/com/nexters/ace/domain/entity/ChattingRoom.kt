@@ -1,6 +1,10 @@
 package com.nexters.ace.domain.entity
 
 data class ChattingRoom(
-    val id: Int,
-    val name: String
+    val ipAddress: String?,
+    val status: String,
+    val country: String,
+    val city: String,
+    val latitude: Double,
+    val longitude: Double
 )
