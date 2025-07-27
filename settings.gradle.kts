@@ -35,5 +35,6 @@ include(":core:designsystem")
 include(":core:model:fairybook")
 include(":core:data")
 include(":core:domain")
+include(":core:network")
 
 include(":feature:main")
