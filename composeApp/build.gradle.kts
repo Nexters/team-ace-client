@@ -27,8 +27,13 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.designsystem)
             implementation(projects.feature.main)
+            implementation(projects.core.data)
+            implementation(projects.core.domain)
+            implementation(projects.core.network)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation("org.slf4j:slf4j-api:2.0.7")
+            implementation("org.slf4j:slf4j-simple:2.0.7")
         }
     }
 }
@@ -46,6 +51,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         getByName("debug") {
             isMinifyEnabled = false
         }
