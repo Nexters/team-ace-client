@@ -32,8 +32,8 @@ kotlin {
             implementation(projects.core.network)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            implementation("org.slf4j:slf4j-api:2.0.7")
-            implementation("org.slf4j:slf4j-simple:2.0.7")
+            implementation(libs.slf4j.api)
+            implementation(libs.slf4j.simple)
         }
     }
 }
