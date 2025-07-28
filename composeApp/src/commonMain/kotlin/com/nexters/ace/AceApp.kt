@@ -1,4 +1,3 @@
-<<<<<<<< HEAD:composeApp/src/commonMain/kotlin/com/nexters/ace/AceApp.kt
 package com.nexters.ace
 
 import androidx.compose.runtime.Composable
@@ -11,5 +10,3 @@ fun AceApp() {
         MainScreen()
     }
 }
-========
->>>>>>>> origin/feature/koin-setting:composeApp/src/commonMain/kotlin/com/nexters/ace/App.kt
