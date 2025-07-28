@@ -2,12 +2,12 @@ package com.nexters.ace.core.data.repository
 
 import com.nexters.ace.core.data.datasource.ChattingRemoteDataSource
 import com.nexters.ace.core.data.mapper.toDomain
-import com.nexters.ace.domain.ChattingRepsitory
+import com.nexters.ace.domain.ChattingRepository
 import com.nexters.ace.domain.entity.ChattingRoom
 
 class ChattingRepositoryImpl(
     private val remoteDataSource: ChattingRemoteDataSource
-) :  ChattingRepsitory{
+) :  ChattingRepository{
 
     override suspend fun createRoom(): Result<ChattingRoom> {
         return runCatching {

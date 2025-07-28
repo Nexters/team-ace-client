@@ -2,7 +2,7 @@ package com.nexters.ace.feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nexters.ace.domain.ChattingRepsitory
+import com.nexters.ace.domain.ChattingRepository
 import com.nexters.ace.domain.entity.ChattingRoom
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val ipInfoRepository: ChattingRepsitory
+    private val ipInfoRepository: ChattingRepository
 ) : ViewModel() {
 
     private val _ipInfoText = MutableStateFlow("Loading ~ ")
