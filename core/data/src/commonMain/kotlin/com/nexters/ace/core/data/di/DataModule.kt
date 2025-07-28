@@ -3,7 +3,7 @@ package com.nexters.ace.core.data.di
 import com.nexters.ace.core.data.datasource.ChattingRemoteDataSource
 import com.nexters.ace.core.data.datasource.ChattingRemoteDataSourceImpl
 import com.nexters.ace.core.data.repository.ChattingRepositoryImpl
-import com.nexters.ace.domain.di.ChattingRepsitory
+import com.nexters.ace.domain.ChattingRepsitory
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
