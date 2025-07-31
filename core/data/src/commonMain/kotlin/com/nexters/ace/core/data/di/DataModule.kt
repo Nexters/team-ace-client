@@ -1,9 +1,9 @@
 package com.nexters.ace.core.data.di
 
-import com.nexters.ace.core.data.datasource.ChattingRemoteDataSource
-import com.nexters.ace.core.data.datasource.ChattingRemoteDataSourceImpl
-import com.nexters.ace.core.data.repository.ChattingRepositoryImpl
-import com.nexters.ace.domain.ChattingRepository
+import com.nexters.ace.core.data.chat.ChattingRemoteDataSource
+import com.nexters.ace.core.data.chat.ChattingRemoteDataSourceImpl
+import com.nexters.ace.core.data.chat.repository.ChattingRepositoryImpl
+import com.nexters.ace.domain.chat.ChattingRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

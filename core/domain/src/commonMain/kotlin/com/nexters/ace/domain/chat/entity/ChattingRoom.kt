@@ -1,4 +1,4 @@
-package com.nexters.ace.domain.entity
+package com.nexters.ace.domain.chat.entity
 
 data class ChattingRoom(
     val ipAddress: String?,

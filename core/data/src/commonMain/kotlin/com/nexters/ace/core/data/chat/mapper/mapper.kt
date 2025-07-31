@@ -1,6 +1,6 @@
-package com.nexters.ace.core.data.mapper
+package com.nexters.ace.core.data.chat.mapper
 
-import com.nexters.ace.domain.entity.ChattingRoom
+import com.nexters.ace.domain.chat.entity.ChattingRoom
 import com.nexters.ace.network.FakeResponse
 
 fun FakeResponse.toDomain(): ChattingRoom {

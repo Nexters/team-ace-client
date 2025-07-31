@@ -1,4 +1,4 @@
-package com.nexters.ace.core.data.datasource
+package com.nexters.ace.core.data.chat
 
 import com.nexters.ace.network.ApiService
 import com.nexters.ace.network.FakeResponse

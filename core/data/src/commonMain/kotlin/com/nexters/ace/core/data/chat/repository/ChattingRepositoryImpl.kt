@@ -1,9 +1,9 @@
-package com.nexters.ace.core.data.repository
+package com.nexters.ace.core.data.chat.repository
 
-import com.nexters.ace.core.data.datasource.ChattingRemoteDataSource
-import com.nexters.ace.core.data.mapper.toDomain
-import com.nexters.ace.domain.ChattingRepository
-import com.nexters.ace.domain.entity.ChattingRoom
+import com.nexters.ace.core.data.chat.ChattingRemoteDataSource
+import com.nexters.ace.core.data.chat.mapper.toDomain
+import com.nexters.ace.domain.chat.ChattingRepository
+import com.nexters.ace.domain.chat.entity.ChattingRoom
 
 class ChattingRepositoryImpl(
     private val remoteDataSource: ChattingRemoteDataSource
