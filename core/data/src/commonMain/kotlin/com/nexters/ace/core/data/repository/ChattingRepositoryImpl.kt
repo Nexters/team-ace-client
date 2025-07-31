@@ -7,7 +7,7 @@ import com.nexters.ace.domain.entity.ChattingRoom
 
 class ChattingRepositoryImpl(
     private val remoteDataSource: ChattingRemoteDataSource
-) :  ChattingRepository{
+) : ChattingRepository {
 
     override suspend fun createRoom(): Result<ChattingRoom> {
         return runCatching {
