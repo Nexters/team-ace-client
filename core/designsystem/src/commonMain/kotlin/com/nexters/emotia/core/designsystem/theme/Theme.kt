@@ -11,7 +11,7 @@ import coil3.compose.LocalAsyncImagePreviewHandler
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun AceTheme(content: @Composable () -> Unit) {
+fun EmotiaTheme(content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalAsyncImagePreviewHandler provides AsyncImagePreviewHandler {
             ColorImage(Color.Red.toArgb())

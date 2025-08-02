@@ -7,4 +7,4 @@ fun MainViewController() = ComposeUIViewController(
     configure = {
         initKoin()
     }
-) { AceApp() }
+) { EmotiaApp() }
