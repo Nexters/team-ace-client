@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.ace.kotlin.multiplatform)
-    alias(libs.plugins.ace.compose.multiplatform)
+    alias(libs.plugins.emotia.kotlin.multiplatform)
+    alias(libs.plugins.emotia.compose.multiplatform)
 }
 
 kotlin {
@@ -39,11 +39,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.nexters.ace"
+    namespace = "com.nexters.emotia"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.nexters.ace"
+        applicationId = "com.nexters.emotia"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

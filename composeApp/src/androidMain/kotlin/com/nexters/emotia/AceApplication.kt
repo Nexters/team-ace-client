@@ -1,7 +1,7 @@
 package com.nexters.emotia
 
 import android.app.Application
-import com.nexters.ace.di.initKoin
+import com.nexters.emotia.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 class AceApplication : Application(){

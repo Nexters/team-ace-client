@@ -1,7 +1,7 @@
 package com.nexters.emotia.network.di
 
-import com.nexters.ace.network.AceNetwork
-import com.nexters.ace.network.ApiService
+import com.nexters.emotia.network.AceNetwork
+import com.nexters.emotia.network.ApiService
 import org.koin.dsl.module
 
 val coreNetworkModule = module {

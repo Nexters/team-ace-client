@@ -3,9 +3,9 @@ package com.nexters.emotia.conventions
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
-import com.nexters.ace.conventions.primitive.KotlinMultiPlatformAndroidPlugin
-import com.nexters.ace.conventions.primitive.KotlinMultiPlatformIOSPlugin
-import com.nexters.ace.conventions.primitive.KotlinMultiPlatformPlugin
+import com.nexters.emotia.conventions.primitive.KotlinMultiPlatformAndroidPlugin
+import com.nexters.emotia.conventions.primitive.KotlinMultiPlatformIOSPlugin
+import com.nexters.emotia.conventions.primitive.KotlinMultiPlatformPlugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ExternalModuleDependencyBundle
 import org.gradle.api.artifacts.MinimalExternalModuleDependency

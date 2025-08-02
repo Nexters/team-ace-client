@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.ace.kotlin.multiplatform)
-    alias(libs.plugins.ace.compose.multiplatform)
+    alias(libs.plugins.emotia.kotlin.multiplatform)
+    alias(libs.plugins.emotia.compose.multiplatform)
 }
 
 kotlin {
@@ -16,5 +16,5 @@ compose.resources {
     publicResClass = true
 }
 
-android.namespace = "com.nexters.ace.core.designsystem"
+android.namespace = "com.nexters.emotia.core.designsystem"
 

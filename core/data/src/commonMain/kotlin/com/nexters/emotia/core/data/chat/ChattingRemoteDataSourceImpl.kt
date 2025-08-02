@@ -1,7 +1,7 @@
 package com.nexters.emotia.core.data.chat
 
-import com.nexters.ace.network.ApiService
-import com.nexters.ace.network.FakeResponse
+import com.nexters.emotia.network.ApiService
+import com.nexters.emotia.network.FakeResponse
 
 class ChattingRemoteDataSourceImpl(
     private val apiService: ApiService

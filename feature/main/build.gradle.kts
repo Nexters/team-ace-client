@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.ace.feature)
+    alias(libs.plugins.emotia.feature)
 }
 
 kotlin {
@@ -25,4 +25,4 @@ kotlin {
     }
 }
 
-android.namespace = "com.nexters.ace.feature.main"
+android.namespace = "com.nexters.emotia.feature.main"

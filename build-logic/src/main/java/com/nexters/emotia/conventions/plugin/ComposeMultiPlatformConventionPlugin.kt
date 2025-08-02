@@ -1,7 +1,7 @@
 package com.nexters.emotia.conventions.plugin
 
-import com.nexters.ace.conventions.applyComposePlugins
-import com.nexters.ace.conventions.primitive.composeMultiplatformDependencies
+import com.nexters.emotia.conventions.applyComposePlugins
+import com.nexters.emotia.conventions.primitive.composeMultiplatformDependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

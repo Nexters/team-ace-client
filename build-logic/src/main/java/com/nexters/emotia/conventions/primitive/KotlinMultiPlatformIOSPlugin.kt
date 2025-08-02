@@ -1,7 +1,7 @@
 package com.nexters.emotia.conventions.primitive
 
-import com.nexters.ace.conventions.Arch
-import com.nexters.ace.conventions.activeArch
+import com.nexters.emotia.conventions.Arch
+import com.nexters.emotia.conventions.activeArch
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

@@ -2,8 +2,8 @@ package com.nexters.emotia.feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nexters.ace.domain.chat.ChattingRepository
-import com.nexters.ace.domain.chat.entity.ChattingRoom
+import com.nexters.emotia.domain.chat.ChattingRepository
+import com.nexters.emotia.domain.chat.entity.ChattingRoom
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

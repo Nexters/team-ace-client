@@ -1,7 +1,7 @@
 package com.nexters.emotia.conventions.primitive
 
-import com.nexters.ace.conventions.androidExtension
-import com.nexters.ace.conventions.libs
+import com.nexters.emotia.conventions.androidExtension
+import com.nexters.emotia.conventions.libs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project

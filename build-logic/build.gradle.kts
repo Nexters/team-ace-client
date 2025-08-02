@@ -14,19 +14,19 @@ dependencies {
 gradlePlugin {
     plugins {
         register("kmpConvention") {
-            id = "ace.kotlin.multiplatform"
+            id = "emotia.kotlin.multiplatform"
             implementationClass =
-                "com.nexters.ace.conventions.plugin.KotlinMultiPlatformConventionPlugin"
+                "com.nexters.emotia.conventions.plugin.KotlinMultiPlatformConventionPlugin"
         }
         register("cmpConvention") {
-            id = "ace.compose.multiplatform"
+            id = "emotia.compose.multiplatform"
             implementationClass =
-                "com.nexters.ace.conventions.plugin.ComposeMultiPlatformConventionPlugin"
+                "com.nexters.emotia.conventions.plugin.ComposeMultiPlatformConventionPlugin"
         }
-        register("aceFeature") {
-            id = "ace.feature"
+        register("emotiaFeature") {
+            id = "emotia.feature"
             implementationClass =
-                "com.nexters.ace.conventions.plugin.AceFeaturePlugin"
+                "com.nexters.emotia.conventions.plugin.EmotiaFeaturePlugin"
         }
     }
 }
