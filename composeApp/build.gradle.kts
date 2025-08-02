@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.emotia.kotlin.multiplatform)
     alias(libs.plugins.emotia.compose.multiplatform)
+    alias(libs.plugins.google.gms)
 }
 
 kotlin {
@@ -22,6 +23,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(project.dependencies.platform(libs.google.firebase.bom))
         }
 
         commonMain.dependencies {
