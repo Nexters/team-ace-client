@@ -3,10 +3,10 @@ name: Firebase App Distribution CD
 
 # 워크플로우 트리거 설정
 on:
-  push:
+  pull_request:
     branches:
       - develop
-  workflow_dispatch: # 수동 실행도 가능
+  workflow_dispatch:
 
 jobs:
   firebase_distribution:
