@@ -60,6 +60,35 @@ jobs:
         # Firebase App Distribution을 위해 디버그 APK를 빌드합니다 (자동 서명됨).
         run: ./gradlew assembleDebug
 
+      - name: APK 파일 확인 및 경로 설정
+        # 빌드된 APK 파일을 찾아서 환경변수로 설정합니다.
+        run: |
+          echo "=== APK 파일 검색 ==="
+          find composeApp/build -name "*.apk" -type f || echo "APK 파일을 찾을 수 없습니다"
+          echo ""
+          echo "=== 빌드 디렉토리 구조 확인 ==="
+          ls -la composeApp/build/ || echo "build 디렉토리가 없습니다"
+          echo ""
+          if [ -d "composeApp/build/intermediates" ]; then
+            echo "=== intermediates 디렉토리 ==="
+            find composeApp/build/intermediates -name "*.apk" -type f || echo "intermediates에 APK 없음"
+          fi
+          echo ""
+          if [ -d "composeApp/build/outputs" ]; then
+            echo "=== outputs 디렉토리 ==="
+            find composeApp/build/outputs -name "*.apk" -type f || echo "outputs에 APK 없음"  
+          fi
+          echo ""
+          echo "=== APK 경로 설정 ==="
+          APK_FILE=$(find composeApp/build -name "*debug*.apk" -type f | head -1)
+          if [ -n "$APK_FILE" ]; then
+            echo "APK_PATH=$APK_FILE" >> $GITHUB_ENV
+            echo "✅ APK 파일 발견: $APK_FILE"
+          else
+            echo "❌ APK 파일을 찾을 수 없습니다"
+            exit 1
+          fi
+
       - name: Firebase App Distribution 업로드
         # 빌드된 디버그 APK를 Firebase App Distribution으로 업로드합니다.
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -67,7 +96,7 @@ jobs:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           groups: 'testers'
-          file: composeApp/build/intermediates/apk/debug/composeApp-debug.apk
+          file: ${{ env.APK_PATH }}
 
       - name: Slack 알림 (빌드 성공)
         if: success()
