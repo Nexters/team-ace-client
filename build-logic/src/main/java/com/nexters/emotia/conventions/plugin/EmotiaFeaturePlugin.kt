@@ -26,10 +26,8 @@ class EmotiaFeaturePlugin : Plugin<Project> {
                     dependencies {
                         implementation(project(":core:designsystem"))
                         implementation(project(":core:navigation"))
+                        implementation(libs.library("androidx-navigation-compose"))
                         implementation(libs.library("androidx-lifecycle-runtimeCompose"))
-                        implementation(libs.library("androidx-navigation3-runtime"))
-                        implementation(libs.library("androidx-navigation3-ui"))
-                        implementation(libs.library("androidx-lifecycle-viewmodel-navigation3"))
                         implementation(libs.library("kotlinx-immutable"))
                     }
                 }
