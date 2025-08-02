@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.emotia.kotlin.multiplatform)
     alias(libs.plugins.kotlinxSerialization)
 }
-android.namespace = "com.nexters.ace.core.network"
+android.namespace = "com.nexters.emotia.core.network"
 
 kotlin {
     sourceSets {

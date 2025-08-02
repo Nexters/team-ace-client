@@ -18,7 +18,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 
-class AceNetwork {
+class EmotiaNetwork {
     val httpClient = createHttpClient(BASE_URL)
 
     private fun createHttpClient(hostName: String): HttpClient = HttpClient {
@@ -52,7 +52,7 @@ class AceNetwork {
     suspend inline fun <reified T : Any> get(path: String): T = httpClient.get(path).body()
 
 
-    companion object {
+    companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L
         // 우리 서버 나오고 수정 필요
         private const val BASE_URL = "ip-api.com"
