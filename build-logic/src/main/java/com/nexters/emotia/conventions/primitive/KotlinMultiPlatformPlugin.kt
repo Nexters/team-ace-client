@@ -1,6 +1,7 @@
 package com.nexters.emotia.conventions.primitive
 
 import com.nexters.emotia.conventions.libs
+import com.nexters.emotia.conventions.library
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -29,6 +30,16 @@ class KotlinMultiPlatformPlugin : Plugin<Project> {
             applyDefaultHierarchyTemplate()
             tasks.withType<KotlinNativeLink>().configureEach {
                 notCompatibleWithConfigurationCache("Configuration cache not supported for a system property read at configuration time")
+            }
+
+            sourceSets.apply {
+                commonMain {
+                    dependencies {
+                        implementation(libs.library("kotlinx-serialization-json"))
+                        implementation(libs.library("kotlinx-serialization-core"))
+                        implementation(libs.library("kotlinx-coroutines-core"))
+                    }
+                }
             }
         }
     }
