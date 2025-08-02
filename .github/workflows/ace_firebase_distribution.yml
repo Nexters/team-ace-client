@@ -2,10 +2,11 @@
 name: Firebase App Distribution CD
 
 # 워크플로우 트리거 설정
-#on:
-#  push:
-#    branches:
-#      - develop
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch: # 수동 실행도 가능
 
 jobs:
   firebase_distribution:
@@ -39,15 +40,17 @@ jobs:
       - name: google-services.json 설정
         # Firebase 서비스에 필요한 google-services.json 파일을 Secrets에서 가져와 복원합니다.
         run: |
-          echo "google-services.json 파일을 설정합니다..."
-          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
-          if [ -f ./app/google-services.json ]; then
-            echo "google-services.json이 ./app/google-services.json에 성공적으로 생성되었습니다."
+          echo "Setting up google-services.json..."
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./composeApp/google-services.json
+          if [ -f ./composeApp/google-services.json ]; then
+            echo "google-services.json successfully created at ./composeApp/google-services.json"
           else
-            echo "오류: ./app/google-services.json에서 google-services.json을 찾을 수 없습니다."
+            echo "Error: google-services.json not found at ./composeApp/google-services.json"
             exit 1
           fi
         shell: bash
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       - name: gradlew 실행 권한 부여
         # gradlew 스크립트에 실행 권한이 없으면 빌드가 실패할 수 있으므로 권한을 부여합니다.
@@ -62,9 +65,9 @@ jobs:
         uses: wzieba/Firebase-App-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           group: 'testers' # Firebase 콘솔에서 설정된 테스터 그룹 이름 지정해야됩니다.
-          file: app/build/outputs/apk/release/app-release.apk
+          file: composeApp/build/outputs/apk/release/composeApp-release.apk
 
       - name: Slack 알림 (빌드 성공)
         if: success()
