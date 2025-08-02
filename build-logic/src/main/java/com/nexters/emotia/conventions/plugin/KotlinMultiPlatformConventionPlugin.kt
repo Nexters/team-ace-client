@@ -1,7 +1,7 @@
 package com.nexters.emotia.conventions.plugin
 
-import com.nexters.ace.conventions.applyKmpPlugins
-import com.nexters.ace.conventions.applyKmpPrimitives
+import com.nexters.emotia.conventions.applyKmpPlugins
+import com.nexters.emotia.conventions.applyKmpPrimitives
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

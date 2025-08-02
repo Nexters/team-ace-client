@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.ace.kotlin.multiplatform)
+    alias(libs.plugins.emotia.kotlin.multiplatform)
     alias(libs.plugins.kotlinxSerialization)
 }
 android.namespace = "com.nexters.ace.core.network"

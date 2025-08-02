@@ -1,4 +1,4 @@
-rootProject.name = "ace-client"
+rootProject.name = "emotia"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

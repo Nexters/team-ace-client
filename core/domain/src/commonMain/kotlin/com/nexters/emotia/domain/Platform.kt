@@ -1,3 +1,3 @@
-package com.nexters.ace.domain
+package com.nexters.emotia.domain
 
 // expect fun platform(): String

@@ -1,18 +1,18 @@
 package com.nexters.emotia.conventions.plugin
 
-import com.nexters.ace.conventions.applyAndroidLibraryPlugin
-import com.nexters.ace.conventions.applyComposePlugins
-import com.nexters.ace.conventions.applyKmpPlugins
-import com.nexters.ace.conventions.applyKmpPrimitives
-import com.nexters.ace.conventions.library
-import com.nexters.ace.conventions.libs
-import com.nexters.ace.conventions.primitive.composeMultiplatformDependencies
+import com.nexters.emotia.conventions.applyAndroidLibraryPlugin
+import com.nexters.emotia.conventions.applyComposePlugins
+import com.nexters.emotia.conventions.applyKmpPlugins
+import com.nexters.emotia.conventions.applyKmpPrimitives
+import com.nexters.emotia.conventions.library
+import com.nexters.emotia.conventions.libs
+import com.nexters.emotia.conventions.primitive.composeMultiplatformDependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-class AceFeaturePlugin : Plugin<Project> {
+class EmotiaFeaturePlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
         applyAndroidLibraryPlugin()
         applyKmpPlugins()

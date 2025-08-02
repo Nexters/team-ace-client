@@ -1,6 +1,6 @@
 package com.nexters.emotia.conventions.primitive
 
-import com.nexters.ace.conventions.libs
+import com.nexters.emotia.conventions.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

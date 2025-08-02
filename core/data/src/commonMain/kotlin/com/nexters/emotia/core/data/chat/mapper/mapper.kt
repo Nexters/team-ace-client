@@ -1,7 +1,7 @@
 package com.nexters.emotia.core.data.chat.mapper
 
-import com.nexters.ace.domain.chat.entity.ChattingRoom
-import com.nexters.ace.network.FakeResponse
+import com.nexters.emotia.domain.chat.entity.ChattingRoom
+import com.nexters.emotia.network.FakeResponse
 
 fun FakeResponse.toDomain(): ChattingRoom {
     // DTO에서 도메인 모델로 변환
