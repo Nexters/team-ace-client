@@ -66,8 +66,8 @@ jobs:
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
-          group: 'testers' # Firebase 콘솔에서 설정된 테스터 그룹 이름 지정해야됩니다.
-          file: composeApp/build/outputs/apk/release/composeApp-release.apk
+          groups: 'testers'
+          file: composeApp/build/outputs/apk/release/composeApp-release-unsigned.apk
 
       - name: Slack 알림 (빌드 성공)
         if: success()
