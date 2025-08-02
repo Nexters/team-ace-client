@@ -5,7 +5,11 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-
+            implementation(projects.core.domain)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.slf4j.api)
+            implementation(libs.slf4j.android)
         }
         val nonWasmJsMain by creating {
             dependsOn(commonMain.get())

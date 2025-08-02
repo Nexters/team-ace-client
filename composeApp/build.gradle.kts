@@ -23,11 +23,17 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
-        
+
         commonMain.dependencies {
             implementation(projects.core.designsystem)
-
             implementation(projects.feature.main)
+            implementation(projects.core.data)
+            implementation(projects.core.domain)
+            implementation(projects.core.network)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.slf4j.api)
+            implementation(libs.slf4j.simple)
         }
     }
 }
@@ -45,6 +51,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+        }
         getByName("debug") {
             isMinifyEnabled = false
         }
