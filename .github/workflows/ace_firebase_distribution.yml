@@ -56,18 +56,18 @@ jobs:
         # gradlew 스크립트에 실행 권한이 없으면 빌드가 실패할 수 있으므로 권한을 부여합니다.
         run: chmod +x ./gradlew
 
-      - name: 릴리스 APK 빌드 (Firebase App Distribution용)
-        # Firebase App Distribution을 위해 릴리스 APK를 빌드합니다.
-        run: ./gradlew assembleRelease
+      - name: 디버그 APK 빌드 (Firebase App Distribution용)
+        # Firebase App Distribution을 위해 디버그 APK를 빌드합니다 (자동 서명됨).
+        run: ./gradlew assembleDebug
 
       - name: Firebase App Distribution 업로드
-        # 빌드된 릴리스 APK를 Firebase App Distribution으로 업로드합니다.
+        # 빌드된 디버그 APK를 Firebase App Distribution으로 업로드합니다.
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           groups: 'testers'
-          file: composeApp/build/outputs/apk/release/composeApp-release-unsigned.apk
+          file: composeApp/build/intermediates/apk/debug/composeApp-debug.apk
 
       - name: Slack 알림 (빌드 성공)
         if: success()
