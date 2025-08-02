@@ -36,6 +36,7 @@ include(":core:model:fairybook")
 include(":core:data")
 include(":core:domain")
 include(":core:network")
+include(":core:navigation")
 
 include(":feature:main")
 

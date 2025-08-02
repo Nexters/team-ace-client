@@ -24,8 +24,13 @@ class EmotiaFeaturePlugin : Plugin<Project> {
             sourceSets.apply {
                 commonMain {
                     dependencies {
-                        // TODO : 공통적으로 필요한 core 모듈 의존성 추가 예정
+                        implementation(project(":core:designsystem"))
+                        implementation(project(":core:navigation"))
                         implementation(libs.library("androidx-lifecycle-runtimeCompose"))
+                        implementation(libs.library("androidx-navigation3-runtime"))
+                        implementation(libs.library("androidx-navigation3-ui"))
+                        implementation(libs.library("androidx-lifecycle-viewmodel-navigation3"))
+                        implementation(libs.library("kotlinx-immutable"))
                     }
                 }
             }
