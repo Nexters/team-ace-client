@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
+          path: composeApp/build/intermediates/apk/debug/composeApp-debug.apk
 
       - name: Slack 알림 (빌드 성공)
         if: success()
