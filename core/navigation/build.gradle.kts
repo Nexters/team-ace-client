@@ -1,9 +1,17 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.ace.kotlin.multiplatform)
-    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.emotia.kotlin.multiplatform)
 }
 
-android {
-    namespace = "org.nexters.ace.core.navigation"
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
+        }
+    }
 }
+
+android.namespace = "com.nexters.emotia.core.navigation"
+

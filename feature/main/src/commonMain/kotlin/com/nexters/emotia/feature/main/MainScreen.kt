@@ -1,27 +1,49 @@
 package com.nexters.emotia.feature.main
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.koin.compose.viewmodel.koinViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.nexters.emotia.core.navigation.navigateTo
+import com.nexters.emotia.core.navigation.navigateToAndClearBackStack
+import com.nexters.emotia.feature.chatting.navigation.ChattingRoute
+import com.nexters.emotia.feature.chatting.navigation.chattingScreen
+import com.nexters.emotia.feature.onboarding.navigation.OnBoardingRoute
+import com.nexters.emotia.feature.onboarding.navigation.onBoardingScreen
+import com.nexters.emotia.feature.result.navigation.ResultRoute
+import com.nexters.emotia.feature.result.navigation.resultScreen
 
 @Composable
 expect fun MainScreen(modifier: Modifier = Modifier)
 
 @Composable
 fun MainContent(modifier: Modifier = Modifier) {
-    val viewModel: MainViewModel = koinViewModel()
-    val ipInfoText by viewModel.ipInfoText.collectAsState()
+    val navController = rememberNavController()
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    NavHost(
+        navController = navController,
+        startDestination = OnBoardingRoute.OnBoardingMain,
+        modifier = modifier
     ) {
-        Text(ipInfoText)
+        onBoardingScreen(
+            onNavigateNext = {
+                navController.navigateTo(ChattingRoute.ChattingMain)
+            }
+        )
+
+        chattingScreen(
+            onNavigateToResult = {
+                navController.navigateTo(ResultRoute.ResultMain)
+            }
+        )
+
+        resultScreen(
+            onNavigateToOnBoarding = {
+                navController.navigateToAndClearBackStack(OnBoardingRoute.OnBoardingMain)
+            },
+            onNavigateToChatting = {
+                navController.navigateTo(ChattingRoute.ChattingMain)
+            }
+        )
     }
 }
