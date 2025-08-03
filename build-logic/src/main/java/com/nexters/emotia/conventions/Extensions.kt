@@ -65,6 +65,7 @@ internal fun Project.applyKmpPrimitives() {
 internal fun Project.applyKmpPlugins() {
     with(pluginManager) {
         apply(libs.plugin("kotlinMultiplatform").pluginId)
+        apply(libs.plugin("kotlinxSerialization").pluginId)
     }
 }
 

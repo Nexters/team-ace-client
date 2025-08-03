@@ -39,4 +39,7 @@ include(":core:network")
 include(":core:navigation")
 
 include(":feature:main")
+include(":feature:onboarding")
+include(":feature:chatting")
+include(":feature:result")
 

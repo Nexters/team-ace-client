@@ -6,6 +6,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain)
+            implementation(projects.core.navigation)
+            implementation(projects.feature.onboarding)
+            implementation(projects.feature.chatting)
+            implementation(projects.feature.result)
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.slf4j.api)
