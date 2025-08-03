@@ -29,6 +29,9 @@ class EmotiaFeaturePlugin : Plugin<Project> {
                         implementation(libs.library("androidx-navigation-compose"))
                         implementation(libs.library("androidx-lifecycle-runtimeCompose"))
                         implementation(libs.library("kotlinx-immutable"))
+                        implementation(libs.library("koin-core"))
+                        implementation(libs.library("koin-compose"))
+                        implementation(libs.library("koin-compose-viewmodel"))
                     }
                 }
             }
