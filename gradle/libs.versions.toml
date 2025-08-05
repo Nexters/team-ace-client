@@ -27,7 +27,7 @@ slf4j = "2.0.7"
 slf4j-android = "1.7.36"
 
 # navigation
-androidx-navigation = "2.9.0-beta04"
+androidx-navigation = "2.9.0-beta02"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
