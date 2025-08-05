@@ -36,6 +36,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.slf4j.api)
             implementation(libs.slf4j.simple)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
         }
     }
 }
