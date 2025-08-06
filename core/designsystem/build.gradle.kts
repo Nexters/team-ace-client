@@ -8,13 +8,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.coil)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.foundation)
-        }
-        androidMain.dependencies {
-            implementation(compose.uiTooling)
         }
     }
 }
