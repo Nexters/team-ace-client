@@ -1,16 +1,19 @@
 package com.nexters.emotia.core.designsystem.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,6 +42,21 @@ fun getChattingSendIconResource(
     }
 }
 
+/*
+  1. enabled : false (비활성화)
+  - 클릭해도 포커스 받지 않음
+  - 텍스트 입력 불가
+  - 회색으로 표시
+  - Send 아이콘도 비활성화
+
+  2. enabled : true + 포커스 없음 (활성화되어 있지만 사용 중 아님)
+  - 클릭하면 포커스 받을 수 있음
+
+
+  3. enabled = true + 포커스 있음 (활성화되고 사용 중)
+  - 텍스트 입력 중 / 완료
+ */
+
 @Composable
 fun EmotiaChatTextField(
     value: String,
@@ -47,11 +65,18 @@ fun EmotiaChatTextField(
     modifier: Modifier = Modifier,
     placeholder: String = "",
     enabled: Boolean = true,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    onFocusChanged: (Boolean) -> Unit = {},
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
     val colors = LocalEmotiaColors.current
     val isFocused by interactionSource.collectIsFocusedAsState()
     val hasText = value.isNotEmpty()
+
+    // Focus 상태 변화 감지
+    LaunchedEffect(isFocused) {
+        onFocusChanged(isFocused)
+    }
 
     // 입력 내용이 있을 때만 아이콘 활성화
     val isIconEnabled = hasText && enabled
@@ -63,7 +88,11 @@ fun EmotiaChatTextField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth()
+            .background(
+                color = colors.darkGray,
+                shape = RoundedCornerShape(200.dp)
+            ),
         enabled = enabled,
         placeholder = {
             if (placeholder.isNotEmpty() && value.isEmpty()) {
@@ -89,6 +118,7 @@ fun EmotiaChatTextField(
             }
         },
         singleLine = true,
+        keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(200.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = colors.white,
