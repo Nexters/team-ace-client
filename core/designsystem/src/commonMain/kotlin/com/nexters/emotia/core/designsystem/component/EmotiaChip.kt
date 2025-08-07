@@ -36,7 +36,7 @@ fun EmotiaChip(
     textStyle: TextStyle = TextStyle(),
     enabled: Boolean = true,
     onClick: () -> Unit,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 ) {
     val isPressed by interactionSource.collectIsPressedAsState()
 
@@ -79,7 +79,7 @@ fun EmotiaChip(
 data class ChipColorSet(
     val default: Color,
     val pressed: Color,
-    val disabled: Color
+    val disabled: Color,
 )
 
 @Composable
@@ -87,8 +87,8 @@ fun getChipColors(): ChipColorsProvider {
     val emotiaColors = LocalEmotiaColors.current
     return ChipColorsProvider(
         Green = ChipColorSet(
-            default = emotiaColors.green,
-            pressed = emotiaColors.darkGreen,
+            default = emotiaColors.greenLight,
+            pressed = emotiaColors.greenDark,
             disabled = emotiaColors.darkGray
         )
         // 추가 색상 세트들을 여기에 정의할 수 있음
@@ -98,9 +98,9 @@ fun getChipColors(): ChipColorsProvider {
 }
 
 data class ChipColorsProvider(
-    val Green: ChipColorSet
+    val Green: ChipColorSet,
 
-)
+    )
 
 @Composable
 private fun getChipBackgroundColor(mainColor: Color, state: ChipState): Color {
@@ -121,7 +121,6 @@ private fun getChipBackgroundColor(mainColor: Color, state: ChipState): Color {
         ChipState.Disabled -> colorSet.disabled
     }
 }
-
 
 @Preview
 @Composable
