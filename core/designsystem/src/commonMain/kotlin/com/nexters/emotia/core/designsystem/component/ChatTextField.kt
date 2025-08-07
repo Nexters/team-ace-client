@@ -1,5 +1,3 @@
-package com.nexters.emotia.core.designsystem.component
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -7,17 +5,18 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
@@ -30,32 +29,66 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-@Composable
-fun getChattingSendIconResource(
+internal enum class ChatTextFieldState {
+    DISABLED,   // 비활성화 상태
+    FOCUSED,    // 포커스 있고 비어있음 (입력 중)
+    TYPING,     // 포커스 있고 텍스트 있음 (타이핑 중)
+    TYPED       // 포커스 없고 텍스트 있음 (입력 완료)
+}
+
+internal fun getTextFieldState(
     enabled: Boolean,
-    isPressed: Boolean
-): DrawableResource? {
+    isFocused: Boolean,
+    hasText: Boolean
+): ChatTextFieldState {
     return when {
-        !enabled -> Res.drawable.ic_chatting_send_disabled
-        isPressed -> Res.drawable.ic_chatting_send_pressed
-        else -> Res.drawable.ic_chatting_send_default
+        !enabled -> ChatTextFieldState.DISABLED
+        isFocused && hasText -> ChatTextFieldState.TYPING
+        isFocused && !hasText -> ChatTextFieldState.FOCUSED
+        !isFocused && hasText -> ChatTextFieldState.TYPED
+        else -> ChatTextFieldState.FOCUSED
     }
 }
 
-/*
-  1. enabled : false (비활성화)
-  - 클릭해도 포커스 받지 않음
-  - 텍스트 입력 불가
-  - 회색으로 표시
-  - Send 아이콘도 비활성화
 
-  2. enabled : true + 포커스 없음 (활성화되어 있지만 사용 중 아님)
-  - 클릭하면 포커스 받을 수 있음
+@Composable
+internal fun ChatTextFieldState.getBorderColor(): Color {
+    val colors = LocalEmotiaColors.current
+    return when (this) {
+        ChatTextFieldState.DISABLED -> colors.lightGray
+        ChatTextFieldState.FOCUSED -> colors.primaryLight
+        ChatTextFieldState.TYPING -> colors.primaryLight
+        ChatTextFieldState.TYPED -> colors.primaryLight
+    }
+}
 
+@Composable
+internal fun ChatTextFieldState.getTextColor(): Color {
+    val colors = LocalEmotiaColors.current
+    return colors.white
+}
 
-  3. enabled = true + 포커스 있음 (활성화되고 사용 중)
-  - 텍스트 입력 중 / 완료
- */
+@Composable
+internal fun ChatTextFieldState.getPlaceholderColor(): Color {
+    val colors = LocalEmotiaColors.current
+    return colors.lightGray
+}
+
+internal fun ChatTextFieldState.getSendIconResource(): DrawableResource {
+    return when (this) {
+        ChatTextFieldState.DISABLED -> Res.drawable.ic_chatting_send_disabled
+        ChatTextFieldState.FOCUSED -> Res.drawable.ic_chatting_send_disabled
+        ChatTextFieldState.TYPING -> Res.drawable.ic_chatting_send_pressed
+        ChatTextFieldState.TYPED -> Res.drawable.ic_chatting_send_default
+    }
+}
+
+internal fun ChatTextFieldState.isSendEnabled(): Boolean {
+    return when (this) {
+        ChatTextFieldState.TYPING, ChatTextFieldState.TYPED -> true
+        ChatTextFieldState.DISABLED, ChatTextFieldState.FOCUSED -> false
+    }
+}
 
 @Composable
 fun EmotiaChatTextField(
@@ -64,31 +97,23 @@ fun EmotiaChatTextField(
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "",
-    enabled: Boolean = true,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    onFocusChanged: (Boolean) -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    enabled: Boolean = true
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     val colors = LocalEmotiaColors.current
     val isFocused by interactionSource.collectIsFocusedAsState()
-    val hasText = value.isNotEmpty()
 
-    // Focus 상태 변화 감지
-    LaunchedEffect(isFocused) {
-        onFocusChanged(isFocused)
-    }
-
-    // 입력 내용이 있을 때만 아이콘 활성화
-    val isIconEnabled = hasText && enabled
-    val iconResource = getChattingSendIconResource(
-        enabled = isIconEnabled,
-        isPressed = hasText && isFocused
+    val state = getTextFieldState(
+        enabled = enabled,
+        isFocused = isFocused,
+        hasText = value.isNotEmpty()
     )
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
             .background(
                 color = colors.darkGray,
                 shape = RoundedCornerShape(200.dp)
@@ -99,34 +124,35 @@ fun EmotiaChatTextField(
                 Text(
                     text = placeholder,
                     fontSize = 14.sp,
-                    color = if (isFocused) colors.lightGray else colors.lightGray
+                    color = state.getPlaceholderColor()
                 )
             }
         },
         trailingIcon = {
             IconButton(
                 onClick = onSendClick,
-                enabled = isIconEnabled
+                enabled = state.isSendEnabled()
             ) {
-                iconResource?.let { res ->
-                    Image(
-                        painter = painterResource(res),
-                        contentDescription = "Send",
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
+                Image(
+                    painter = painterResource(state.getSendIconResource()),
+                    contentDescription = "전송",
+                    modifier = Modifier.size(36.dp)
+                )
             }
         },
         singleLine = true,
-        keyboardOptions = keyboardOptions,
+        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
+        keyboardActions = KeyboardActions(
+            onSend = { if (value.isNotEmpty()) onSendClick() }
+        ),
         shape = RoundedCornerShape(200.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = colors.white,
-            unfocusedTextColor = colors.white,
-            disabledTextColor = colors.white,
-            focusedBorderColor = colors.primaryLight,
-            unfocusedBorderColor = if (isFocused || hasText) colors.primaryLight else colors.lightGray,
-            disabledBorderColor = colors.lightGray,
+            focusedTextColor = state.getTextColor(),
+            unfocusedTextColor = state.getTextColor(),
+            disabledTextColor = state.getTextColor(),
+            focusedBorderColor = state.getBorderColor(),
+            unfocusedBorderColor = state.getBorderColor(),
+            disabledBorderColor = state.getBorderColor(),
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
@@ -138,12 +164,52 @@ fun EmotiaChatTextField(
 
 @Preview
 @Composable
-fun ChatTextFieldPreview() {
+private fun ChatTextFieldDisabledPreview() {
     EmotiaTheme {
         EmotiaChatTextField(
             value = "",
             onValueChange = { },
-            placeholder = "요정에게 지금 기분을 설명해 보자 ",
+            placeholder = "비활성화 상태",
+            enabled = false,
+            onSendClick = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ChatTextFieldFocusedPreview() {
+    EmotiaTheme {
+        EmotiaChatTextField(
+            value = "",
+            onValueChange = { },
+            placeholder = "포커스 상태 (비어있음)",
+            onSendClick = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ChatTextFieldTypingPreview() {
+    EmotiaTheme {
+        EmotiaChatTextField(
+            value = "입력 중...",
+            onValueChange = { },
+            placeholder = "타이핑 상태",
+            onSendClick = { }
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ChatTextFieldTypedPreview() {
+    EmotiaTheme {
+        EmotiaChatTextField(
+            value = "입력 완료",
+            onValueChange = { },
+            placeholder = "입력 완료 상태",
             onSendClick = { }
         )
     }
