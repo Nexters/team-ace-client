@@ -1,7 +1,7 @@
 package com.nexters.emotia.core.data.di
 
-import com.nexters.emotia.core.data.chat.ChattingRemoteDataSource
-import com.nexters.emotia.core.data.chat.ChattingRemoteDataSourceImpl
+import com.nexters.emotia.core.data.chat.datasource.ChattingRemoteDataSource
+import com.nexters.emotia.core.data.chat.datasource.ChattingRemoteDataSourceImpl
 import com.nexters.emotia.core.data.chat.repository.ChattingRepositoryImpl
 import com.nexters.emotia.domain.chat.ChattingRepository
 import org.koin.core.module.dsl.singleOf
