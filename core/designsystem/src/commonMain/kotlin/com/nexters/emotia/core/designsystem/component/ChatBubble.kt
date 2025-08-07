@@ -52,6 +52,23 @@ fun getBubbleStyle(type: BubbleType): BubbleStyle {
     }
 }
 
+fun getBubbleModifier(
+    type: BubbleType,
+    baseModifier: Modifier,
+    screenHorizontalPadding: Dp,
+    minOppositeMargin: Dp
+): Modifier {
+    return when (type) {
+        BubbleType.MINE -> baseModifier
+            .fillMaxWidth()
+            .padding(start = minOppositeMargin, end = screenHorizontalPadding)
+
+        BubbleType.OTHER -> baseModifier
+            .fillMaxWidth()
+            .padding(start = screenHorizontalPadding, end = minOppositeMargin)
+    }
+}
+
 @Composable
 fun ChatBubble(
     text: String,
@@ -66,21 +83,12 @@ fun ChatBubble(
 ) {
     val style = getBubbleStyle(type)
 
-    val bubbleModifier = when (type) {
-        BubbleType.MINE -> modifier
-            .fillMaxWidth()
-            .padding(
-                start = minOppositeMargin,
-                end = screenHorizontalPadding
-            )
-
-        BubbleType.OTHER -> modifier
-            .fillMaxWidth()
-            .padding(
-                start = screenHorizontalPadding,
-                end = minOppositeMargin
-            )
-    }
+    val bubbleModifier = getBubbleModifier(
+        type = type,
+        baseModifier = modifier,
+        screenHorizontalPadding = screenHorizontalPadding,
+        minOppositeMargin = minOppositeMargin
+    )
 
     Box(
         modifier = bubbleModifier,
@@ -94,14 +102,12 @@ fun ChatBubble(
             color = style.backgroundColor,
             border = BorderStroke(borderWidth, style.borderColor)
         ) {
-
             Text(
                 text = text,
                 modifier = Modifier.padding(padding),
                 color = style.textColor,
                 style = textStyle
             )
-
         }
     }
 }

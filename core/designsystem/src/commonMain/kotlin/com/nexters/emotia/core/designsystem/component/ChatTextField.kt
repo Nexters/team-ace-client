@@ -103,11 +103,13 @@ fun EmotiaChatTextField(
     val colors = LocalEmotiaColors.current
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    val state = getTextFieldState(
-        enabled = enabled,
-        isFocused = isFocused,
-        hasText = value.isNotEmpty()
-    )
+    val state = remember(enabled, isFocused, value) {
+        getTextFieldState(
+            enabled = enabled,
+            isFocused = isFocused,
+            hasText = value.isNotEmpty()
+        )
+    }
 
     OutlinedTextField(
         value = value,
