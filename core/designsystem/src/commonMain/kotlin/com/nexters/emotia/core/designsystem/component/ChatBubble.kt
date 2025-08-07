@@ -17,9 +17,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
-import com.nexters.emotia.core.designsystem.token.LocalEmotiaColors
+import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 
 enum class BubbleType {
     MINE,
@@ -29,7 +28,7 @@ enum class BubbleType {
 data class BubbleStyle(
     val backgroundColor: Color,
     val borderColor: Color,
-    val textColor: Color
+    val textColor: Color,
 )
 
 @Composable
@@ -56,7 +55,7 @@ fun getBubbleModifier(
     type: BubbleType,
     baseModifier: Modifier,
     screenHorizontalPadding: Dp,
-    minOppositeMargin: Dp
+    minOppositeMargin: Dp,
 ): Modifier {
     return when (type) {
         BubbleType.MINE -> baseModifier

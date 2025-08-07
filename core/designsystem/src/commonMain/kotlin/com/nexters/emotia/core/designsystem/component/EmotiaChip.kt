@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
-import com.nexters.emotia.core.designsystem.token.LocalEmotiaColors
+import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ChipState {

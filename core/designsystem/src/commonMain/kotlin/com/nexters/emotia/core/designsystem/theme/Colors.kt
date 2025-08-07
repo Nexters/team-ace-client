@@ -1,4 +1,4 @@
-package com.nexters.emotia.core.designsystem.token
+package com.nexters.emotia.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
