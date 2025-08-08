@@ -62,8 +62,14 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
 }
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    implementation(libs.bundles.coil)
 }

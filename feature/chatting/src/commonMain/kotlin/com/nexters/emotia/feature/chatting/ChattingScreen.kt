@@ -30,9 +30,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ChattingScreen(
-    onNavigateToResult: () -> Unit,
+    onNavigateToResult: (String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ChattingViewModel = koinViewModel()
+    viewModel: ChattingViewModel = koinViewModel(),
 ) {
     val colors = LocalEmotiaColors.current
     val lazyListState = rememberLazyListState()
@@ -41,6 +41,13 @@ fun ChattingScreen(
     LaunchedEffect(viewModel.uiState.messages.size) {
         if (viewModel.uiState.messages.isNotEmpty()) {
             lazyListState.animateScrollToItem(viewModel.uiState.messages.size - 1)
+        }
+    }
+
+    // 최대 채팅 개수 도달 시 결과 화면으로 이동
+    LaunchedEffect(viewModel.uiState.isMaxCountReached) {
+        if (viewModel.uiState.isMaxCountReached && viewModel.uiState.roomId != null) {
+            onNavigateToResult(viewModel.uiState.roomId.toString())
         }
     }
 

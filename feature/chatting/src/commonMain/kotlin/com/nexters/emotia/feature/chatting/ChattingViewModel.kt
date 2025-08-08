@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nexters.emotia.core.designsystem.component.BubbleType
 import com.nexters.emotia.domain.chat.ChattingRepository
+import com.nexters.emotia.domain.config.RemoteConfigRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 data class ChatMessage(
@@ -16,7 +18,7 @@ data class ChatMessage(
 
 data class EmotionOption(
     val text: String,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 )
 
 data class ChattingUiState(
@@ -27,25 +29,42 @@ data class ChattingUiState(
     val showEmotionChips: Boolean = false,
     val isLoading: Boolean = false,
     val roomId: Int? = null,
-    val error: String? = null
+    val error: String? = null,
+    val maxChatCount: Int = 5,
+    val userMessageCount: Int = 0,
+    val isMaxCountReached: Boolean = false,
 )
 
 class ChattingViewModel(
-    private val chattingRepository: ChattingRepository
+    private val chattingRepository: ChattingRepository,
+    private val remoteConfigRepository: RemoteConfigRepository,
 ) : ViewModel() {
 
     var uiState by mutableStateOf(ChattingUiState())
         private set
 
     init {
+        initializeRemoteConfig()
         createChatRoom()
+    }
+
+    private fun initializeRemoteConfig() {
+        viewModelScope.launch {
+            try {
+                val maxCount = remoteConfigRepository.getChattingMaxCount()
+                println("Max chat count: $maxCount")
+                uiState = uiState.copy(maxChatCount = maxCount)
+            } catch (e: Exception) {
+                println("Failed to initialize remote config: ${e.message}")
+            }
+        }
     }
 
     private fun createChatRoom() {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, error = null)
 
-            chattingRepository.createRoom("유저네임하드코딩해야됨각자")
+            chattingRepository.createRoom("12345678")
                 .onSuccess { chatRoom ->
                     val firstMessage = ChatMessage(
                         text = chatRoom.firstMessage,
@@ -83,18 +102,23 @@ class ChattingViewModel(
 
         val messageToSend = uiState.currentInputText
         val roomId = uiState.roomId!!
+        val newUserMessageCount = uiState.userMessageCount + 1
 
         uiState = uiState.copy(
             messages = uiState.messages + userMessage,
             currentInputText = "",
-            isLoading = true
+            isLoading = true,
+            userMessageCount = newUserMessageCount,
         )
 
-        sendChatMessage(roomId, messageToSend)
+        sendChatMessage(
+            roomId,
+            messageToSend,
+            isMaxCountReached = newUserMessageCount >= uiState.maxChatCount
+        )
     }
 
-
-    private fun sendChatMessage(roomId: Int, message: String) {
+    private fun sendChatMessage(roomId: Int, message: String, isMaxCountReached: Boolean = false) {
         viewModelScope.launch {
             // chatting typing indicator 를 보기 위해 딜레이 걸어둠
             kotlinx.coroutines.delay(1000)
@@ -109,8 +133,13 @@ class ChattingViewModel(
                     uiState = uiState.copy(
                         messages = uiState.messages + aiResponse,
                         isLoading = false,
-                        error = null
+                        error = null,
                     )
+
+                    if (isMaxCountReached) {
+                        delay(2000)
+                        uiState = uiState.copy(isMaxCountReached = true)
+                    }
                 }
                 .onFailure { exception ->
                     uiState = uiState.copy(
@@ -118,6 +147,7 @@ class ChattingViewModel(
                         error = "메시지 전송에 실패했습니다: ${exception.message}"
                     )
                 }
+
         }
     }
 

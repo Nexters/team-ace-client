@@ -5,6 +5,7 @@ import com.nexters.emotia.core.data.chat.mapper.toDomain
 import com.nexters.emotia.domain.chat.ChattingRepository
 import com.nexters.emotia.domain.chat.entity.ChatMessage
 import com.nexters.emotia.domain.chat.entity.ChattingRoom
+import com.nexters.emotia.domain.chat.entity.Fairy
 
 class ChattingRepositoryImpl(
     private val remoteDataSource: ChattingRemoteDataSource
@@ -35,6 +36,20 @@ class ChattingRepositoryImpl(
             response.toDomain()
         }.onFailure { exception ->
             println("채팅 전송 실패: ${exception.message}")
+        }
+    }
+
+    override suspend fun getFairies(chatRoomId: String): Result<List<Fairy>> {
+        return runCatching {
+            val response = remoteDataSource.getFairies(chatRoomId)
+
+            if (!response.success) {
+                throw IllegalStateException("API 요청 실패: ${response.error}")
+            }
+
+            response.toDomain()
+        }.onFailure { exception ->
+            println("요정 정보 조회 실패: ${exception.message}")
         }
     }
 }

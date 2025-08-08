@@ -24,8 +24,8 @@ internal fun MainNavHost(
         )
 
         chattingScreen(
-            onNavigateToResult = {
-                navigator.navigateToResult()
+            onNavigateToResult = { chatRoomId ->
+                navigator.navigateToResult(chatRoomId)
             }
         )
 

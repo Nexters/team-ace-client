@@ -1,6 +1,7 @@
 package com.nexters.emotia.core.data.chat.datasource
 
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
+import com.nexters.emotia.network.dto.response.GetFairiesResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
 
 interface ChattingRemoteDataSource {
@@ -9,4 +10,5 @@ interface ChattingRemoteDataSource {
         roomId: Int,
         message: String
     ): SendChatResponse
+    suspend fun getFairies(chatRoomId: String): GetFairiesResponse
 }

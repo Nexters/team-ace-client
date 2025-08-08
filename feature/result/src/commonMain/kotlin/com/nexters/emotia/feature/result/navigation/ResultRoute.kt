@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ResultRoute : Route {
     @Serializable
-    data object ResultMain : ResultRoute
+    data class ResultMain(val chatRoomId: String) : ResultRoute
 }

@@ -12,7 +12,8 @@ androidx-lifecycle = "2.9.1"
 androidx-testExt = "1.2.1"
 composeMultiplatform = "1.8.2"
 google-service = "4.4.3"
-google-firebase-bom = "34.0.0"
+google-firebase-bom = "33.7.0"
+gitlive-firebase = "2.1.0"
 junit = "4.13.2"
 kotlin = "2.2.0"
 kotlinx-immutable = "0.4.0"
@@ -25,6 +26,7 @@ koin = "4.1.0"
 ktor = "3.2.2"
 slf4j = "2.0.7"
 slf4j-android = "1.7.36"
+desugar-jdk-libs = "2.1.5"
 
 # navigation
 androidx-navigation = "2.9.0-beta02"
@@ -90,6 +92,12 @@ compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin"
 
 # Google Services
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
+
+# GitLive Firebase
+gitlive-firebase-config = { group = "dev.gitlive", name = "firebase-config", version.ref = "gitlive-firebase" }
+gitlive-firebase-common = { group = "dev.gitlive", name = "firebase-common", version.ref = "gitlive-firebase" }
+
+desugar-jdk-libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar-jdk-libs" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
