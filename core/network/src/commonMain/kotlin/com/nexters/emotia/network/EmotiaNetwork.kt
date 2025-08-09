@@ -11,6 +11,8 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
@@ -50,6 +52,9 @@ class EmotiaNetwork {
     }
 
     suspend inline fun <reified T : Any> get(path: String): T = httpClient.get(path).body()
+
+    suspend inline fun <reified T : Any> post(path: String, body: Any): T = 
+        httpClient.post(path) { setBody(body) }.body()
 
 
     companion object Companion {
