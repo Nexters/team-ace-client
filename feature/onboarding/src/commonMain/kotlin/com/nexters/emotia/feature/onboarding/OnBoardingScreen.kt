@@ -14,18 +14,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.nexters.emotia.getPlatform
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun OnBoardingScreen(
-    viewModel: OnBoardingViewModel,
+    viewModel: OnBoardingViewModel = koinViewModel(),
     onNavigateToChatting: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
     LaunchedEffect(Unit) {
-        val deviceUuid = getPlatform().generateDeviceUuid()
+        val deviceUuid = "123123123123"
         println("[OnBoardingScreen] 화면 진입 - 자동 로그인 시작, UUID: $deviceUuid")
         viewModel.performAutoLogin(deviceUuid)
     }
@@ -58,7 +58,7 @@ fun OnBoardingScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 Button(onClick = {
-                    val deviceUuid = getPlatform().generateDeviceUuid()
+                    val deviceUuid = "123123123123"
                     viewModel.performAutoLogin(deviceUuid)
                 }) {
                     Text("다시 시도")

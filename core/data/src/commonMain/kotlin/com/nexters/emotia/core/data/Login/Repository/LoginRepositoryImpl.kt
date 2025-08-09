@@ -17,9 +17,9 @@ class LoginRepositoryImpl(
             val networkRequest = NetworkLoginRequest(username = userName)
             val response = loginDataSource.login(networkRequest)
             val entity = LoginEntity(
-                username = response.user?.name ?: "",
-                accessToken = response.accessToken ?: "",
-                refreshToken = response.refreshToken ?: ""
+                username = response.data?.username ?: "",
+                accessToken = response.data?.accessToken ?: "",
+                refreshToken = response.data?.refreshToken ?: ""
             )
             println("[LoginRepository] 로그인 성공 - username: ${entity.username}, accessToken: ${entity.accessToken.take(10)}...")
             Result.success(entity)
