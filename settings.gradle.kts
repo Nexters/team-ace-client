@@ -35,6 +35,7 @@ include(":core:designsystem")
 include(":core:model:fairybook")
 
 include(":core:data:chatting")
+include(":core:data:onboarding")
 
 include(":core:domain:chatting")
 
