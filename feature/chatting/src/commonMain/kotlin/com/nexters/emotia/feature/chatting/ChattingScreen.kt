@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,10 +18,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nexters.emotia.core.designsystem.component.ChatBubble
 import com.nexters.emotia.core.designsystem.component.TypingIndicator
 import com.nexters.emotia.core.designsystem.token.LocalEmotiaColors
@@ -34,13 +35,14 @@ fun ChattingScreen(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = koinViewModel()
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = LocalEmotiaColors.current
     val lazyListState = rememberLazyListState()
 
-    // 새 채팅 올때마다 스크롤
-    LaunchedEffect(viewModel.uiState.messages.size) {
-        if (viewModel.uiState.messages.isNotEmpty()) {
-            lazyListState.animateScrollToItem(viewModel.uiState.messages.size - 1)
+    // 새 채팅 올 때마다 스크롤
+    LaunchedEffect(uiState.messages.size) {
+        if (uiState.messages.isNotEmpty()) {
+            lazyListState.animateScrollToItem(uiState.messages.size - 1)
         }
     }
 
@@ -52,7 +54,7 @@ fun ChattingScreen(
             .imePadding() // 키보드 패딩
             .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
     ) {
-        if (viewModel.uiState.isLoading && viewModel.uiState.messages.isEmpty()) {
+        if (uiState.isLoading && uiState.messages.isEmpty()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -66,7 +68,7 @@ fun ChattingScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(viewModel.uiState.messages) { message ->
+                items(uiState.messages) { message ->
                     ChatBubble(
                         text = message.text,
                         type = message.type
@@ -74,7 +76,7 @@ fun ChattingScreen(
                 }
 
                 // 채팅 로딩 중
-                if (viewModel.uiState.isLoading && viewModel.uiState.messages.isNotEmpty()) {
+                if (uiState.isLoading && uiState.messages.isNotEmpty()) {
                     item {
                         Box(
                             modifier = Modifier
@@ -85,7 +87,6 @@ fun ChattingScreen(
                             TypingIndicator(
                                 modifier = Modifier
                                     .height(40.dp)
-                                    .width(48.dp)
                             )
                         }
                     }
@@ -94,11 +95,11 @@ fun ChattingScreen(
         }
 
         EmotiaChatTextField(
-            value = viewModel.uiState.currentInputText,
+            value = uiState.currentInputText,
             onValueChange = viewModel::onInputTextChanged,
             onSendClick = viewModel::onSendMessage,
             placeholder = "요정에게 지금 기분을 설명해보자",
-            enabled = !viewModel.uiState.isLoading && viewModel.uiState.error == null
+            enabled = !uiState.isLoading && uiState.error == null
         )
     }
 }
