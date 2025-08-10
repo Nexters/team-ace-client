@@ -36,6 +36,7 @@ include(":core:model:fairybook")
 
 include(":core:data:chatting")
 include(":core:data:onboarding")
+include(":core:data:result")
 
 include(":core:domain:chatting")
 
@@ -46,3 +47,4 @@ include(":feature:main")
 include(":feature:onboarding")
 include(":feature:chatting")
 include(":feature:result")
+
