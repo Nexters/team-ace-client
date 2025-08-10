@@ -2,7 +2,7 @@ package com.nexters.emotia.feature.chatting
 
 import androidx.lifecycle.ViewModel
 import com.nexters.emotia.core.designsystem.component.BubbleType
-import com.nexters.emotia.core.domain.chat.repsitory.ChattingRepository
+import com.nexters.emotia.core.domain.chatting.repsitory.ChattingRepository
 import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import com.nexters.emotia.feature.chatting.contract.ChattingState

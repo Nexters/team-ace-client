@@ -31,7 +31,7 @@ kotlin {
             implementation(projects.feature.main)
 
             implementation(projects.core.network)
-            implementation(projects.core.data.chat)
+            implementation(projects.core.data.chatting)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
