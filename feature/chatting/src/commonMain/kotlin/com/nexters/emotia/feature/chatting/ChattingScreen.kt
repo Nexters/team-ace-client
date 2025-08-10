@@ -53,6 +53,12 @@ fun ChattingScreen(
         }
     }
 
+    LaunchedEffect(uiState.messages.size) {
+        if (uiState.messages.isNotEmpty()) {
+            lazyListState.animateScrollToItem(uiState.messages.size - 1)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
