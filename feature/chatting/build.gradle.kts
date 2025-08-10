@@ -5,7 +5,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.domain)
+            implementation(projects.core.domain.chat)
             implementation(projects.core.designsystem)
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)

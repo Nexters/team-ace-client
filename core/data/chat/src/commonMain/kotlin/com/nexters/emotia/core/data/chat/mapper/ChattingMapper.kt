@@ -1,7 +1,7 @@
 package com.nexters.emotia.core.data.chat.mapper
 
-import com.nexters.emotia.domain.chat.entity.ChatMessage
-import com.nexters.emotia.domain.chat.entity.ChattingRoom
+import com.nexters.emotia.core.domain.chat.entity.ChatMessage
+import com.nexters.emotia.core.domain.chat.entity.ChattingRoom
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
 

@@ -17,9 +17,10 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.logging)
             implementation(libs.koin.core)
+
             implementation(projects.core.network)
-            implementation(projects.core.domain)
-            implementation(projects.core.model.fairybook)
+            implementation(projects.core.domain.chat)
+
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
