@@ -34,9 +34,9 @@ include(":composeApp")
 include(":core:designsystem")
 include(":core:model:fairybook")
 
-include(":core:data:chat")
+include(":core:data:chatting")
 
-include(":core:domain:chat")
+include(":core:domain:chatting")
 
 include(":core:network")
 include(":core:navigation")
