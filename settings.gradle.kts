@@ -33,7 +33,8 @@ include(":composeApp")
 
 include(":core:designsystem")
 include(":core:model:fairybook")
-include(":core:data")
+include(":core:data:chat")
+
 include(":core:domain")
 include(":core:network")
 include(":core:navigation")
@@ -42,4 +43,3 @@ include(":feature:main")
 include(":feature:onboarding")
 include(":feature:chatting")
 include(":feature:result")
-
