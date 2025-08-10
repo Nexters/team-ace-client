@@ -47,10 +47,9 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-        # - name: local.properties 설정
-        # 프로젝트의 local.properties 파일에 필요한 환경 변수를 설정합니다. 이후, 서버가 배포되면 주석 해제하여 사용합니다.
-        # run: |
-        #   echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
+      - name: local.properties 설정
+        run: |
+          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
 
       - name: 디버그 APK 빌드
         run: ./gradlew assembleDebug
