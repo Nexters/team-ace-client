@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nexters.emotia.core.designsystem.component.ChatBubble
 import com.nexters.emotia.core.designsystem.component.TypingIndicator
-import com.nexters.emotia.core.designsystem.token.LocalEmotiaColors
+import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
