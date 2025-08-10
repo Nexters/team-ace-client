@@ -39,6 +39,7 @@ include(":core:data:onboarding")
 include(":core:data:result")
 
 include(":core:domain:chatting")
+include(":core:domain:result")
 
 include(":core:network")
 include(":core:navigation")
