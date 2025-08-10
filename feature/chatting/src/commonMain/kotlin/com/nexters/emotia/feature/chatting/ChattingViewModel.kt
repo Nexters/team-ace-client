@@ -1,141 +1,128 @@
 package com.nexters.emotia.feature.chatting
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.nexters.emotia.core.designsystem.component.BubbleType
 import com.nexters.emotia.domain.chat.ChattingRepository
-import kotlinx.collections.immutable.PersistentList
+import com.nexters.emotia.feature.chatting.contract.ChattingIntent
+import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
+import com.nexters.emotia.feature.chatting.contract.ChattingState
+import com.nexters.emotia.feature.chatting.model.ChatMessage
+import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-
-data class ChatMessage(
-    val text: String,
-    val type: BubbleType,
-)
-
-data class EmotionOption(
-    val text: String,
-    val isSelected: Boolean = false
-)
-
-data class ChattingUiState(
-    val messages: PersistentList<ChatMessage> = persistentListOf(),
-    val currentInputText: String = "",
-    val emotionOptions: PersistentList<EmotionOption> = persistentListOf(),
-    val isTextFieldEnabled: Boolean = true,
-    val showEmotionChips: Boolean = false,
-    val isLoading: Boolean = false,
-    val roomId: Int? = null,
-    val error: String? = null
-)
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 
 class ChattingViewModel(
     private val chattingRepository: ChattingRepository
-) : ViewModel() {
+) : ContainerHost<ChattingState, ChattingSideEffect>, ViewModel() {
 
-    private val _uiState = MutableStateFlow(ChattingUiState())
-    val uiState: StateFlow<ChattingUiState> = _uiState.asStateFlow()
+    override val container = container<ChattingState, ChattingSideEffect>(
+        initialState = ChattingState()
+    )
 
     init {
-        createChatRoom()
+        handleIntent(ChattingIntent.CreateChatRoom)
     }
 
-    private fun createChatRoom() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
-
-            chattingRepository.createRoom("hyeseon-dev")
-                .onSuccess { chatRoom ->
-                    val firstMessage = ChatMessage(
-                        text = chatRoom.firstMessage,
-                        type = BubbleType.OTHER
-                    )
-
-                    _uiState.update {
-                        it.copy(
-                            roomId = chatRoom.roomId,
-                            messages = persistentListOf(firstMessage),
-                            isLoading = false,
-                            showEmotionChips = true,
-                            // TODO : emotion chip 구현 필요
-                            emotionOptions = persistentListOf()
-                        )
-                    }
-                }
-                .onFailure { exception ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = "채팅룸 생성에 실패했습니다: ${exception.message}"
-                        )
-                    }
-                }
+    fun handleIntent(intent: ChattingIntent) {
+        when (intent) {
+            is ChattingIntent.CreateChatRoom -> createChatRoom()
+            is ChattingIntent.InputTextChanged -> updateInputText(intent.text)
+            is ChattingIntent.SendMessage -> sendMessage()
+            is ChattingIntent.SelectEmotionOption -> selectEmotionOption(intent.option)
+            is ChattingIntent.ClearError -> clearError()
         }
     }
 
-    fun onInputTextChanged(text: String) {
-        _uiState.update { it.copy(currentInputText = text) }
+    private fun createChatRoom() = intent {
+        reduce { state.copy(isLoading = true, error = null) }
+
+        chattingRepository.createRoom("hyeseon-dev")
+            .onSuccess { chatRoom ->
+                val firstMessage = ChatMessage(
+                    text = chatRoom.firstMessage,
+                    type = BubbleType.OTHER
+                )
+
+                reduce {
+                    state.copy(
+                        roomId = chatRoom.roomId,
+                        messages = persistentListOf(firstMessage),
+                        isLoading = false,
+                        showEmotionChips = true,
+                        emotionOptions = persistentListOf()
+                    )
+                }
+            }
+            .onFailure { exception ->
+                val errorMessage = "채팅룸 생성에 실패했습니다: ${exception.message}"
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        error = errorMessage
+                    )
+                }
+                postSideEffect(ChattingSideEffect.ShowError(errorMessage))
+            }
     }
 
-    fun onSendMessage() {
-        val currentUiState = _uiState.value
-        if (currentUiState.currentInputText.isBlank() || currentUiState.roomId == null) return
+    private fun updateInputText(text: String) = intent {
+        reduce { state.copy(currentInputText = text) }
+    }
+
+    private fun sendMessage() = intent {
+        val currentState = state
+
+        if (currentState.currentInputText.isBlank() || currentState.roomId == null) return@intent
 
         val userMessage = ChatMessage(
-            text = currentUiState.currentInputText,
+            text = currentState.currentInputText,
             type = BubbleType.MINE
         )
 
-        val messageToSend = currentUiState.currentInputText
-        val roomId = currentUiState.roomId
+        val messageToSend = currentState.currentInputText
+        val roomId = currentState.roomId
 
-        _uiState.update {
-            it.copy(
-                messages = it.messages.add(userMessage),
+        reduce {
+            state.copy(
+                messages = state.messages.add(userMessage),
                 currentInputText = "",
                 isLoading = true
             )
         }
 
-        sendChatMessage(roomId, messageToSend)
-    }
+        chattingRepository.sendChat(roomId, messageToSend)
+            .onSuccess { chatResponse ->
+                val aiResponse = ChatMessage(
+                    text = chatResponse.message,
+                    type = BubbleType.OTHER
+                )
 
-
-    private fun sendChatMessage(roomId: Int?, message: String) {
-        if (roomId == null) return
-
-        viewModelScope.launch {
-            delay(1000)
-
-            chattingRepository.sendChat(roomId, message)
-                .onSuccess { chatResponse ->
-                    val aiResponse = ChatMessage(
-                        text = chatResponse.message,
-                        type = BubbleType.OTHER
+                reduce {
+                    state.copy(
+                        messages = state.messages.add(aiResponse),
+                        isLoading = false,
+                        error = null
                     )
-
-                    _uiState.update {
-                        it.copy(
-                            messages = it.messages.add(aiResponse),
-                            isLoading = false,
-                            error = null
-                        )
-                    }
                 }
-                .onFailure { exception ->
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = "메시지 전송에 실패했습니다: ${exception.message}"
-                        )
-                    }
+            }
+            .onFailure { exception ->
+                val errorMessage = "메시지 전송에 실패했습니다: ${exception.message}"
+                reduce {
+                    state.copy(
+                        isLoading = false,
+                        error = errorMessage
+                    )
                 }
-        }
+                postSideEffect(ChattingSideEffect.ShowError(errorMessage))
+            }
     }
 
+    private fun selectEmotionOption(option: EmotionOption) = intent {
+        // TODO : 감정 옵션 칩 API 배포 후 구현
+    }
+
+    private fun clearError() = intent {
+        reduce { state.copy(error = null) }
+    }
 }
