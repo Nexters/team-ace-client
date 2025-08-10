@@ -25,6 +25,7 @@ koin = "4.1.0"
 ktor = "3.2.2"
 slf4j = "2.0.7"
 slf4j-android = "1.7.36"
+orbit = "10.0.0"
 
 # navigation
 androidx-navigation = "2.9.0-beta02"
@@ -90,6 +91,11 @@ compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin"
 
 # Google Services
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
+
+# Orbit-MVI
+orbit-core = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbit" }
+orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
+orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

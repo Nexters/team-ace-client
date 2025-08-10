@@ -32,6 +32,10 @@ class EmotiaFeaturePlugin : Plugin<Project> {
                         implementation(libs.library("koin-core"))
                         implementation(libs.library("koin-compose"))
                         implementation(libs.library("koin-compose-viewmodel"))
+                        implementation(libs.library("orbit-core"))
+                        implementation(libs.library("orbit-compose"))
+                        implementation(libs.library("orbit-viewmodel"))
+
                     }
                 }
             }
