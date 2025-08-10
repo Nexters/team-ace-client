@@ -23,11 +23,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nexters.emotia.core.designsystem.component.ChatBubble
 import com.nexters.emotia.core.designsystem.component.TypingIndicator
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
+import com.nexters.emotia.feature.chatting.contract.ChattingIntent
+import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import org.koin.compose.viewmodel.koinViewModel
+import org.orbitmvi.orbit.compose.collectAsState
+
 
 @Composable
 fun ChattingScreen(
@@ -35,14 +38,18 @@ fun ChattingScreen(
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.collectAsState()
     val colors = LocalEmotiaColors.current
     val lazyListState = rememberLazyListState()
 
-    // 새 채팅 올 때마다 스크롤
-    LaunchedEffect(uiState.messages.size) {
-        if (uiState.messages.isNotEmpty()) {
-            lazyListState.animateScrollToItem(uiState.messages.size - 1)
+    // SideEffect 처리
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is ChattingSideEffect.ShowError -> {
+                    // TODO : 에러 디자인시스템 요청
+                }
+            }
         }
     }
 
@@ -96,10 +103,15 @@ fun ChattingScreen(
 
         EmotiaChatTextField(
             value = uiState.currentInputText,
-            onValueChange = viewModel::onInputTextChanged,
-            onSendClick = viewModel::onSendMessage,
+            onValueChange = { text ->
+                viewModel.handleIntent(ChattingIntent.InputTextChanged(text))
+            },
+            onSendClick = {
+                viewModel.handleIntent(ChattingIntent.SendMessage)
+            },
             placeholder = "요정에게 지금 기분을 설명해보자",
             enabled = !uiState.isLoading && uiState.error == null
         )
     }
 }
+
