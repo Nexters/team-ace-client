@@ -73,6 +73,8 @@ class ChattingViewModel(
     private fun sendMessage() = intent {
         val currentState = state
 
+        // TODO : 메시지 전송 중 send 연타 고려
+        // TODO : 키보드 올렸을때 마지막 채팅이 위로 보이도록 개선
         if (currentState.currentInputText.isBlank() || currentState.roomId == null) return@intent
 
         val userMessage = ChatMessage(
