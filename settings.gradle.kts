@@ -40,6 +40,7 @@ include(":core:data:result")
 
 include(":core:domain:chatting")
 include(":core:domain:result")
+include(":core:domain:onboarding")
 
 include(":core:network")
 include(":core:navigation")
@@ -48,4 +49,5 @@ include(":feature:main")
 include(":feature:onboarding")
 include(":feature:chatting")
 include(":feature:result")
+
 

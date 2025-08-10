@@ -19,7 +19,7 @@ kotlin {
             implementation(libs.koin.core)
 
             implementation(projects.core.network)
-            //implementation(projects.core.domain.chatting)
+            implementation(projects.core.domain.result)
 
         }
         iosMain.dependencies {
