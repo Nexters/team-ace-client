@@ -1,12 +1,16 @@
 package com.nexters.emotia.feature.chatting
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nexters.emotia.core.designsystem.component.BubbleType
 import com.nexters.emotia.domain.chat.ChattingRepository
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class ChatMessage(
@@ -20,9 +24,9 @@ data class EmotionOption(
 )
 
 data class ChattingUiState(
-    val messages: List<ChatMessage> = emptyList(),
+    val messages: PersistentList<ChatMessage> = persistentListOf(),
     val currentInputText: String = "",
-    val emotionOptions: List<EmotionOption> = emptyList(),
+    val emotionOptions: PersistentList<EmotionOption> = persistentListOf(),
     val isTextFieldEnabled: Boolean = true,
     val showEmotionChips: Boolean = false,
     val isLoading: Boolean = false,
@@ -34,8 +38,8 @@ class ChattingViewModel(
     private val chattingRepository: ChattingRepository
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(ChattingUiState())
-        private set
+    private val _uiState = MutableStateFlow(ChattingUiState())
+    val uiState: StateFlow<ChattingUiState> = _uiState.asStateFlow()
 
     init {
         createChatRoom()
@@ -43,61 +47,70 @@ class ChattingViewModel(
 
     private fun createChatRoom() {
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true, error = null)
+            _uiState.update { it.copy(isLoading = true, error = null) }
 
-            chattingRepository.createRoom("유저네임하드코딩해야됨각자")
+            chattingRepository.createRoom("hyeseon-dev")
                 .onSuccess { chatRoom ->
                     val firstMessage = ChatMessage(
                         text = chatRoom.firstMessage,
                         type = BubbleType.OTHER
                     )
 
-                    uiState = uiState.copy(
-                        roomId = chatRoom.roomId,
-                        messages = listOf(firstMessage),
-                        isLoading = false,
-                        showEmotionChips = true,
-                        emotionOptions = getDefaultEmotions()
-                    )
+                    _uiState.update {
+                        it.copy(
+                            roomId = chatRoom.roomId,
+                            messages = persistentListOf(firstMessage),
+                            isLoading = false,
+                            showEmotionChips = true,
+                            // TODO : emotion chip 구현 필요
+                            emotionOptions = persistentListOf()
+                        )
+                    }
                 }
                 .onFailure { exception ->
-                    uiState = uiState.copy(
-                        isLoading = false,
-                        error = "채팅룸 생성에 실패했습니다: ${exception.message}"
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = "채팅룸 생성에 실패했습니다: ${exception.message}"
+                        )
+                    }
                 }
         }
     }
 
     fun onInputTextChanged(text: String) {
-        uiState = uiState.copy(currentInputText = text)
+        _uiState.update { it.copy(currentInputText = text) }
     }
 
     fun onSendMessage() {
-        if (uiState.currentInputText.isBlank() || uiState.roomId == null) return
+        val currentUiState = _uiState.value
+        if (currentUiState.currentInputText.isBlank() || currentUiState.roomId == null) return
 
         val userMessage = ChatMessage(
-            text = uiState.currentInputText,
+            text = currentUiState.currentInputText,
             type = BubbleType.MINE
         )
 
-        val messageToSend = uiState.currentInputText
-        val roomId = uiState.roomId!!
+        val messageToSend = currentUiState.currentInputText
+        val roomId = currentUiState.roomId
 
-        uiState = uiState.copy(
-            messages = uiState.messages + userMessage,
-            currentInputText = "",
-            isLoading = true
-        )
+        _uiState.update {
+            it.copy(
+                messages = it.messages.add(userMessage),
+                currentInputText = "",
+                isLoading = true
+            )
+        }
 
         sendChatMessage(roomId, messageToSend)
     }
 
 
-    private fun sendChatMessage(roomId: Int, message: String) {
+    private fun sendChatMessage(roomId: Int?, message: String) {
+        if (roomId == null) return
+
         viewModelScope.launch {
-            // chatting typing indicator 를 보기 위해 딜레이 걸어둠
-            kotlinx.coroutines.delay(1000)
+            delay(1000)
 
             chattingRepository.sendChat(roomId, message)
                 .onSuccess { chatResponse ->
@@ -106,24 +119,23 @@ class ChattingViewModel(
                         type = BubbleType.OTHER
                     )
 
-                    uiState = uiState.copy(
-                        messages = uiState.messages + aiResponse,
-                        isLoading = false,
-                        error = null
-                    )
+                    _uiState.update {
+                        it.copy(
+                            messages = it.messages.add(aiResponse),
+                            isLoading = false,
+                            error = null
+                        )
+                    }
                 }
                 .onFailure { exception ->
-                    uiState = uiState.copy(
-                        isLoading = false,
-                        error = "메시지 전송에 실패했습니다: ${exception.message}"
-                    )
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            error = "메시지 전송에 실패했습니다: ${exception.message}"
+                        )
+                    }
                 }
         }
     }
 
-    private fun getDefaultEmotions() = listOf(
-        EmotionOption(text = "기쁨"),
-        EmotionOption(text = "슬픔"),
-        EmotionOption(text = "화남"),
-    )
 }
