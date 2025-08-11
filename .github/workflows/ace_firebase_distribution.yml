@@ -35,7 +35,7 @@ jobs:
 
       - name: local.properties 설정 (Android용)
         run: |
-          echo "BASE_URL=\"${{ secrets.BASE_URL }}\"" >> local.properties
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
 
       - name: NetworkConfig.local.kt 설정 (iOS용)
         run: |
