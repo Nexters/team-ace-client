@@ -10,6 +10,9 @@ build/
 local.properties
 **/NetworkConfig.local.kt
 
+# Configuration files
+composeApp/src/main/res/xml/network_security_config.xml
+
 # Log/OS Files
 *.log
 
