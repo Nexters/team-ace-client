@@ -47,9 +47,20 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-      - name: local.properties 설정
+      - name: local.properties 설정 (Android용)
         run: |
-          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
+          echo "BASE_URL=\"${{ secrets.BASE_URL }}\"" >> local.properties
+
+      - name: NetworkConfig.local.kt 설정 (iOS용)
+        run: |
+          mkdir -p core/network/src/iosMain/kotlin/com/nexters/emotia/network/
+          cat > core/network/src/iosMain/kotlin/com/nexters/emotia/network/NetworkConfig.local.kt << EOF
+          package com.nexters.emotia.network
+          
+          internal object NetworkConfigLocal {
+              const val BASE_URL = "${{ secrets.BASE_URL }}"
+          }
+          EOF
 
       - name: 디버그 APK 빌드
         run: ./gradlew assembleDebug
