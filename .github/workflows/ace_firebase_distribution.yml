@@ -33,9 +33,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-#      - name: local.properties 설정
-#        run: |
-#          echo "base.url=\"${{ secrets.BASE_URL }}\"" >> local.properties
+      - name: local.properties 설정 (Android용)
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
+
+      - name: NetworkConfig.local.kt 설정 (iOS용)
+        run: |
+          mkdir -p core/network/src/iosMain/kotlin/com/nexters/emotia/network/
+          cat > core/network/src/iosMain/kotlin/com/nexters/emotia/network/NetworkConfig.local.kt << EOF
+          package com.nexters.emotia.network
+          
+          internal object NetworkConfigLocal {
+              const val BASE_URL = "${{ secrets.BASE_URL }}"
+          }
+          EOF
+
+      - name: network_security_config.xml 설정
+        run: |
+          BASE_DOMAIN=$(echo "${{ secrets.BASE_URL }}" | sed 's/:[0-9]*$//')
+          cat > composeApp/src/main/res/xml/network_security_config.xml << EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <network-security-config>
+            <domain-config cleartextTrafficPermitted="true">
+              <domain includeSubdomains="true">$BASE_DOMAIN</domain>
+            </domain-config>
+          </network-security-config>
+          EOF
 
       - name: google-services.json 설정
         # Firebase 서비스에 필요한 google-services.json 파일을 Secrets에서 가져와 복원합니다.

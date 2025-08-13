@@ -29,9 +29,10 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.designsystem)
             implementation(projects.feature.main)
-            implementation(projects.core.data)
-            implementation(projects.core.domain)
+
             implementation(projects.core.network)
+            implementation(projects.core.data.chatting)
+
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.slf4j.api)

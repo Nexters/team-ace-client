@@ -16,7 +16,7 @@
 
     <!-- 여기에 IP 추가 (일부 기기/버전에서 무시될 수 있음) -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain>223.130.157.12</domain>
+        <domain></domain>
     </domain-config>
 
     <!-- ip-api.com -->

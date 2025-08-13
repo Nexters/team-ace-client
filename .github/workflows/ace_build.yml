@@ -47,10 +47,32 @@ jobs:
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
-        # - name: local.properties 설정
-        # 프로젝트의 local.properties 파일에 필요한 환경 변수를 설정합니다. 이후, 서버가 배포되면 주석 해제하여 사용합니다.
-        # run: |
-        #   echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
+      - name: local.properties 설정 (Android용)
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" >> local.properties
+
+      - name: NetworkConfig.local.kt 설정 (iOS용)
+        run: |
+          mkdir -p core/network/src/iosMain/kotlin/com/nexters/emotia/network/
+          cat > core/network/src/iosMain/kotlin/com/nexters/emotia/network/NetworkConfig.local.kt << EOF
+          package com.nexters.emotia.network
+          
+          internal object NetworkConfigLocal {
+              const val BASE_URL = "${{ secrets.BASE_URL }}"
+          }
+          EOF
+
+      - name: network_security_config.xml 설정
+        run: |
+          BASE_DOMAIN=$(echo "${{ secrets.BASE_URL }}" | sed 's/:[0-9]*$//')
+          cat > composeApp/src/main/res/xml/network_security_config.xml << EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <network-security-config>
+            <domain-config cleartextTrafficPermitted="true">
+              <domain includeSubdomains="true">$BASE_DOMAIN</domain>
+            </domain-config>
+          </network-security-config>
+          EOF
 
       - name: 디버그 APK 빌드
         run: ./gradlew assembleDebug

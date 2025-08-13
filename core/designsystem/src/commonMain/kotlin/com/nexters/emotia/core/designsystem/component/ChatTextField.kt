@@ -20,7 +20,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
-import com.nexters.emotia.core.designsystem.token.LocalEmotiaColors
+import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.ic_chatting_send_default
 import emotia.core.designsystem.generated.resources.ic_chatting_send_disabled
@@ -39,7 +39,7 @@ internal enum class ChatTextFieldState {
 internal fun getTextFieldState(
     enabled: Boolean,
     isFocused: Boolean,
-    hasText: Boolean
+    hasText: Boolean,
 ): ChatTextFieldState {
     return when {
         !enabled -> ChatTextFieldState.DISABLED
@@ -49,7 +49,6 @@ internal fun getTextFieldState(
         else -> ChatTextFieldState.FOCUSED
     }
 }
-
 
 @Composable
 internal fun ChatTextFieldState.getBorderColor(): Color {
@@ -97,7 +96,7 @@ fun EmotiaChatTextField(
     onSendClick: () -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String = "",
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val colors = LocalEmotiaColors.current

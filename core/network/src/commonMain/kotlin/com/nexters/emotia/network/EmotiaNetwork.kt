@@ -11,9 +11,11 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -53,13 +55,29 @@ class EmotiaNetwork {
 
     suspend inline fun <reified T : Any> get(path: String): T = httpClient.get(path).body()
 
-    suspend inline fun <reified T : Any> post(path: String, body: Any): T = 
+    /*
+       * TODO : AUTH 작업 시 토큰 헤더를 위한 interceptor 필요
+     */
+    suspend inline fun <reified T : Any, reified R : Any> post(
+        path: String,
+        body: R,
+        token: String? = null
+    ): T = httpClient.post(path) {
+        setBody(body)
+        token?.let {
+            header(HttpHeaders.Authorization, "Bearer $it")
+        }
+    }.body()
+
+    suspend inline fun <reified T : Any> post(path: String, body: Any): T =
         httpClient.post(path) { setBody(body) }.body()
 
 
     companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L
+        const val TEST_TOKEN =
+            ""
         // 우리 서버 나오고 수정 필요
-        private const val BASE_URL = "223.130.157.12:8080"
+        private const val BASE_URL = ""
     }
 }
