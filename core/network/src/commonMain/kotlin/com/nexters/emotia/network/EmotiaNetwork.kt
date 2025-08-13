@@ -60,6 +60,6 @@ class EmotiaNetwork {
     companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L
         // 우리 서버 나오고 수정 필요
-        private const val BASE_URL = "www.naver.com"
+        private const val BASE_URL = ""
     }
 }
