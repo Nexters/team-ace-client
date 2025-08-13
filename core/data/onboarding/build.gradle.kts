@@ -20,7 +20,6 @@ kotlin {
 
             implementation(projects.core.network)
             implementation(projects.core.domain.onboarding)
-
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
