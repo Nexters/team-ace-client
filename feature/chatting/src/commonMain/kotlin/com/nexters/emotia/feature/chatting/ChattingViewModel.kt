@@ -10,6 +10,7 @@ import com.nexters.emotia.feature.chatting.model.ChatMessage
 import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.persistentListOf
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 
 class ChattingViewModel(
     private val chattingRepository: ChattingRepository

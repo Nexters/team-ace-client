@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import org.koin.compose.viewmodel.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 
 @Composable
@@ -42,12 +44,10 @@ fun ChattingScreen(
     val lazyListState = rememberLazyListState()
 
     // SideEffect 처리
-    LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when (sideEffect) {
-                is ChattingSideEffect.ShowError -> {
-                    // TODO : 에러 디자인시스템 요청
-                }
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is ChattingSideEffect.ShowError -> {
+                // TODO : 에러 디자인시스템 요청
             }
         }
     }
