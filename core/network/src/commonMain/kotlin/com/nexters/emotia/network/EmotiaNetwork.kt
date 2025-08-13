@@ -78,6 +78,6 @@ class EmotiaNetwork {
         const val TEST_TOKEN =
             ""
         // 우리 서버 나오고 수정 필요
-        private const val BASE_URL = ""
+        private const val BASE_URL = "www.naver.com"
     }
 }
