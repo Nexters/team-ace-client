@@ -25,9 +25,13 @@ koin = "4.1.0"
 ktor = "3.2.2"
 slf4j = "2.0.7"
 slf4j-android = "1.7.36"
+orbit = "10.0.0"
 
 # navigation
 androidx-navigation = "2.9.0-beta02"
+kotlinStdlib = "2.2.0"
+runner = "1.7.0"
+core = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -91,6 +95,14 @@ compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin"
 # Google Services
 google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google-firebase-bom" }
 
+# Orbit-MVI
+orbit-core = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbit" }
+orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
+orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -106,6 +118,7 @@ emotia-kotlin-multiplatform = { id = "emotia.kotlin.multiplatform", version = "u
 emotia-compose-multiplatform = { id = "emotia.compose.multiplatform", version = "unspecified" }
 emotia-feature = { id = "emotia.feature", version = "unspecified" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 
 [bundles]
 coil = [
