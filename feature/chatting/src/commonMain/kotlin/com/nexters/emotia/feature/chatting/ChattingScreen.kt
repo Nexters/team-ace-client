@@ -15,10 +15,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -43,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -74,9 +77,21 @@ fun ChattingScreen(
     val uiState by viewModel.collectAsState()
     val colors = LocalEmotiaColors.current
     val lazyListState = rememberLazyListState()
+    val density = LocalDensity.current
+
+    var isKeyboardVisible by remember { mutableStateOf(false) }
+    val imeHeight = WindowInsets.ime.getBottom(density)
+
+    LaunchedEffect(imeHeight) {
+        val wasVisible = isKeyboardVisible
+        val nowVisible = imeHeight > 0
+
+        if (wasVisible != nowVisible) {
+            isKeyboardVisible = nowVisible
+        }
+    }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val density = LocalDensity.current
 
     var isSpotlightAnimating by remember { mutableStateOf(false) }
     var animationPhase by remember { mutableStateOf(0) }
@@ -128,6 +143,7 @@ fun ChattingScreen(
         }
     }
 
+    // 새 메시지 추가 시 스크롤
     LaunchedEffect(uiState.messages.size, uiState.showFairyPager) {
         if (uiState.messages.isNotEmpty()) {
             val lastIndex = if (uiState.showFairyPager) {
@@ -143,6 +159,13 @@ fun ChattingScreen(
         if (uiState.showFairyPager) {
             keyboardController?.hide()
             focusManager.clearFocus()
+        }
+    }
+
+    // 키보드 상태 변화 시 스크롤 처리 (키보드 올라갈 때만)
+    LaunchedEffect(isKeyboardVisible) {
+        if (uiState.messages.isNotEmpty() && isKeyboardVisible) {
+            lazyListState.animateScrollToItem(uiState.messages.size - 1)
         }
     }
 
@@ -165,7 +188,15 @@ fun ChattingScreen(
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(vertical = 8.dp),
+                contentPadding = PaddingValues(
+                    top = 8.dp,
+                    bottom = if (isKeyboardVisible) {
+                        // 키보드가 올라왔을 때 키보드 높이만큼 bottom padding 추가
+                        with(density) { imeHeight.toDp() / 2 }
+                    } else {
+                        8.dp
+                    }
+                ),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(
