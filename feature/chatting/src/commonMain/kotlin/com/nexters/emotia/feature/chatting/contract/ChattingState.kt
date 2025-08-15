@@ -1,5 +1,6 @@
 package com.nexters.emotia.feature.chatting.contract
 
+import com.nexters.emotia.core.domain.chatting.entity.Fairy
 import com.nexters.emotia.feature.chatting.model.ChatMessage
 import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.PersistentList
@@ -13,5 +14,8 @@ data class ChattingState(
     val showEmotionChips: Boolean = false,
     val isLoading: Boolean = false,
     val roomId: Int? = null,
-    val error: String? = null
+    val error: String? = null,
+    val fairies: PersistentList<Fairy> = persistentListOf(),
+    val showFairyPager: Boolean = false,
+    val selectedFairyIndex: Int = 1
 )

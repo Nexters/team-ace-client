@@ -26,3 +26,12 @@ fun EmotiaTheme(
         content = content,
     )
 }
+
+object EmotiaTheme {
+    val colors: EmotiaColors
+        @Composable get() = LocalEmotiaColors.current
+
+    val typography: EmotiaTypography
+        @Composable get() = LocalEmotiaTypography.current
+}
+

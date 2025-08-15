@@ -40,21 +40,35 @@ fun FairyCard(
     name: String,
     image: String,
     emotion: String,
+    isSelected: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(12.dp)
     val innerShape = RoundedCornerShape(6.dp)
 
-    val borderBrush = Brush.verticalGradient(
-        colors = listOf(colors.primaryLight, colors.primaryDark)
-    )
     val cardBackground = colors.transparencyBlack
     val panelBackground = Color(0xFF161821)
 
     Box(
         modifier = modifier
             .shadow(elevation = 10.dp, shape = shape)
-            .border(width = 5.dp, brush = borderBrush, shape = shape)
+            .then(
+                if (isSelected) {
+                    Modifier.border(
+                        width = 5.dp,
+                        brush = Brush.verticalGradient(
+                            colors = listOf(colors.primaryLight, colors.primaryDark)
+                        ),
+                        shape = shape
+                    )
+                } else {
+                    Modifier.border(
+                        width = 5.dp,
+                        color = cardBackground,
+                        shape = shape
+                    )
+                }
+            )
             .clip(shape)
             .background(cardBackground)
             .padding(12.dp)
@@ -77,7 +91,7 @@ fun FairyCard(
                         .crossfade(true)
                         .build(),
                     contentDescription = "$name image",
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Inside,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(140.dp)

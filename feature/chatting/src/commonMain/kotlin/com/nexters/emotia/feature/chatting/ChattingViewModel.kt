@@ -10,6 +10,7 @@ import com.nexters.emotia.feature.chatting.model.ChatMessage
 import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
@@ -37,6 +38,8 @@ class ChattingViewModel(
             is ChattingIntent.SendMessage -> sendMessage()
             is ChattingIntent.SelectEmotionOption -> selectEmotionOption(intent.option)
             is ChattingIntent.ClearError -> clearError()
+            is ChattingIntent.LoadFairies -> loadFairies()
+            is ChattingIntent.SelectFairy -> selectFairy(intent.index)
         }
     }
 
@@ -120,6 +123,11 @@ class ChattingViewModel(
                         error = null
                     )
                 }
+
+                // 최대 채팅 크기 도달 시 요정 정보 로드
+                if (currentUserMessageCount >= MAX_USER_MESSAGE_COUNT) {
+                    handleIntent(ChattingIntent.LoadFairies)
+                }
             }
             .onFailure { exception ->
                 val errorMessage = "메시지 전송에 실패했습니다: ${exception.message}"
@@ -139,6 +147,34 @@ class ChattingViewModel(
 
     private fun clearError() = intent {
         reduce { state.copy(error = null) }
+    }
+
+    private fun loadFairies() = intent {
+        val currentState = state
+        if (currentState.roomId == null) return@intent
+
+        chattingRepository.getFairies(currentState.roomId.toString())
+            .onSuccess { fairies ->
+                val initialIndex = if (fairies.size > 1) 1 else 0
+                reduce {
+                    state.copy(
+                        fairies = fairies.toPersistentList(),
+                        showFairyPager = true,
+                        selectedFairyIndex = initialIndex
+                    )
+                }
+            }
+            .onFailure { exception ->
+                val errorMessage = "요정 정보를 불러오는데 실패했습니다: ${exception.message}"
+                reduce {
+                    state.copy(error = errorMessage)
+                }
+                postSideEffect(ChattingSideEffect.ShowError(errorMessage))
+            }
+    }
+
+    private fun selectFairy(index: Int) = intent {
+        reduce { state.copy(selectedFairyIndex = index) }
     }
 
     private fun getUserMessageCount(messages: PersistentList<ChatMessage>): Int {

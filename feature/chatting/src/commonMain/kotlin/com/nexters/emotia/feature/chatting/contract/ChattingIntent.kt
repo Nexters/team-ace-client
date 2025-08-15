@@ -9,4 +9,6 @@ sealed interface ChattingIntent {
     data object SendMessage : ChattingIntent
     data class SelectEmotionOption(val option: EmotionOption) : ChattingIntent
     data object ClearError : ChattingIntent
+    data object LoadFairies : ChattingIntent
+    data class SelectFairy(val index: Int) : ChattingIntent
 }
