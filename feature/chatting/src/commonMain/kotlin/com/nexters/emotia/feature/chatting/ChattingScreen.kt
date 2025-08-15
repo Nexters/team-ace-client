@@ -146,6 +146,52 @@ fun ChattingScreen(
         }
     }
 
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .padding(16.dp)
+            .imePadding() // 키보드 패딩
+            .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
+    ) {
+        if (uiState.isLoading && uiState.messages.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = colors.primaryLight)
+            }
+        } else {
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    items = uiState.messages,
+                    key = { message -> message.timestamp }
+                ) { message ->
+                    ChatBubble(
+                        text = message.text,
+                        type = message.type,
+                        messageId = message.timestamp.toString()
+                    )
+                }
+
+                // 채팅 로딩 중
+                if (uiState.isLoading && uiState.messages.isNotEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(start = 16.dp, bottom = 4.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            TypingIndicator(
+                                modifier = Modifier
+                                    .height(40.dp)
+                            )
     Box(
         modifier = modifier.fillMaxSize()
     ) {
