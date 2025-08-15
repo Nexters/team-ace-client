@@ -6,12 +6,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import kotlinx.coroutines.delay
+
+// 전역 애니메이션 상태 관리
+object TypewriterAnimationManager {
+    private val completedAnimations = mutableSetOf<String>()
+
+    fun isAnimationCompleted(messageId: String): Boolean {
+        return completedAnimations.contains(messageId)
+    }
+
+    fun markAnimationCompleted(messageId: String) {
+        completedAnimations.add(messageId)
+    }
+
+}
 
 @Composable
 fun TypewriterText(
@@ -20,16 +33,22 @@ fun TypewriterText(
     textStyle: TextStyle = TextStyle.Default,
     textColor: Color = Color.Unspecified,
     typingDelayMs: Long = 50L,
+    messageId: String? = null,
 ) {
-    // 1. 애니메이션 완료 상태를 저장 : rememberSaveable을 사용하여 LazyColumn의 재활용 시에도 상태를 유지
-    var isAnimationFinished by rememberSaveable(text) { mutableStateOf(false) }
+    // messageId가 있으면 이를 key로 사용, 없으면 text를 key로 사용
+    val uniqueKey = messageId ?: text
 
-    // 2. 현재 표시할 글자 수를 기억 : text가 변경되면 초기화
-    var currentIndex by remember(text) { mutableStateOf(0) }
+    // 전역 상태에서 애니메이션 완료 여부 확인
+    val isGloballyCompleted = TypewriterAnimationManager.isAnimationCompleted(uniqueKey)
 
-    // 3. isAnimationFinished가 false일 때만 타자기 애니메이션 실행
-    LaunchedEffect(text, isAnimationFinished) {
-        if (isAnimationFinished) {
+    // 현재 표시할 글자 수 - 완료된 경우 전체 텍스트 표시
+    var currentIndex by remember(uniqueKey) {
+        mutableStateOf(if (isGloballyCompleted) text.length else 0)
+    }
+
+    // 전역적으로 완료되지 않은 경우에만 애니메이션 실행
+    LaunchedEffect(uniqueKey) {
+        if (isGloballyCompleted) {
             currentIndex = text.length
             return@LaunchedEffect
         }
@@ -40,8 +59,8 @@ fun TypewriterText(
             currentIndex++
         }
 
-        // 애니메이션 완료 후 상태를 true로 업데이트
-        isAnimationFinished = true
+        // 애니메이션 완료 후 전역 상태에 기록
+        TypewriterAnimationManager.markAnimationCompleted(uniqueKey)
     }
 
     Text(

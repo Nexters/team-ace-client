@@ -63,6 +63,7 @@ fun ChatBubbleText(
     textStyle: TextStyle,
     textColor: Color,
     modifier: Modifier = Modifier,
+    messageId: String? = null,
 ) {
     when (type) {
         // 상대방(AI)이 보낸 말풍선은 타이핑 애니메이션을 적용
@@ -73,7 +74,7 @@ fun ChatBubbleText(
                 textStyle = textStyle,
                 textColor = textColor,
                 typingDelayMs = 50L,
-                isEnabled = true
+                messageId = messageId
             )
         }
 
@@ -110,6 +111,7 @@ fun ChatBubble(
     text: String,
     type: BubbleType,
     modifier: Modifier = Modifier,
+    messageId: String? = null,
     cornerRadius: Dp = 8.dp,
     borderWidth: Dp = 1.dp,
     padding: Dp = 8.dp,
@@ -142,7 +144,8 @@ fun ChatBubble(
                 type = type,
                 textStyle = style.textStyle,
                 textColor = style.textColor,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
+                messageId = messageId
             )
         }
     }
