@@ -171,13 +171,15 @@ fun ChattingScreen(
                     contentPadding = PaddingValues(vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(uiState.messages) { message ->
+                    items(
+                        items = uiState.messages,
+                        key = { message -> message.timestamp }
+                    ) { message ->
                         ChatBubble(
                             text = message.text,
                             type = message.type
                         )
                     }
-
                     // 채팅 로딩 중
                     if (uiState.isLoading && uiState.messages.isNotEmpty()) {
                         item {

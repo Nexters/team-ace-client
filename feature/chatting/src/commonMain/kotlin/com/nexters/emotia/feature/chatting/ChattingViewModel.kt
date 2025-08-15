@@ -11,6 +11,7 @@ import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.datetime.Clock
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
@@ -50,7 +51,8 @@ class ChattingViewModel(
             .onSuccess { chatRoom ->
                 val firstMessage = ChatMessage(
                     text = chatRoom.firstMessage,
-                    type = BubbleType.OTHER
+                    type = BubbleType.OTHER,
+                    timestamp = Clock.System.now().toEpochMilliseconds()
                 )
 
                 reduce {
@@ -88,7 +90,8 @@ class ChattingViewModel(
 
         val userMessage = ChatMessage(
             text = currentState.currentInputText,
-            type = BubbleType.MINE
+            type = BubbleType.MINE,
+            timestamp = Clock.System.now().toEpochMilliseconds()
         )
 
         val messageToSend = currentState.currentInputText
@@ -112,8 +115,9 @@ class ChattingViewModel(
                 }
 
                 val aiResponse = ChatMessage(
-                    text = aiResponseText,
-                    type = BubbleType.OTHER
+                    text = chatResponse.message,
+                    type = BubbleType.OTHER,
+                    timestamp = Clock.System.now().toEpochMilliseconds()
                 )
 
                 reduce {
