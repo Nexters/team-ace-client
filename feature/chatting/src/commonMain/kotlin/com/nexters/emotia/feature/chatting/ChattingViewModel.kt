@@ -8,17 +8,23 @@ import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import com.nexters.emotia.feature.chatting.contract.ChattingState
 import com.nexters.emotia.feature.chatting.model.ChatMessage
 import com.nexters.emotia.feature.chatting.model.EmotionOption
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 
 class ChattingViewModel(
-    private val chattingRepository: ChattingRepository
+    private val chattingRepository: ChattingRepository,
 ) : ContainerHost<ChattingState, ChattingSideEffect>, ViewModel() {
 
     override val container = container<ChattingState, ChattingSideEffect>(
         initialState = ChattingState()
     )
+
+    companion object {
+        private const val MAX_USER_MESSAGE_COUNT = 3
+        private const val MAX_CHAT_REACHED_MESSAGE = "아무래도 네 감정은..."
+    }
 
     init {
         handleIntent(ChattingIntent.CreateChatRoom)
@@ -37,7 +43,7 @@ class ChattingViewModel(
     private fun createChatRoom() = intent {
         reduce { state.copy(isLoading = true, error = null) }
 
-        chattingRepository.createRoom("hyeseon-dev")
+        chattingRepository.createRoom("안드테스트")
             .onSuccess { chatRoom ->
                 val firstMessage = ChatMessage(
                     text = chatRoom.firstMessage,
@@ -95,8 +101,15 @@ class ChattingViewModel(
 
         chattingRepository.sendChat(roomId, messageToSend)
             .onSuccess { chatResponse ->
+                val currentUserMessageCount = getUserMessageCount(state.messages)
+                val aiResponseText = if (currentUserMessageCount >= MAX_USER_MESSAGE_COUNT) {
+                    MAX_CHAT_REACHED_MESSAGE
+                } else {
+                    chatResponse.message
+                }
+
                 val aiResponse = ChatMessage(
-                    text = chatResponse.message,
+                    text = aiResponseText,
                     type = BubbleType.OTHER
                 )
 
@@ -126,5 +139,9 @@ class ChattingViewModel(
 
     private fun clearError() = intent {
         reduce { state.copy(error = null) }
+    }
+
+    private fun getUserMessageCount(messages: PersistentList<ChatMessage>): Int {
+        return messages.count { it.type == BubbleType.MINE }
     }
 }
