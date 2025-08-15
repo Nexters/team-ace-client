@@ -23,7 +23,7 @@ import kotlinx.serialization.json.Json
 
 
 class EmotiaNetwork {
-    val httpClient = createHttpClient(BASE_URL)
+    val httpClient = createHttpClient(NetworkConfig.baseUrl)
 
     private fun createHttpClient(hostName: String): HttpClient = HttpClient {
         install(ContentNegotiation) {
@@ -77,7 +77,5 @@ class EmotiaNetwork {
         private const val TIMEOUT_MILLIS = 10_000L
         const val TEST_TOKEN =
             ""
-        // 우리 서버 나오고 수정 필요
-        private const val BASE_URL = ""
     }
 }

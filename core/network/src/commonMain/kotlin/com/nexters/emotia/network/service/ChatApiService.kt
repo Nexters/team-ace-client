@@ -9,7 +9,7 @@ import com.nexters.emotia.network.dto.response.SendChatResponse
 /*
     * TODO : 도메인 (chat, auth, onboarding) 에 따라 apiService를 분리할 지 논의 해보기
  */
-class ApiService(
+class ChatApiService(
     private val network: EmotiaNetwork,
 ) {
     suspend fun createChatRoom(
@@ -34,6 +34,5 @@ class ApiService(
             token = token
         )
     }
-
 
 }

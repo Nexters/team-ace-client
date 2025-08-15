@@ -1,9 +1,9 @@
-package com.nexters.emotia.core.data.Login.Repository
+package com.nexters.emotia.core.data.onboarding.repository
 
-import com.nexters.emotia.core.data.Login.LoginDataSource
-import com.nexters.emotia.domain.login.LoginRepository
-import com.nexters.emotia.domain.login.Entity.LoginEntity
-import com.nexters.emotia.domain.login.Entity.RegisterRequest as DomainRegisterRequest
+import com.nexters.emotia.core.data.onboarding.datasource.LoginDataSource
+import com.nexters.emotia.core.domain.onboarding.LoginRepository
+import com.nexters.emotia.core.domain.onboarding.entity.LoginEntity
+import com.nexters.emotia.core.domain.onboarding.RegisterRequest as DomainRegisterRequest
 import com.nexters.emotia.network.OnBoardingDTO.LoginRequest as NetworkLoginRequest
 import com.nexters.emotia.network.OnBoardingDTO.RegisterRequest as NetworkRegisterRequest
 

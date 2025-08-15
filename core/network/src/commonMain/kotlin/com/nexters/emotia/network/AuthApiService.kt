@@ -7,19 +7,19 @@ import com.nexters.emotia.network.OnBoardingDTO.RegisterRequest
 import com.nexters.emotia.network.OnBoardingDTO.RegisterResponse
 import com.nexters.emotia.network.OnBoardingDTO.TokenInfoResponse
 
-class ApiService(
+class AuthApiService(
     private val network: EmotiaNetwork,
 ) {
-    suspend fun login(repuest: LoginRequest): LoginResponse {
-        return network.post(LOGIN_ENDPOINT, repuest)
+    suspend fun login(request: LoginRequest): LoginResponse {
+        return network.post(LOGIN_ENDPOINT, request)
     }
 
-    suspend fun register(repuest: RegisterRequest): RegisterResponse {
-        return network.post(REGISTER_ENDPOINT, repuest)
+    suspend fun register(request: RegisterRequest): RegisterResponse {
+        return network.post(REGISTER_ENDPOINT, request)
     }
 
-    suspend fun refrash(repuest: RefreshTokenInfoRequest): TokenInfoResponse {
-        return network.post(REFRESH_TOKEN_ENDPOINT, repuest)
+    suspend fun refresh(request: RefreshTokenInfoRequest): TokenInfoResponse {
+        return network.post(REFRESH_TOKEN_ENDPOINT, request)
     }
 
     companion object {

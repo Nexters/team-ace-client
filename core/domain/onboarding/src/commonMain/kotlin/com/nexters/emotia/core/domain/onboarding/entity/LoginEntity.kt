@@ -1,4 +1,4 @@
-package com.nexters.emotia.domain.login.Entity
+package com.nexters.emotia.core.domain.onboarding.entity
 
 data class LoginEntity(
     val username: String,

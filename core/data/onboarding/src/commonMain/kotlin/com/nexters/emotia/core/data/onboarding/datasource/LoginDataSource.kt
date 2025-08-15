@@ -1,4 +1,4 @@
-package com.nexters.emotia.core.data.Login
+package com.nexters.emotia.core.data.onboarding.datasource
 
 import com.nexters.emotia.network.OnBoardingDTO.LoginRequest
 import com.nexters.emotia.network.OnBoardingDTO.LoginResponse

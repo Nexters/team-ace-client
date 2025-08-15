@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <base-config cleartextTrafficPermitted="false">
-        <trust-anchors>
-            <certificates src="system" />
-        </trust-anchors>
-    </base-config>
-
-    <!-- 에뮬레이터/로컬 -->
     <domain-config cleartextTrafficPermitted="true">
-        <domain>10.0.2.2</domain>
-        <domain>10.0.3.2</domain>
-        <domain>127.0.0.1</domain>
-        <domain>localhost</domain>
-    </domain-config>
-
-    <!-- 여기에 IP 추가 (일부 기기/버전에서 무시될 수 있음) -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain></domain>
-    </domain-config>
-
-    <!-- ip-api.com -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">ip-api.com</domain>
+        <domain includeSubdomains="true">{baseurl}</domain>
     </domain-config>
 </network-security-config>

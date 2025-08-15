@@ -1,8 +1,8 @@
-package com.nexters.emotia.domain.login.usecase
+package com.nexters.emotia.core.domain.onboarding.usecase
 
-import com.nexters.emotia.domain.login.Entity.LoginEntity
-import com.nexters.emotia.domain.login.Entity.RegisterRequest
-import com.nexters.emotia.domain.login.LoginRepository
+import com.nexters.emotia.core.domain.onboarding.LoginRepository
+import com.nexters.emotia.core.domain.onboarding.RegisterRequest
+import com.nexters.emotia.core.domain.onboarding.entity.LoginEntity
 
 class AutoLoginUseCase(
     private val loginRepository: LoginRepository

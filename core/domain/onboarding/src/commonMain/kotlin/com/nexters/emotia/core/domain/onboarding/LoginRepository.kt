@@ -1,7 +1,6 @@
-package com.nexters.emotia.domain.login
+package com.nexters.emotia.core.domain.onboarding
 
-import com.nexters.emotia.domain.login.Entity.LoginEntity
-import com.nexters.emotia.domain.login.Entity.RegisterRequest
+import com.nexters.emotia.core.domain.onboarding.entity.LoginEntity
 
 interface LoginRepository {
     suspend fun login(userName: String): Result<LoginEntity>

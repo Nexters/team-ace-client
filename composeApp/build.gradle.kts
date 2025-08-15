@@ -32,6 +32,8 @@ kotlin {
 
             implementation(projects.core.network)
             implementation(projects.core.data.chatting)
+            implementation(projects.core.data.onboarding)
+            implementation(projects.core.domain.onboarding)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
