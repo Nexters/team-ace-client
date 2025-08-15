@@ -8,6 +8,7 @@ kotlin {
             implementation(projects.core.domain.chatting)
             implementation(libs.slf4j.api)
             implementation(libs.slf4j.android)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
