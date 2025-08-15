@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
+import com.nexters.emotia.core.designsystem.theme.LocalEmotiaTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class BubbleType {
@@ -29,25 +30,61 @@ data class BubbleStyle(
     val backgroundColor: Color,
     val borderColor: Color,
     val textColor: Color,
+    val textStyle: TextStyle,
 )
 
 @Composable
 fun getBubbleStyle(type: BubbleType): BubbleStyle {
     val colors = LocalEmotiaColors.current
+    val typography = LocalEmotiaTypography.current
     return when (type) {
         // 내가 보낸 말풍선 스타일
         BubbleType.MINE -> BubbleStyle(
             backgroundColor = colors.primaryLight,
             borderColor = colors.primaryDark,
-            textColor = colors.white
+            textColor = colors.white,
+            textStyle = typography.emotia14M
         )
 
         // 상대방이 보낸 말풍선 스타일
         BubbleType.OTHER -> BubbleStyle(
             backgroundColor = colors.black40,
             borderColor = colors.white40,
-            textColor = colors.white
+            textColor = colors.white,
+            textStyle = typography.emotia14M
         )
+    }
+}
+
+@Composable
+fun ChatBubbleText(
+    text: String,
+    type: BubbleType,
+    textStyle: TextStyle,
+    textColor: Color,
+    modifier: Modifier = Modifier,
+) {
+    when (type) {
+        // 상대방(AI)이 보낸 말풍선은 타이핑 애니메이션을 적용
+        BubbleType.OTHER -> {
+            TypewriterText(
+                text = text,
+                modifier = modifier,
+                textStyle = textStyle,
+                textColor = textColor,
+                typingDelayMs = 50L,
+                isEnabled = true
+            )
+        }
+
+        BubbleType.MINE -> {
+            Text(
+                text = text,
+                modifier = modifier,
+                color = textColor,
+                style = textStyle,
+            )
+        }
     }
 }
 
@@ -73,7 +110,6 @@ fun ChatBubble(
     text: String,
     type: BubbleType,
     modifier: Modifier = Modifier,
-    textStyle: TextStyle = TextStyle.Default,
     cornerRadius: Dp = 8.dp,
     borderWidth: Dp = 1.dp,
     padding: Dp = 8.dp,
@@ -101,11 +137,12 @@ fun ChatBubble(
             color = style.backgroundColor,
             border = BorderStroke(borderWidth, style.borderColor)
         ) {
-            Text(
+            ChatBubbleText(
                 text = text,
-                modifier = Modifier.padding(padding),
-                color = style.textColor,
-                style = textStyle
+                type = type,
+                textStyle = style.textStyle,
+                textColor = style.textColor,
+                modifier = Modifier.padding(padding)
             )
         }
     }
@@ -140,4 +177,3 @@ fun ChatBubblePreview() {
         }
     }
 }
-
