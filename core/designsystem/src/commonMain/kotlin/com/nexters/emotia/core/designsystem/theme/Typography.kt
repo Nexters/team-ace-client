@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 
 @Immutable
@@ -15,36 +16,64 @@ data class EmotiaTypography(
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
         lineHeight = 32.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia16M: TextStyle = default.copy(
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 26.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia16R: TextStyle = default.copy(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 26.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia14M: TextStyle = default.copy(
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 24.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia14R: TextStyle = default.copy(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 24.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia12M: TextStyle = default.copy(
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
         lineHeight = 18.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
     val emotia12R: TextStyle = default.copy(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 18.sp,
+        lineHeightStyle = LineHeightStyle(
+            alignment = LineHeightStyle.Alignment.Center,
+            trim = LineHeightStyle.Trim.None,
+        )
     ),
 
     ) {
