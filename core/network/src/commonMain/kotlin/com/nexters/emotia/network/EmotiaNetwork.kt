@@ -1,6 +1,5 @@
 package com.nexters.emotia.network
 
-
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpTimeout
@@ -20,7 +19,6 @@ import io.ktor.http.URLProtocol
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-
 
 class EmotiaNetwork {
     val httpClient = createHttpClient(NetworkConfig.baseUrl)
@@ -53,7 +51,14 @@ class EmotiaNetwork {
         }
     }
 
-    suspend inline fun <reified T : Any> get(path: String): T = httpClient.get(path).body()
+    suspend inline fun <reified T : Any> get(
+        path: String,
+        token: String? = null,
+    ): T = httpClient.get(path) {
+        token?.let {
+            header(HttpHeaders.Authorization, "Bearer $it")
+        }
+    }.body()
 
     /*
        * TODO : AUTH 작업 시 토큰 헤더를 위한 interceptor 필요
@@ -61,7 +66,7 @@ class EmotiaNetwork {
     suspend inline fun <reified T : Any, reified R : Any> post(
         path: String,
         body: R,
-        token: String? = null
+        token: String? = null,
     ): T = httpClient.post(path) {
         setBody(body)
         token?.let {
@@ -71,7 +76,6 @@ class EmotiaNetwork {
 
     suspend inline fun <reified T : Any> post(path: String, body: Any): T =
         httpClient.post(path) { setBody(body) }.body()
-
 
     companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L

@@ -4,6 +4,7 @@ import com.nexters.emotia.network.EmotiaNetwork
 import com.nexters.emotia.network.dto.request.CreateRoomRequest
 import com.nexters.emotia.network.dto.request.SendChatRequest
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
+import com.nexters.emotia.network.dto.response.GetFairiesResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
 
 /*
@@ -14,7 +15,7 @@ class ChatApiService(
 ) {
     suspend fun createChatRoom(
         username: String,
-        token: String
+        token: String,
     ): CreateRoomResponse {
         return network.post(
             path = "api/v1/chat-rooms",
@@ -26,7 +27,7 @@ class ChatApiService(
     suspend fun sendChat(
         chatRoomId: String,
         message: String,
-        token: String
+        token: String,
     ): SendChatResponse {
         return network.post(
             path = "api/v1/chat-rooms/${chatRoomId}/messages",
@@ -35,4 +36,13 @@ class ChatApiService(
         )
     }
 
+    suspend fun getFairies(
+        chatRoomId: String,
+        token: String,
+    ): GetFairiesResponse {
+        return network.get(
+            path = "api/v1/fairies?chatRoomId=${chatRoomId}",
+            token = token
+        )
+    }
 }
