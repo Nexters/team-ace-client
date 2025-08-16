@@ -1,6 +1,5 @@
 package com.nexters.emotia.core.data.chatting.datasource
 
-import com.nexters.emotia.network.EmotiaNetwork
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
 import com.nexters.emotia.network.dto.response.GetFairiesResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
@@ -13,7 +12,6 @@ class ChattingRemoteDataSourceImpl(
     override suspend fun createRoom(username: String): CreateRoomResponse {
         return apiService.createChatRoom(
             username = username,
-            token = EmotiaNetwork.TEST_TOKEN
         )
     }
 
@@ -24,7 +22,6 @@ class ChattingRemoteDataSourceImpl(
         return apiService.sendChat(
             chatRoomId = roomId.toString(),
             message = message,
-            token = EmotiaNetwork.TEST_TOKEN
         )
     }
 

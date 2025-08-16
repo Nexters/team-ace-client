@@ -14,25 +14,21 @@ class ChatApiService(
     private val network: EmotiaNetwork,
 ) {
     suspend fun createChatRoom(
-        username: String,
-        token: String,
+        username: String
     ): CreateRoomResponse {
         return network.post(
             path = "api/v1/chat-rooms",
-            body = CreateRoomRequest(username = username),
-            token = token
+            body = CreateRoomRequest(username = username)
         )
     }
 
     suspend fun sendChat(
         chatRoomId: String,
-        message: String,
-        token: String,
+        message: String
     ): SendChatResponse {
         return network.post(
             path = "api/v1/chat-rooms/${chatRoomId}/messages",
-            body = SendChatRequest(message = message),
-            token = token
+            body = SendChatRequest(message = message)
         )
     }
 
