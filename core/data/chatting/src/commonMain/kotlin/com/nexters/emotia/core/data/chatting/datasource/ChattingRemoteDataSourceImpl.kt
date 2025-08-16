@@ -3,10 +3,10 @@ package com.nexters.emotia.core.data.chatting.datasource
 import com.nexters.emotia.network.EmotiaNetwork
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
-import com.nexters.emotia.network.service.ApiService
+import com.nexters.emotia.network.service.ChatApiService
 
 class ChattingRemoteDataSourceImpl(
-    private val apiService: ApiService
+    private val apiService: ChatApiService
 ) : ChattingRemoteDataSource {
 
     override suspend fun createRoom(username: String): CreateRoomResponse {

@@ -1,4 +1,4 @@
-package com.nexters.emotia.core.domain.chatting.repsitory
+package com.nexters.emotia.core.domain.chatting.repository
 
 import com.nexters.emotia.core.domain.chatting.entity.ChatMessage
 import com.nexters.emotia.core.domain.chatting.entity.ChattingRoom

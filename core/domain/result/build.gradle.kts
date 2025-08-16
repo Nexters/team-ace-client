@@ -4,3 +4,11 @@ plugins {
 }
 
 android.namespace = "com.nexters.emotia.core.domain.result"
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.koin.core)
+        }
+    }
+}

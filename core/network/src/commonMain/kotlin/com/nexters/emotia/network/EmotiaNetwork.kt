@@ -46,6 +46,7 @@ class EmotiaNetwork {
         defaultRequest {
             contentType(ContentType.Application.Json)
             url {
+                // 우리 서버 나오고 수정 필요
                 protocol = URLProtocol.HTTP
                 host = hostName
             }
@@ -67,6 +68,10 @@ class EmotiaNetwork {
             header(HttpHeaders.Authorization, "Bearer $it")
         }
     }.body()
+
+    suspend inline fun <reified T : Any> post(path: String, body: Any): T =
+        httpClient.post(path) { setBody(body) }.body()
+
 
     companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L

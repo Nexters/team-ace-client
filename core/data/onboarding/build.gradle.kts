@@ -20,6 +20,8 @@ kotlin {
 
             implementation(projects.core.network)
             implementation(projects.core.domain.onboarding)
+            implementation(projects.core.domain.chatting)
+            implementation(projects.core.data.chatting)
 
         }
         iosMain.dependencies {

@@ -4,7 +4,7 @@ import com.nexters.emotia.core.data.chatting.datasource.ChattingRemoteDataSource
 import com.nexters.emotia.core.data.chatting.mapper.toDomain
 import com.nexters.emotia.core.domain.chatting.entity.ChatMessage
 import com.nexters.emotia.core.domain.chatting.entity.ChattingRoom
-import com.nexters.emotia.core.domain.chatting.repsitory.ChattingRepository
+import com.nexters.emotia.core.domain.chatting.repository.ChattingRepository
 
 class ChattingRepositoryImpl(
     private val remoteDataSource: ChattingRemoteDataSource

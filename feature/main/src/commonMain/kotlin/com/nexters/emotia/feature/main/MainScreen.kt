@@ -13,12 +13,13 @@ expect fun MainScreen(modifier: Modifier = Modifier)
 internal fun MainContent(
     modifier: Modifier = Modifier,
     navigator: MainNavigator = rememberMainNavigator(),
+    deviceUuid: String,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            MainNavHost(navigator)
+            MainNavHost(navigator, deviceUuid = deviceUuid)
         }
     }
 }

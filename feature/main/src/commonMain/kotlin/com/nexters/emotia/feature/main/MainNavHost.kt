@@ -11,6 +11,7 @@ import com.nexters.emotia.feature.result.navigation.resultScreen
 internal fun MainNavHost(
     navigator: MainNavigator,
     modifier: Modifier = Modifier,
+    deviceUuid: String,
 ) {
     NavHost(
         navController = navigator.navController,
@@ -20,7 +21,8 @@ internal fun MainNavHost(
         onBoardingScreen(
             onNavigateNext = {
                 navigator.navigateToChatting()
-            }
+            },
+            deviceUuid = deviceUuid
         )
 
         chattingScreen(
