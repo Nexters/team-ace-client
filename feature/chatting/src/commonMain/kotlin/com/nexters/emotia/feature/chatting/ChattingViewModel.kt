@@ -38,7 +38,7 @@ class ChattingViewModel(
         handleIntent(ChattingIntent.CreateChatRoom)
     }
 
-    private fun loadSavedMessages(roomId: Int) {
+    private fun loadSavedMessages(roomId: String) {
         viewModelScope.launch {
             chattingRepository.getSavedMessages(roomId).collectLatest { savedMessages ->
                 if (savedMessages.isNotEmpty()) {
@@ -83,7 +83,7 @@ class ChattingViewModel(
 
                 reduce {
                     state.copy(
-                        roomId = chatRoom.roomId,
+                        roomId = chatRoom.roomId.toString(),
                         messages = persistentListOf(firstMessage),
                         isLoading = false,
                         showEmotionChips = true,
@@ -125,7 +125,7 @@ class ChattingViewModel(
 
         // 사용자 메시지를 DB에 저장
         viewModelScope.launch {
-            chattingRepository.saveMessage(userMessage.toDomain(roomId.toString()))
+            chattingRepository.saveMessage(userMessage.toDomain(roomId))
         }
 
         reduce {

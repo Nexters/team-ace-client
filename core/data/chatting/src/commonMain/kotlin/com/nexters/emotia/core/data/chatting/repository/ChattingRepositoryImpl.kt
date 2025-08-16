@@ -31,9 +31,9 @@ class ChattingRepositoryImpl(
         }
     }
 
-    override suspend fun sendChat(roomId: Int, message: String): Result<ChatMessage> {
+    override suspend fun sendChat(roomId: String, message: String): Result<ChatMessage> {
         return runCatching {
-            val response = remoteDataSource.sendChat(roomId, message)
+            val response = remoteDataSource.sendChat(roomId.toInt(), message)
 
             if (!response.success) {
                 throw IllegalStateException("API 요청 실패: ${response.error}")
@@ -54,17 +54,17 @@ class ChattingRepositoryImpl(
         localDataSource.insertMessages(messages.toEntity())
     }
 
-    override fun getSavedMessages(roomId: Int): Flow<List<ChatMessage>> {
+    override fun getSavedMessages(roomId: String): Flow<List<ChatMessage>> {
         return localDataSource.getMessagesByRoomId(roomId).map { entities ->
             entities.toDomainModel()
         }
     }
 
-    override suspend fun clearSavedMessages(roomId: Int) {
+    override suspend fun clearSavedMessages(roomId: String) {
         localDataSource.deleteMessagesByRoomId(roomId)
     }
 
-    override suspend fun getSavedMessageCount(roomId: Int): Int {
+    override suspend fun getSavedMessageCount(roomId: String): Int {
         return localDataSource.getMessageCountByRoomId(roomId)
     }
 

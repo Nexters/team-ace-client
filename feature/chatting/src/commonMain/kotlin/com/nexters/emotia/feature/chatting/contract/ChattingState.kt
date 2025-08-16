@@ -13,7 +13,7 @@ data class ChattingState(
     val isTextFieldEnabled: Boolean = true,
     val showEmotionChips: Boolean = false,
     val isLoading: Boolean = false,
-    val roomId: Int? = null,
+    val roomId: String? = null,
     val error: String? = null,
     val fairies: PersistentList<Fairy> = persistentListOf(),
     val showFairyPager: Boolean = false,
