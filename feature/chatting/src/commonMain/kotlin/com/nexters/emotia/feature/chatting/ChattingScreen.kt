@@ -42,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
@@ -172,7 +173,14 @@ fun ChattingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        colors.backgroundBlue,
+                        Color.Black
+                    )
+                )
+            )
             .padding(16.dp)
             .imePadding() // 키보드 패딩
             .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
