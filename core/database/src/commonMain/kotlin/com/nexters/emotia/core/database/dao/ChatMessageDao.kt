@@ -14,12 +14,12 @@ interface ChatMessageDao {
     @Insert
     suspend fun insertMessages(messages: List<ChatMessageEntity>)
 
-    @Query("SELECT * FROM chat_messages WHERE roomId = :roomId OR roomId IS NULL ORDER BY timestamp ASC")
-    fun getMessagesByRoomId(roomId: String?): Flow<List<ChatMessageEntity>>
+    @Query("SELECT * FROM chat_messages WHERE roomId = :roomId ORDER BY timestamp ASC")
+    fun getMessagesByRoomId(roomId: Int): Flow<List<ChatMessageEntity>>
 
-    @Query("DELETE FROM chat_messages WHERE roomId = :roomId OR roomId IS NULL")
-    suspend fun deleteMessagesByRoomId(roomId: String?)
+    @Query("DELETE FROM chat_messages WHERE roomId = :roomId")
+    suspend fun deleteMessagesByRoomId(roomId: Int)
 
-    @Query("SELECT COUNT(*) FROM chat_messages WHERE roomId = :roomId OR roomId IS NULL")
-    suspend fun getMessageCountByRoomId(roomId: String?): Int
+    @Query("SELECT COUNT(*) FROM chat_messages WHERE roomId = :roomId")
+    suspend fun getMessageCountByRoomId(roomId: Int): Int
 }

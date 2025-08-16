@@ -54,17 +54,17 @@ class ChattingRepositoryImpl(
         localDataSource.insertMessages(messages.toEntity())
     }
 
-    override fun getSavedMessages(roomId: String?): Flow<List<ChatMessage>> {
+    override fun getSavedMessages(roomId: Int): Flow<List<ChatMessage>> {
         return localDataSource.getMessagesByRoomId(roomId).map { entities ->
             entities.toDomainModel()
         }
     }
 
-    override suspend fun clearSavedMessages(roomId: String?) {
+    override suspend fun clearSavedMessages(roomId: Int) {
         localDataSource.deleteMessagesByRoomId(roomId)
     }
 
-    override suspend fun getSavedMessageCount(roomId: String?): Int {
+    override suspend fun getSavedMessageCount(roomId: Int): Int {
         return localDataSource.getMessageCountByRoomId(roomId)
     }
 
