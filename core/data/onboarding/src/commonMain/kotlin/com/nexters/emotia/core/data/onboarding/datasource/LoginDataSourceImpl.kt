@@ -21,6 +21,6 @@ class LoginDataSourceImpl(
     }
 
     override suspend fun refreshToken(request: RefreshTokenInfoRequest): TokenInfoResponse {
-        return apiService.refreshToken(request = request)
+        return apiService.refresh(request = request)
     }
 }
