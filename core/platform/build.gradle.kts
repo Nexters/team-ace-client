@@ -6,7 +6,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            // No additional dependencies needed
+            implementation(libs.koin.core)
         }
 
         androidMain.dependencies {

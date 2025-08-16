@@ -3,6 +3,7 @@ package com.nexters.emotia.feature.chatting
 import androidx.lifecycle.ViewModel
 import com.nexters.emotia.core.designsystem.component.BubbleType
 import com.nexters.emotia.core.domain.chatting.repository.ChattingRepository
+import com.nexters.emotia.core.platform.Platform
 import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import com.nexters.emotia.feature.chatting.contract.ChattingState
@@ -17,6 +18,7 @@ import org.orbitmvi.orbit.viewmodel.container
 
 class ChattingViewModel(
     private val chattingRepository: ChattingRepository,
+    private val platform: Platform,
 ) : ContainerHost<ChattingState, ChattingSideEffect>, ViewModel() {
 
     override val container = container<ChattingState, ChattingSideEffect>(
@@ -47,7 +49,8 @@ class ChattingViewModel(
     private fun createChatRoom() = intent {
         reduce { state.copy(isLoading = true, error = null) }
 
-        chattingRepository.createRoom("안드테스트")
+        val deviceUuid = platform.generateDeviceUuid()
+        chattingRepository.createRoom(deviceUuid)
             .onSuccess { chatRoom ->
                 val firstMessage = ChatMessage(
                     text = chatRoom.firstMessage,
