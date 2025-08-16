@@ -28,6 +28,10 @@ slf4j = "2.0.7"
 slf4j-android = "1.7.36"
 orbit = "10.0.0"
 
+# Room Database
+room = "2.7.2"
+ksp = "2.2.0-2.0.2"
+
 # navigation
 androidx-navigation = "2.9.0-beta02"
 kotlinStdlib = "2.2.0"
@@ -102,6 +106,12 @@ google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", ve
 orbit-core = { group = "org.orbit-mvi", name = "orbit-core", version.ref = "orbit" }
 orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
 orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
+
+# Room Database
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version = "2.4.0" }
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
@@ -115,6 +125,7 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-gms = { id = "com.google.gms.google-services", version.ref = "google-service" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 # Custom Gradle Plugins
 emotia-kotlin-multiplatform = { id = "emotia.kotlin.multiplatform", version = "unspecified" }
