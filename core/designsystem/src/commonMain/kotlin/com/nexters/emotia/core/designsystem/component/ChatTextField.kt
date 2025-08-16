@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.ic_chatting_send_default
@@ -124,8 +124,7 @@ fun EmotiaChatTextField(
             if (placeholder.isNotEmpty() && value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    fontSize = 14.sp,
-                    color = state.getPlaceholderColor()
+                    style = typography.emotia14M
                 )
             }
         },
