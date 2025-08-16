@@ -1,21 +1,15 @@
 package com.nexters.emotia.feature.chatting
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.nexters.emotia.core.designsystem.component.BubbleType
 import com.nexters.emotia.core.domain.chatting.repository.ChattingRepository
 import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import com.nexters.emotia.feature.chatting.contract.ChattingState
-import com.nexters.emotia.feature.chatting.mapper.toDomain
-import com.nexters.emotia.feature.chatting.mapper.toPresentation
 import com.nexters.emotia.feature.chatting.model.ChatMessage
 import com.nexters.emotia.feature.chatting.model.EmotionOption
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Clock
 import org.orbitmvi.orbit.ContainerHost
@@ -36,21 +30,6 @@ class ChattingViewModel(
 
     init {
         handleIntent(ChattingIntent.CreateChatRoom)
-    }
-
-    private fun loadSavedMessages(roomId: String) {
-        viewModelScope.launch {
-            chattingRepository.getSavedMessages(roomId).collectLatest { savedMessages ->
-                if (savedMessages.isNotEmpty()) {
-                    val messages = savedMessages.map { it.toPresentation() }.toPersistentList()
-                    intent {
-                        reduce {
-                            state.copy(messages = messages)
-                        }
-                    }
-                }
-            }
-        }
     }
 
     fun handleIntent(intent: ChattingIntent) {
@@ -75,11 +54,6 @@ class ChattingViewModel(
                     type = BubbleType.OTHER,
                     timestamp = Clock.System.now().toEpochMilliseconds()
                 )
-
-                // 첫 메시지를 DB에 저장
-                viewModelScope.launch {
-                    chattingRepository.saveMessage(firstMessage.toDomain(chatRoom.roomId.toString()))
-                }
 
                 reduce {
                     state.copy(
@@ -110,8 +84,6 @@ class ChattingViewModel(
     private fun sendMessage() = intent {
         val currentState = state
 
-        // TODO : 메시지 전송 중 send 연타 고려
-        // TODO : 키보드 올렸을때 마지막 채팅이 위로 보이도록 개선
         if (currentState.currentInputText.isBlank() || currentState.roomId == null) return@intent
 
         val userMessage = ChatMessage(
@@ -122,11 +94,6 @@ class ChattingViewModel(
 
         val messageToSend = currentState.currentInputText
         val roomId = currentState.roomId
-
-        // 사용자 메시지를 DB에 저장
-        viewModelScope.launch {
-            chattingRepository.saveMessage(userMessage.toDomain(roomId))
-        }
 
         reduce {
             state.copy(
@@ -146,15 +113,10 @@ class ChattingViewModel(
                 }
 
                 val aiResponse = ChatMessage(
-                    text = chatResponse.message,
+                    text = aiResponseText,
                     type = BubbleType.OTHER,
                     timestamp = Clock.System.now().toEpochMilliseconds()
                 )
-
-                // AI 응답을 DB에 저장
-                viewModelScope.launch {
-                    chattingRepository.saveMessage(aiResponse.toDomain(roomId.toString()))
-                }
 
                 reduce {
                     state.copy(
@@ -193,7 +155,7 @@ class ChattingViewModel(
         val currentState = state
         if (currentState.roomId == null) return@intent
 
-        chattingRepository.getFairies(currentState.roomId.toString())
+        chattingRepository.getFairies(currentState.roomId)
             .onSuccess { fairies ->
                 val initialIndex = if (fairies.size > 1) 1 else 0
                 reduce {

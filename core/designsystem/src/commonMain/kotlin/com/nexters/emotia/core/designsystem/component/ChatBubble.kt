@@ -17,8 +17,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
-import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
-import com.nexters.emotia.core.designsystem.theme.LocalEmotiaTypography
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class BubbleType {
@@ -35,8 +35,6 @@ data class BubbleStyle(
 
 @Composable
 fun getBubbleStyle(type: BubbleType): BubbleStyle {
-    val colors = LocalEmotiaColors.current
-    val typography = LocalEmotiaTypography.current
     return when (type) {
         // 내가 보낸 말풍선 스타일
         BubbleType.MINE -> BubbleStyle(
