@@ -17,6 +17,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.logging)
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.datetime)
 
             implementation(projects.core.network)
             implementation(projects.core.domain.chatting)

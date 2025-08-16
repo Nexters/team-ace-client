@@ -118,7 +118,7 @@ class ChattingViewModel(
                 val aiResponse = ChatMessage(
                     text = aiResponseText,
                     type = BubbleType.OTHER,
-                    timestamp = Clock.System.now().toEpochMilliseconds()
+                    timestamp = chatResponse.timestamp
                 )
 
                 reduce {
