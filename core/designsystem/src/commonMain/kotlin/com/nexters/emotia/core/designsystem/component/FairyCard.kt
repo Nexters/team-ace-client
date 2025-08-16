@@ -21,6 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
@@ -40,6 +41,7 @@ fun FairyCard(
     name: String,
     image: String,
     emotion: String,
+    emotionDescription: String,
     isSelected: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
@@ -109,7 +111,7 @@ fun FairyCard(
             Spacer(Modifier.height(12.dp))
 
             Text(
-                text = name,
+                text = emotion,
                 style = typography.emotia18M.copy(
                     color = colors.white
                 )
@@ -125,10 +127,12 @@ fun FairyCard(
             Spacer(Modifier.height(6.dp))
 
             Text(
-                text = emotion,
+                text = emotionDescription,
                 style = typography.emotia12R.copy(
                     color = colors.primaryLight,
-                )
+                ),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(6.dp))
@@ -149,7 +153,8 @@ fun FairyCardPreview() {
             name = "행복한 요정",
             image = "",
             emotion = "행복",
-            modifier = Modifier.width(200.dp)
+            emotionDescription = "행복한 기분을 느낄 때 선택해주세요.",
+            modifier = Modifier.width(200.dp),
         )
     }
 }

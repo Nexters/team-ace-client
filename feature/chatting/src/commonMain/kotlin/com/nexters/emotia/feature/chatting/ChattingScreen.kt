@@ -10,6 +10,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -210,7 +211,9 @@ fun ChattingScreen(
 
                             HorizontalPager(
                                 state = pagerState,
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 28.dp),
                                 contentPadding = PaddingValues(horizontal = 80.dp),
                                 pageSpacing = 24.dp
                             ) { page ->
@@ -227,8 +230,9 @@ fun ChattingScreen(
 
                                 FairyCard(
                                     name = fairy.name,
-                                    image = fairy.image,
+                                    image = fairy.silhouetteImage,
                                     emotion = fairy.emotion,
+                                    emotionDescription = fairy.description,
                                     isSelected = isSelected,
                                     modifier = Modifier
                                         .size(width = 200.dp, height = 280.dp)
@@ -254,7 +258,6 @@ fun ChattingScreen(
                                 )
                             }
 
-                            Spacer(Modifier.height(108.dp))
                         }
                     }
                 }
@@ -262,6 +265,9 @@ fun ChattingScreen(
 
             if (uiState.showFairyPager && uiState.fairies.isNotEmpty()) {
                 val selectedIndex = uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
+
+                Spacer(Modifier.height(60.dp))
+
                 EmotiaButton(
                     text = "내 감정은 ${uiState.fairies[selectedIndex].emotion}이야",
                     modifier = Modifier.padding(16.dp),
@@ -302,7 +308,14 @@ fun ChattingScreen(
 
         if (animationPhase > 0) {
             Canvas(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        // 터치 이벤트 차단 (빈 람다)
+                    }
             ) {
                 val centerPoint = if (fairyCardCenter != Offset.Zero) fairyCardCenter else Offset(
                     size.width / 2,

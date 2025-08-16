@@ -6,4 +6,5 @@ data class Fairy(
     val image: String,
     val silhouetteImage: String,
     val emotion: String,
+    val description: String,
 )

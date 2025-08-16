@@ -80,6 +80,6 @@ class EmotiaNetwork {
     companion object Companion {
         private const val TIMEOUT_MILLIS = 10_000L
         const val TEST_TOKEN =
-            ""
+            "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMjM0NTY3OCIsInVzZXJJZCI6NCwiaWF0IjoxNzU1MjY5NDcxLCJleHAiOjE3NTU4NzQyNzF9.lHD2KarFsq2EbrthtWaDHyQm340OUeHwN9ZjUB_krXkUB48WnHDyvgHikLsK6YA4deZCtztN4mYGEjPXtWLugw"
     }
 }

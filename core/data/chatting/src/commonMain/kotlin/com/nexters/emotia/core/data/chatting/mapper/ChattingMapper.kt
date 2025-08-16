@@ -37,6 +37,7 @@ fun FairyDto.toDomain(): Fairy {
         name = this.name,
         image = this.image,
         silhouetteImage = this.silhouetteImage,
-        emotion = this.emotion
+        emotion = this.emotion,
+        description = this.emotionDescription
     )
 }
