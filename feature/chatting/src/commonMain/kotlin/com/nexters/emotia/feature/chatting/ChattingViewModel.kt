@@ -38,11 +38,11 @@ class ChattingViewModel(
         handleIntent(ChattingIntent.CreateChatRoom)
     }
 
-    private fun loadCachedMessages() {
+    private fun loadSavedMessages(roomId: Int) {
         viewModelScope.launch {
-            chattingRepository.getSavedMessages(null).collectLatest { cachedMessages ->
-                if (cachedMessages.isNotEmpty()) {
-                    val messages = cachedMessages.map { it.toPresentation() }.toPersistentList()
+            chattingRepository.getSavedMessages(roomId).collectLatest { savedMessages ->
+                if (savedMessages.isNotEmpty()) {
+                    val messages = savedMessages.map { it.toPresentation() }.toPersistentList()
                     intent {
                         reduce {
                             state.copy(messages = messages)
