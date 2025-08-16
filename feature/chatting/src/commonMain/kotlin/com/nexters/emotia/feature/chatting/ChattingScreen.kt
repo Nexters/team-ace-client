@@ -67,7 +67,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ChattingScreen(
-    onNavigateToResult: () -> Unit,
+    onNavigateToResult: (fairyId: Int, fairyName: String, fairyImage: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = koinViewModel(),
 ) {
@@ -102,6 +102,19 @@ fun ChattingScreen(
             animationPhase = 1 // 1단계: 축소 시작
             kotlinx.coroutines.delay(2000) // 1초 축소 + 1초 대기
             animationPhase = 2 // 2단계: 완전 차단
+            kotlinx.coroutines.delay(1000) // 2단계 애니메이션 완료 대기
+
+            if (uiState.fairies.isNotEmpty()) {
+                val selectedFairy = uiState.fairies[uiState.selectedFairyIndex.coerceIn(
+                    0,
+                    uiState.fairies.size - 1
+                )]
+                onNavigateToResult(
+                    selectedFairy.id,
+                    selectedFairy.name,
+                    selectedFairy.silhouetteImage
+                )
+            }
         } else {
             animationPhase = 0 // 정지 상태로 리셋
         }
@@ -258,6 +271,7 @@ fun ChattingScreen(
                                 )
                             }
 
+                            Spacer(Modifier.height(60.dp))
                         }
                     }
                 }
@@ -265,8 +279,6 @@ fun ChattingScreen(
 
             if (uiState.showFairyPager && uiState.fairies.isNotEmpty()) {
                 val selectedIndex = uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
-
-                Spacer(Modifier.height(60.dp))
 
                 EmotiaButton(
                     text = "내 감정은 ${uiState.fairies[selectedIndex].emotion}이야",

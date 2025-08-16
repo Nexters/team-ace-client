@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ResultRoute : Route {
     @Serializable
-    data object ResultMain : ResultRoute
+    data class ResultMain(val id: Int, val name: String, val imageUrl: String) : ResultRoute
 }
