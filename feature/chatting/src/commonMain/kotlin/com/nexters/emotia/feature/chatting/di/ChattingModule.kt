@@ -7,7 +7,8 @@ import org.koin.dsl.module
 val chattingModule = module {
     viewModel {
         ChattingViewModel(
-            chattingRepository = get()
+            chattingRepository = get(),
+            platform = get()
         )
     }
 }
