@@ -10,8 +10,10 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -53,13 +55,11 @@ fun ResultScreen(
 ) {
     val uiState by viewModel.collectAsState()
 
-    // ViewModel 초기화
     LaunchedEffect(fairyId, fairyName, fairyImage) {
         viewModel.handleIntent(ResultIntent.InitializeFairy(fairyId, fairyName, fairyImage))
         viewModel.handleIntent(ResultIntent.StartExpandAnimation)
     }
 
-    // SideEffect 처리
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
             is ResultSideEffect.NavigateToOnBoarding -> onNavigateToOnBoarding()
@@ -70,7 +70,6 @@ fun ResultScreen(
         }
     }
 
-    // 원 반지름 애니메이션 (0에서 큰 값으로 확장)
     val animatedRadius by animateFloatAsState(
         targetValue = if (uiState.isExpanding) 2000f else 0f,
         animationSpec = tween(
@@ -91,7 +90,6 @@ fun ResultScreen(
             contentScale = ContentScale.Crop
         )
 
-        // 요정 이미지만 중앙에 표시
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -111,9 +109,10 @@ fun ResultScreen(
                     // TODO : 에러 이미지 처리
                 },
             )
+
+            Spacer(Modifier.height(50.dp))
         }
 
-        // 확장 애니메이션 오버레이 - 원 내부는 투명, 외부는 검정색
         if (animatedRadius < 1800f) {
             Canvas(
                 modifier = Modifier
