@@ -8,6 +8,7 @@ import com.nexters.emotia.network.dto.response.CreateRoomResponse
 import com.nexters.emotia.network.dto.response.FairyDto
 import com.nexters.emotia.network.dto.response.GetFairiesResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
+import kotlinx.datetime.Clock
 
 fun CreateRoomResponse.toDomain(): ChattingRoom {
     val roomData = this.data ?: throw IllegalStateException("응답 데이터가 없습니다")
@@ -21,13 +22,10 @@ fun CreateRoomResponse.toDomain(): ChattingRoom {
 fun SendChatResponse.toDomain(): ChatMessage {
     val chatData = this.data ?: throw IllegalStateException("응답 데이터가 없습니다")
 
-    // 자동로그인 구현되면 수정 예정 : 지금은 하드코딩
     return ChatMessage(
-        roomId = "1",
-        id = 12,
-        timestamp = 12,
+        message = chatData.message,
         senderType = SenderType.OTHER,
-        message = chatData.message
+        timestamp = Clock.System.now().toEpochMilliseconds()
     )
 }
 
