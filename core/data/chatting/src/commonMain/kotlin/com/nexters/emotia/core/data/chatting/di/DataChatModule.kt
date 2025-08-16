@@ -17,7 +17,6 @@ val dataChatModule =
         single<ChattingRepository> {
             ChattingRepositoryImpl(
                 remoteDataSource = get(),
-                localDataSource = get()
             )
         }
     }

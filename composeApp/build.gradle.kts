@@ -32,7 +32,6 @@ kotlin {
             implementation(projects.core.platform)
 
             implementation(projects.core.network)
-            implementation(projects.core.database)
             implementation(projects.core.data.chatting)
             implementation(projects.core.data.onboarding)
             implementation(projects.core.domain.onboarding)
