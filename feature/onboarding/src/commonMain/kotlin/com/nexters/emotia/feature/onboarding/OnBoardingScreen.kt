@@ -20,12 +20,12 @@ import org.koin.compose.viewmodel.koinViewModel
 fun OnBoardingScreen(
     viewModel: OnBoardingViewModel = koinViewModel(),
     onNavigateToChatting: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    deviceUuid: String
 ) {
     val uiState by viewModel.uiState.collectAsState()
     
     LaunchedEffect(Unit) {
-        val deviceUuid = "123123123123"
         println("[OnBoardingScreen] 화면 진입 - 자동 로그인 시작, UUID: $deviceUuid")
         viewModel.performAutoLogin(deviceUuid)
     }
@@ -58,7 +58,6 @@ fun OnBoardingScreen(
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 Button(onClick = {
-                    val deviceUuid = "123123123123"
                     viewModel.performAutoLogin(deviceUuid)
                 }) {
                     Text("다시 시도")

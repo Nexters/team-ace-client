@@ -6,10 +6,12 @@ import com.nexters.emotia.feature.onboarding.OnBoardingScreen
 
 fun NavGraphBuilder.onBoardingScreen(
     onNavigateNext: () -> Unit,
+    deviceUuid: String,
 ) {
     composable<OnBoardingRoute.OnBoardingMain> {
         OnBoardingScreen(
-            onNavigateToChatting = onNavigateNext
+            onNavigateToChatting = onNavigateNext,
+            deviceUuid = deviceUuid
         )
     }
 }

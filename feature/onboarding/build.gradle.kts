@@ -8,6 +8,10 @@ kotlin {
             implementation(projects.core.domain.onboarding)
             implementation(libs.slf4j.api)
             implementation(libs.slf4j.android)
+            implementation(projects.core.data.onboarding)
+            implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+
         }
     }
 }
