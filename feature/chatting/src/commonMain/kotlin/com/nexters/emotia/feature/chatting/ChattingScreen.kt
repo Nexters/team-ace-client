@@ -15,8 +15,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -42,11 +42,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -170,74 +169,20 @@ fun ChattingScreen(
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        colors.backgroundBlue,
-                        Color.Black
-                    )
-                )
-            )
-            .padding(16.dp)
-            .imePadding() // 키보드 패딩
-            .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
-    ) {
-        if (uiState.isLoading && uiState.messages.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = colors.primaryLight)
-            }
-        } else {
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(
-                    top = 8.dp,
-                    bottom = if (isKeyboardVisible) {
-                        // 키보드가 올라왔을 때 키보드 높이만큼 bottom padding 추가
-                        with(density) { imeHeight.toDp() / 2 }
-                    } else {
-                        8.dp
-                    }
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(
-                    items = uiState.messages,
-                    key = { message -> message.timestamp }
-                ) { message ->
-                    ChatBubble(
-                        text = message.text,
-                        type = message.type,
-                        messageId = message.timestamp.toString()
-                    )
-                }
-
-                // 채팅 로딩 중
-                if (uiState.isLoading && uiState.messages.isNotEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .wrapContentWidth()
-                                .padding(start = 16.dp, bottom = 4.dp),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            TypingIndicator(
-                                modifier = Modifier
-                                    .height(40.dp)
-                            )
     Box(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
-                .background(Color.Black)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            colors.backgroundBlue,
+                            Color.Black
+                        )
+                    )
+                )
                 .padding(16.dp)
                 .imePadding() // 키보드 패딩
                 .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
@@ -253,7 +198,15 @@ fun ChattingScreen(
                 LazyColumn(
                     state = lazyListState,
                     modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(vertical = 8.dp),
+                    contentPadding = PaddingValues(
+                        top = 8.dp,
+                        bottom = if (isKeyboardVisible) {
+                            // 키보드가 올라왔을 때 키보드 높이만큼 bottom padding 추가
+                            with(density) { imeHeight.toDp() / 2 }
+                        } else {
+                            8.dp
+                        }
+                    ),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(
@@ -262,9 +215,11 @@ fun ChattingScreen(
                     ) { message ->
                         ChatBubble(
                             text = message.text,
-                            type = message.type
+                            type = message.type,
+                            messageId = message.timestamp.toString()
                         )
                     }
+
                     // 채팅 로딩 중
                     if (uiState.isLoading && uiState.messages.isNotEmpty()) {
                         item {
@@ -283,7 +238,8 @@ fun ChattingScreen(
                     }
 
                     item {
-                        val showFairyCards = uiState.showFairyPager && uiState.fairies.isNotEmpty()
+                        val showFairyCards =
+                            uiState.showFairyPager && uiState.fairies.isNotEmpty()
                         AnimatedVisibility(
                             visible = showFairyCards,
                             enter = slideInVertically(
@@ -304,7 +260,11 @@ fun ChattingScreen(
                             )
 
                             LaunchedEffect(pagerState.currentPage) {
-                                viewModel.handleIntent(ChattingIntent.SelectFairy(pagerState.currentPage))
+                                viewModel.handleIntent(
+                                    ChattingIntent.SelectFairy(
+                                        pagerState.currentPage
+                                    )
+                                )
                             }
 
                             Spacer(Modifier.height(84.dp))
@@ -318,7 +278,8 @@ fun ChattingScreen(
                                 pageSpacing = 24.dp
                             ) { page ->
                                 val fairy = uiState.fairies[page]
-                                val isSelected = page == pagerState.currentPage
+                                val isSelected =
+                                    page == pagerState.currentPage
 
                                 val yOffset by animateFloatAsState(
                                     targetValue = if (isSelected) 0f else 28f,
@@ -335,21 +296,30 @@ fun ChattingScreen(
                                     emotionDescription = fairy.description,
                                     isSelected = isSelected,
                                     modifier = Modifier
-                                        .size(width = 200.dp, height = 280.dp)
+                                        .size(
+                                            width = 200.dp,
+                                            height = 280.dp
+                                        )
                                         .offset(y = yOffset.dp)
                                         .then(
                                             if (isSelected) {
                                                 Modifier.onGloballyPositioned { coordinates ->
-                                                    val position = coordinates.positionInRoot()
-                                                    val size = coordinates.size
-                                                    fairyCardCenter = Offset(
-                                                        x = position.x + size.width / 2,
-                                                        y = position.y + size.height / 2 - with(
-                                                            density
-                                                        ) { 50.dp.toPx() }
-                                                    )
+                                                    val position =
+                                                        coordinates.positionInRoot()
+                                                    val size =
+                                                        coordinates.size
+                                                    fairyCardCenter =
+                                                        Offset(
+                                                            x = position.x + size.width / 2,
+                                                            y = position.y + size.height / 2 - with(
+                                                                density
+                                                            ) { 50.dp.toPx() }
+                                                        )
                                                     fairyCardSize =
-                                                        minOf(size.width, size.height) / 2f
+                                                        minOf(
+                                                            size.width,
+                                                            size.height
+                                                        ) / 2f
                                                 }
                                             } else {
                                                 Modifier
@@ -365,7 +335,10 @@ fun ChattingScreen(
             }
 
             if (uiState.showFairyPager && uiState.fairies.isNotEmpty()) {
-                val selectedIndex = uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
+                val selectedIndex = uiState.selectedFairyIndex.coerceIn(
+                    0,
+                    uiState.fairies.size - 1
+                )
 
                 EmotiaButton(
                     text = "내 감정은 ${uiState.fairies[selectedIndex].emotion}이야",
@@ -394,7 +367,11 @@ fun ChattingScreen(
                 EmotiaChatTextField(
                     value = uiState.currentInputText,
                     onValueChange = { text ->
-                        viewModel.handleIntent(ChattingIntent.InputTextChanged(text))
+                        viewModel.handleIntent(
+                            ChattingIntent.InputTextChanged(
+                                text
+                            )
+                        )
                     },
                     onSendClick = {
                         viewModel.handleIntent(ChattingIntent.SendMessage)
@@ -416,10 +393,11 @@ fun ChattingScreen(
                         // 터치 이벤트 차단 (빈 람다)
                     }
             ) {
-                val centerPoint = if (fairyCardCenter != Offset.Zero) fairyCardCenter else Offset(
-                    size.width / 2,
-                    size.height / 2
-                )
+                val centerPoint =
+                    if (fairyCardCenter != Offset.Zero) fairyCardCenter else Offset(
+                        size.width / 2,
+                        size.height / 2
+                    )
 
                 val clipPath = Path().apply {
                     addOval(
@@ -440,4 +418,3 @@ fun ChattingScreen(
         }
     }
 }
-
