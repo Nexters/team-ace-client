@@ -21,4 +21,5 @@ data class FairyDto(
     val image: String,
     val silhouetteImage: String,
     val emotion: String,
+    val emotionDescription: String,
 )

@@ -29,8 +29,12 @@ internal class MainNavigator(
         navController.navigateTo(ChattingRoute.ChattingMain)
     }
 
-    fun navigateToResult() {
-        navController.navigateTo(ResultRoute.ResultMain)
+    fun navigateToResult(
+        id: Int,
+        name: String,
+        image: String,
+    ) {
+        navController.navigateTo(ResultRoute.ResultMain(id, name, image))
     }
 
     private fun popBackStack() {
