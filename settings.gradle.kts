@@ -33,6 +33,7 @@ include(":composeApp")
 
 include(":core:designsystem")
 include(":core:model:fairybook")
+include(":core:platform")
 
 include(":core:data:chatting")
 include(":core:data:onboarding")
