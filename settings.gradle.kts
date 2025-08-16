@@ -4,6 +4,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     includeBuild("build-logic")
     repositories {
+        gradlePluginPortal()
         google {
             mavenContent {
                 includeGroupAndSubgroups("androidx")
@@ -12,7 +13,6 @@ pluginManagement {
             }
         }
         mavenCentral()
-        gradlePluginPortal()
     }
 }
 
@@ -35,6 +35,7 @@ include(":core:designsystem")
 include(":core:model:fairybook")
 include(":core:platform")
 
+include(":core:database")
 include(":core:data:chatting")
 include(":core:data:onboarding")
 include(":core:data:result")
