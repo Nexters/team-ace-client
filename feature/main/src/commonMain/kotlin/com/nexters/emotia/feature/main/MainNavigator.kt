@@ -33,8 +33,17 @@ internal class MainNavigator(
         id: Int,
         name: String,
         image: String,
+        silhouetteImage: String,
     ) {
-        navController.navigateTo(ResultRoute.ResultMain(id, name, image))
+        navController.navigateTo(ResultRoute.ResultMain(id, name, image, silhouetteImage))
+    }
+
+    fun navigateToLetter(
+        id: Int,
+        name: String,
+        image: String,
+    ) {
+        navController.navigateTo(ResultRoute.Letter(id, name, image))
     }
 
     private fun popBackStack() {
