@@ -19,7 +19,7 @@ class ResultViewModel : ViewModel(), ContainerHost<ResultState, ResultSideEffect
                     state.copy(
                         fairyId = intent.fairyId,
                         fairyName = intent.fairyName,
-                        fairyImage = intent.fairyImage
+                        fairyImage = intent.fairySilhouetteImage
                     )
                 }
             }

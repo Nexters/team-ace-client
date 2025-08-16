@@ -6,5 +6,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ResultRoute : Route {
     @Serializable
-    data class ResultMain(val id: Int, val name: String, val imageUrl: String) : ResultRoute
+    data class ResultMain(
+        val id: Int,
+        val name: String,
+        val imageUrl: String,
+        val silhouetteImageUrl: String,
+    ) : ResultRoute
+
+    @Serializable
+    data class Letter(val id: Int, val name: String, val imageUrl: String) : ResultRoute
 }

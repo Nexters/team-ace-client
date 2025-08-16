@@ -5,15 +5,18 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -34,6 +37,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
 import com.nexters.emotia.feature.result.contract.ResultIntent
 import com.nexters.emotia.feature.result.contract.ResultSideEffect
 import emotia.core.designsystem.generated.resources.Res
@@ -50,6 +54,7 @@ fun ResultScreen(
     fairyImage: String,
     onNavigateToOnBoarding: () -> Unit,
     onNavigateToChatting: () -> Unit,
+    onNavigateToLetter: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ResultViewModel = koinViewModel(),
 ) {
@@ -80,7 +85,9 @@ fun ResultScreen(
     )
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize().clickable {
+            onNavigateToLetter(uiState.fairyId, uiState.fairyName, uiState.fairyImage)
+        }
     ) {
 
         Image(
@@ -97,21 +104,30 @@ fun ResultScreen(
         ) {
             SubcomposeAsyncImage(
                 model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(uiState.fairyImage)
+                    .data(uiState.fairySilhouetteImage)
                     .crossfade(true)
                     .build(),
                 contentDescription = "${uiState.fairyName} image",
                 contentScale = ContentScale.Inside,
                 modifier = Modifier
                     .size(300.dp)
+                    .offset(y = (-50).dp)
                     .clip(RoundedCornerShape(16.dp)),
                 error = {
                     // TODO : 에러 이미지 처리
                 },
             )
-
-            Spacer(Modifier.height(50.dp))
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .padding(bottom = 48.dp)
+                .height(80.dp)
+                .background(color = colors.transparencyBlack)
+                .align(Alignment.BottomCenter)
+        )
 
         if (animatedRadius < 1800f) {
             Canvas(
@@ -141,3 +157,4 @@ fun ResultScreen(
         }
     }
 }
+

@@ -70,7 +70,7 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun ChattingScreen(
-    onNavigateToResult: (fairyId: Int, fairyName: String, fairyImage: String) -> Unit,
+    onNavigateToResult: (fairyId: Int, fairyName: String, fairyImage: String, silhouetteImage: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ChattingViewModel = koinViewModel(),
 ) {
@@ -127,6 +127,7 @@ fun ChattingScreen(
                 onNavigateToResult(
                     selectedFairy.id,
                     selectedFairy.name,
+                    selectedFairy.image,
                     selectedFairy.silhouetteImage
                 )
             }
