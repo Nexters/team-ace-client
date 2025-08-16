@@ -124,7 +124,8 @@ fun EmotiaChatTextField(
             if (placeholder.isNotEmpty() && value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    style = typography.emotia14M
+                    style = typography.emotia14M,
+                    color = colors.lightGray
                 )
             }
         },
