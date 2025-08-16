@@ -14,5 +14,10 @@ val dataChatModule =
         singleOf(::ChattingRemoteDataSourceImpl).bind<ChattingRemoteDataSource>()
 
         // Repository 주입
-        singleOf(::ChattingRepositoryImpl).bind<ChattingRepository>()
+        single<ChattingRepository> {
+            ChattingRepositoryImpl(
+                remoteDataSource = get(),
+                localDataSource = get()
+            )
+        }
     }
