@@ -12,7 +12,8 @@ val onBoardingModule = module {
     
     viewModel {
         OnBoardingViewModel(
-            loginRepository = get()
+            loginRepository = get(),
+            tokenUseCase = get()
         )
     }
 }

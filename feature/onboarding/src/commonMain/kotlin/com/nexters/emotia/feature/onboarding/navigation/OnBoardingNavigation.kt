@@ -10,7 +10,7 @@ fun NavGraphBuilder.onBoardingScreen(
 ) {
     composable<OnBoardingRoute.OnBoardingMain> {
         OnBoardingScreen(
-            onNavigateToChatting = onNavigateNext,
+            onOnboardingFinished = onNavigateNext,
             deviceUuid = deviceUuid
         )
     }
