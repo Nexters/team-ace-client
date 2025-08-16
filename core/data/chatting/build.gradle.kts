@@ -20,7 +20,6 @@ kotlin {
 
             implementation(projects.core.network)
             implementation(projects.core.domain.chatting)
-            implementation(projects.core.database)
 
         }
         iosMain.dependencies {
