@@ -6,7 +6,7 @@ import com.nexters.emotia.network.service.ChatApiService
 import org.koin.dsl.module
 
 val coreNetworkModule = module {
-    single { EmotiaNetwork() }
+    single { EmotiaNetwork(get()) }
     single { ChatApiService(get()) }
     single { AuthApiService(get()) }
 }
