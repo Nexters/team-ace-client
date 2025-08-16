@@ -57,7 +57,7 @@ class OnBoardingViewModel(
                 // 2단계: 회원가입 시도
                 val registerRequest = RegisterRequest(
                     username = deviceUuid,
-                    nickname = deviceUuid
+                    nickname = "감치닉네임"
                 )
                 val registerResult = loginRepository.register(registerRequest)
                 
