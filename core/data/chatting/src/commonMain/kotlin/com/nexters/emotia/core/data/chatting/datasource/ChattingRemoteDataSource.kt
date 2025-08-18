@@ -7,7 +7,7 @@ import com.nexters.emotia.network.dto.response.SendChatResponse
 interface ChattingRemoteDataSource {
     suspend fun createRoom(username: String): CreateRoomResponse
     suspend fun sendChat(
-        roomId: Int,
+        roomId: String,
         message: String,
     ): SendChatResponse
 

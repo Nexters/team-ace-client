@@ -27,7 +27,7 @@ class ChattingRepositoryImpl(
 
     override suspend fun sendChat(roomId: String, message: String): Result<ChatMessage> {
         return runCatching {
-            val response = remoteDataSource.sendChat(roomId.toInt(), message)
+            val response = remoteDataSource.sendChat(roomId, message)
 
             if (!response.success) {
                 throw IllegalStateException("API 요청 실패: ${response.error}")
