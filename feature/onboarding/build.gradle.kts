@@ -6,6 +6,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain.onboarding)
+            implementation(projects.core.designsystem)
             implementation(libs.slf4j.api)
             implementation(libs.slf4j.android)
             implementation(projects.core.data.onboarding)
