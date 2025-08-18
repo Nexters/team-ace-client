@@ -17,11 +17,11 @@ class ChattingRemoteDataSourceImpl(
     }
 
     override suspend fun sendChat(
-        roomId: Int,
+        roomId: String,
         message: String,
     ): SendChatResponse {
         return apiService.sendChat(
-            chatRoomId = roomId.toString(),
+            chatRoomId = roomId,
             message = message,
         )
     }
