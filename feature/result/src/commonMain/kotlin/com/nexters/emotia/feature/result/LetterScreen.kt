@@ -3,6 +3,7 @@ package com.nexters.emotia.feature.result
 import EmotiaMultiLineTextField
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,12 +33,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import coil3.compose.LocalPlatformContext
 import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nexters.emotia.core.designsystem.component.EmotiaButton
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.img_letter_background
 import org.jetbrains.compose.resources.painterResource
@@ -143,7 +149,6 @@ fun LetterScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // 버튼
             EmotiaButton(
                 text = "위로 건네기",
                 onClick = {
@@ -155,8 +160,24 @@ fun LetterScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "다시 대화하기",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        // TODO : 채팅 내비게이션 다시 시작 구현
+                    },
+                style = typography.emotia14M.copy(
+                    color = colors.lightGray,
+                    textDecoration = TextDecoration.Underline
+                ),
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             if (isKeyboardVisible) {
-                Spacer(modifier = Modifier.height(250.dp))
+                Spacer(modifier = Modifier.height(210.dp))
             }
         }
     }
