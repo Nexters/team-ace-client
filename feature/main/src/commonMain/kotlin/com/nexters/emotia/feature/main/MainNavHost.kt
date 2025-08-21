@@ -1,8 +1,10 @@
 package com.nexters.emotia.feature.main
 
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
 import com.nexters.emotia.feature.chatting.navigation.chattingScreen
 import com.nexters.emotia.feature.onboarding.navigation.onBoardingScreen
 import com.nexters.emotia.feature.result.navigation.fairyScreen
@@ -16,7 +18,7 @@ internal fun MainNavHost(
     NavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
-        modifier = modifier
+        modifier = modifier.background(color = colors.black)
     ) {
         onBoardingScreen(
             onNavigateNext = {
@@ -41,8 +43,8 @@ internal fun MainNavHost(
             onNavigateToLetter = { id, name, image, chatRoomId ->
                 navigator.navigateToLetter(id, name, image, chatRoomId)
             },
-            onNavigateToResult = { fairyId, fairyName, fairyImage, contents ->
-                navigator.navigateToLetterResult(fairyId, fairyName, fairyImage, contents)
+            onNavigateToResult = { fairyName, contents ->
+                navigator.navigateToLetterResult(fairyName, contents)
             }
         )
     }

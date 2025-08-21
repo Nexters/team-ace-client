@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -59,7 +58,7 @@ fun LetterScreen(
     fairyName: String,
     fairyImage: String,
     chatRoomId: Int,
-    onNavigateToResult: (Int, String, String, String) -> Unit,
+    onNavigateToResult: (String, String) -> Unit,
     onNavigateToChatting: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LetterViewModel = koinViewModel(),
@@ -83,9 +82,7 @@ fun LetterScreen(
         when (sideEffect) {
             is LetterSideEffect.NavigateToResult -> {
                 onNavigateToResult(
-                    sideEffect.letter.fairyId,
                     sideEffect.letter.name,
-                    sideEffect.letter.image,
                     sideEffect.letter.contents
                 )
             }
@@ -220,20 +217,21 @@ fun LetterScreen(
             }
         }
 
-        // 로딩 오버레이
-        if (uiState.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable { /* 터치 차단 */ },
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = colors.primaryDark
-                )
-            }
-        }
+        // TODO : 로딩이 빨라서 보류. 다른 정책 필요
+//        // 로딩 오버레이
+//        if (uiState.isLoading) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Black.copy(alpha = 0.5f))
+//                    .clickable { /* 터치 차단 */ },
+//                contentAlignment = Alignment.Center
+//            ) {
+//                CircularProgressIndicator(
+//                    color = colors.primaryDark
+//                )
+//            }
+//        }
     }
 }
 
