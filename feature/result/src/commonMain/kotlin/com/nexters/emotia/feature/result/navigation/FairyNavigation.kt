@@ -11,7 +11,7 @@ fun NavGraphBuilder.fairyScreen(
     onNavigateToOnBoarding: () -> Unit,
     onNavigateToChatting: () -> Unit,
     onNavigateToLetter: (Int, String, String, Int) -> Unit,
-    onNavigateToResult: (Int, String, String, String) -> Unit,
+    onNavigateToResult: (String, String) -> Unit,
 ) {
     composable<FairyRoute.FairyMain> { backStackEntry ->
         val data = backStackEntry.toRoute<FairyRoute.FairyMain>()
@@ -36,8 +36,8 @@ fun NavGraphBuilder.fairyScreen(
             fairyName = data.name,
             fairyImage = data.imageUrl,
             chatRoomId = data.chatRoomId,
-            onNavigateToResult = { fairyId, fairyName, fairyImage, contents ->
-                onNavigateToResult(fairyId, fairyName, fairyImage, contents)
+            onNavigateToResult = { fairyName, contents ->
+                onNavigateToResult(fairyName, contents)
             },
             onNavigateToChatting = onNavigateToChatting
         )
@@ -47,10 +47,9 @@ fun NavGraphBuilder.fairyScreen(
         val data = backStackEntry.toRoute<FairyRoute.Result>()
 
         ResultScreen(
-            fairyId = data.fairyId,
             fairyName = data.fairyName,
-            fairyImage = data.fairyImage,
-            contents = data.contents
+            contents = data.contents,
+            onNavigateToOnBoarding = onNavigateToOnBoarding
         )
     }
 }

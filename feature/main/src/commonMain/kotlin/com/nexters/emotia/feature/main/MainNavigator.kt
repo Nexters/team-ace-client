@@ -49,12 +49,10 @@ internal class MainNavigator(
     }
 
     fun navigateToLetterResult(
-        fairyId: Int,
         fairyName: String,
-        fairyImage: String,
         contents: String,
     ) {
-        navController.navigateTo(FairyRoute.Result(fairyId, fairyName, fairyImage, contents))
+        navController.navigateTo(FairyRoute.Result(fairyName, contents))
     }
 
     private fun popBackStack() {
