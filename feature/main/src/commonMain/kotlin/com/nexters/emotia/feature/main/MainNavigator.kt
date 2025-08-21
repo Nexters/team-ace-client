@@ -10,7 +10,7 @@ import com.nexters.emotia.feature.chatting.navigation.ChattingRoute
 import com.nexters.emotia.feature.main.util.navigateTo
 import com.nexters.emotia.feature.main.util.navigateToAndClearBackStack
 import com.nexters.emotia.feature.onboarding.navigation.OnBoardingRoute
-import com.nexters.emotia.feature.result.navigation.ResultRoute
+import com.nexters.emotia.feature.result.navigation.FairyRoute
 
 internal class MainNavigator(
     val navController: NavHostController,
@@ -29,21 +29,32 @@ internal class MainNavigator(
         navController.navigateTo(ChattingRoute.ChattingMain)
     }
 
-    fun navigateToResult(
+    fun navigateToFairy(
         id: Int,
         name: String,
         image: String,
         silhouetteImage: String,
+        chatRoomId: Int,
     ) {
-        navController.navigateTo(ResultRoute.ResultMain(id, name, image, silhouetteImage))
+        navController.navigateTo(FairyRoute.FairyMain(id, name, image, silhouetteImage, chatRoomId))
     }
 
     fun navigateToLetter(
         id: Int,
         name: String,
         image: String,
+        chatRoomId: Int,
     ) {
-        navController.navigateTo(ResultRoute.Letter(id, name, image))
+        navController.navigateTo(FairyRoute.Letter(id, name, image, chatRoomId))
+    }
+
+    fun navigateToLetterResult(
+        fairyId: Int,
+        fairyName: String,
+        fairyImage: String,
+        contents: String,
+    ) {
+        navController.navigateTo(FairyRoute.Result(fairyId, fairyName, fairyImage, contents))
     }
 
     private fun popBackStack() {

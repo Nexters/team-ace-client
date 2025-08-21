@@ -5,12 +5,12 @@ import androidx.navigation.compose.composable
 import com.nexters.emotia.feature.chatting.ChattingScreen
 
 fun NavGraphBuilder.chattingScreen(
-    onNavigateToResult: (Int, String, String, String) -> Unit,
+    onNavigateToFairy: (Int, String, String, String, Int) -> Unit,
 ) {
     composable<ChattingRoute.ChattingMain> {
         ChattingScreen(
-            onNavigateToResult = { id, name, image, silhouetteImage ->
-                onNavigateToResult(id, name, image, silhouetteImage)
+            onNavigateToFairy = { id, name, image, silhouetteImage, chatRoomId ->
+                onNavigateToFairy(id, name, image, silhouetteImage, chatRoomId)
             }
         )
     }

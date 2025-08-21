@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.nexters.emotia.feature.chatting.navigation.chattingScreen
 import com.nexters.emotia.feature.onboarding.navigation.onBoardingScreen
-import com.nexters.emotia.feature.result.navigation.resultScreen
+import com.nexters.emotia.feature.result.navigation.fairyScreen
 
 @Composable
 internal fun MainNavHost(
@@ -26,20 +26,23 @@ internal fun MainNavHost(
         )
 
         chattingScreen(
-            onNavigateToResult = { id, name, image, silhouetteImage ->
-                navigator.navigateToResult(id, name, image, silhouetteImage)
+            onNavigateToFairy = { id, name, image, silhouetteImage, chatRoomId ->
+                navigator.navigateToFairy(id, name, image, silhouetteImage, chatRoomId)
             }
         )
 
-        resultScreen(
+        fairyScreen(
             onNavigateToOnBoarding = {
                 navigator.navigateToOnBoarding()
             },
             onNavigateToChatting = {
                 navigator.navigateToChatting()
             },
-            onNavigateToLetter = { id, name, image ->
-                navigator.navigateToLetter(id, name, image)
+            onNavigateToLetter = { id, name, image, chatRoomId ->
+                navigator.navigateToLetter(id, name, image, chatRoomId)
+            },
+            onNavigateToResult = { fairyId, fairyName, fairyImage, contents ->
+                navigator.navigateToLetterResult(fairyId, fairyName, fairyImage, contents)
             }
         )
     }

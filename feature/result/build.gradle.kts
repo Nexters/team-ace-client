@@ -8,6 +8,7 @@ kotlin {
             implementation(libs.bundles.coil)
             implementation(libs.slf4j.api)
             implementation(libs.slf4j.android)
+            implementation(projects.core.domain.letter)
         }
     }
 }

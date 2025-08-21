@@ -36,10 +36,12 @@ include(":core:model:fairybook")
 include(":core:platform")
 
 include(":core:data:chatting")
+include(":core:data:letter")
 include(":core:data:onboarding")
 include(":core:data:result")
 
 include(":core:domain:chatting")
+include(":core:domain:letter")
 include(":core:domain:result")
 include(":core:domain:onboarding")
 
