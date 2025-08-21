@@ -1,6 +1,7 @@
 package com.nexters.emotia.di
 
 import com.nexters.emotia.core.data.chatting.di.dataChatModule
+import com.nexters.emotia.core.data.letter.di.dataLetterModule
 import com.nexters.emotia.core.data.onboarding.di.dataOnboardingModule
 import com.nexters.emotia.core.domain.onboarding.di.domainOnboardingModule
 import com.nexters.emotia.core.platform.di.platformModule
@@ -14,6 +15,7 @@ val appModule =
             coreNetworkModule,
             platformModule,
             dataChatModule,
+            dataLetterModule,
             dataOnboardingModule,
             domainOnboardingModule,
             featureModule,

@@ -1,4 +1,4 @@
-package com.nexters.emotia.feature.result
+package com.nexters.emotia.feature.result.letter
 
 import EmotiaMultiLineTextField
 import androidx.compose.foundation.Image
@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,20 +44,58 @@ import coil3.request.crossfade
 import com.nexters.emotia.core.designsystem.component.EmotiaButton
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
+import com.nexters.emotia.feature.result.letter.contract.LetterIntent
+import com.nexters.emotia.feature.result.letter.contract.LetterSideEffect
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.img_letter_background
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 fun LetterScreen(
     fairyId: Int,
     fairyName: String,
     fairyImage: String,
+    chatRoomId: Int,
+    onNavigateToResult: (Int, String, String, String) -> Unit,
+    onNavigateToChatting: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: LetterViewModel = koinViewModel(),
 ) {
-    var textFieldValue by remember { mutableStateOf("") }
+    val uiState by viewModel.collectAsState()
     var isKeyboardVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(fairyId, fairyName, fairyImage, chatRoomId) {
+        viewModel.handleIntent(
+            LetterIntent.InitializeFairy(
+                fairyId,
+                fairyName,
+                fairyImage,
+                chatRoomId
+            )
+        )
+    }
+
+    viewModel.collectSideEffect { sideEffect ->
+        when (sideEffect) {
+            is LetterSideEffect.NavigateToResult -> {
+                onNavigateToResult(
+                    sideEffect.letter.fairyId,
+                    sideEffect.letter.name,
+                    sideEffect.letter.image,
+                    sideEffect.letter.contents
+                )
+            }
+
+            is LetterSideEffect.NavigateToChatting -> onNavigateToChatting()
+            is LetterSideEffect.ShowError -> {
+                // TODO: 에러 처리
+            }
+        }
+    }
 
     val density = LocalDensity.current
     val imeHeight = WindowInsets.ime.getBottom(density)
@@ -132,8 +171,8 @@ fun LetterScreen(
             Spacer(modifier = Modifier.height(28.dp))
 
             EmotiaMultiLineTextField(
-                value = textFieldValue,
-                onValueChange = { textFieldValue = it },
+                value = uiState.contents,
+                onValueChange = { viewModel.handleIntent(LetterIntent.UpdateContents(it)) },
                 placeholder = "${fairyName}에게 위로의 말을 건네보자.",
                 modifier = Modifier
                     .let { modifier ->
@@ -152,9 +191,9 @@ fun LetterScreen(
             EmotiaButton(
                 text = "위로 건네기",
                 onClick = {
-                    // TODO: 전송 로직 구현
+                    viewModel.handleIntent(LetterIntent.SendLetter)
                 },
-                enabled = textFieldValue.isNotEmpty(),
+                enabled = uiState.contents.isNotEmpty() && !uiState.isLoading,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
 
@@ -165,7 +204,7 @@ fun LetterScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        // TODO : 채팅 내비게이션 다시 시작 구현
+                        onNavigateToChatting()
                     },
                 style = typography.emotia14M.copy(
                     color = colors.lightGray,
@@ -178,6 +217,21 @@ fun LetterScreen(
 
             if (isKeyboardVisible) {
                 Spacer(modifier = Modifier.height(210.dp))
+            }
+        }
+
+        // 로딩 오버레이
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { /* 터치 차단 */ },
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = colors.primaryDark
+                )
             }
         }
     }

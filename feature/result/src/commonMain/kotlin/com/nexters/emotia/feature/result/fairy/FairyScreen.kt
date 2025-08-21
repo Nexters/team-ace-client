@@ -1,4 +1,4 @@
-package com.nexters.emotia.feature.result
+package com.nexters.emotia.feature.result.fairy
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -38,8 +38,8 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
-import com.nexters.emotia.feature.result.contract.ResultIntent
-import com.nexters.emotia.feature.result.contract.ResultSideEffect
+import com.nexters.emotia.feature.result.fairy.contract.FairyIntent
+import com.nexters.emotia.feature.result.fairy.contract.FairySideEffect
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.img_result_background
 import org.jetbrains.compose.resources.painterResource
@@ -48,7 +48,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
-fun ResultScreen(
+fun FairyScreen(
     fairyId: Int,
     fairyName: String,
     fairyImage: String,
@@ -56,20 +56,20 @@ fun ResultScreen(
     onNavigateToChatting: () -> Unit,
     onNavigateToLetter: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ResultViewModel = koinViewModel(),
+    viewModel: FairyViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.collectAsState()
 
     LaunchedEffect(fairyId, fairyName, fairyImage) {
-        viewModel.handleIntent(ResultIntent.InitializeFairy(fairyId, fairyName, fairyImage))
-        viewModel.handleIntent(ResultIntent.StartExpandAnimation)
+        viewModel.handleIntent(FairyIntent.InitializeFairy(fairyId, fairyName, fairyImage))
+        viewModel.handleIntent(FairyIntent.StartExpandAnimation)
     }
 
     viewModel.collectSideEffect { sideEffect ->
         when (sideEffect) {
-            is ResultSideEffect.NavigateToOnBoarding -> onNavigateToOnBoarding()
-            is ResultSideEffect.NavigateToChatting -> onNavigateToChatting()
-            is ResultSideEffect.ShowError -> {
+            is FairySideEffect.NavigateToOnBoarding -> onNavigateToOnBoarding()
+            is FairySideEffect.NavigateToChatting -> onNavigateToChatting()
+            is FairySideEffect.ShowError -> {
                 // TODO: 에러 처리
             }
         }
