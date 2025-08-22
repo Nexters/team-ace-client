@@ -77,8 +77,7 @@ class EmotiaNetwork(
         defaultRequest {
             contentType(ContentType.Application.Json)
             url {
-                // 우리 서버 나오고 수정 필요
-                protocol = URLProtocol.HTTP
+                protocol = URLProtocol.HTTPS
                 host = hostName
             }
         }

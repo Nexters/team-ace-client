@@ -4,17 +4,6 @@
 <dict>
     <key>CFBundleIdentifier</key>
     <string>com.nexters.emotia</string>
-    <key>NSAppTransportSecurity</key>
-    <dict>
-        <key>NSExceptionDomains</key>
-        <dict>
-            <key>{baseurl}</key>
-            <dict>
-                <key>NSExceptionAllowsInsecureHTTPLoads</key>
-                <true />
-            </dict>
-        </dict>
-    </dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 </dict>
