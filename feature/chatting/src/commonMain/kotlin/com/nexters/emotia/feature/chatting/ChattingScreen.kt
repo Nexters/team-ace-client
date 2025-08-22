@@ -240,10 +240,13 @@ fun ChattingScreen(
                             items = uiState.messages,
                             key = { message -> message.timestamp }
                         ) { message ->
+                            val messageIndex = uiState.messages.indexOf(message)
+                            // 첫 번째(AI)와 두 번째(사용자) 메시지는 타자기 효과 스킵
                             ChatBubble(
                                 text = message.text,
                                 type = message.type,
-                                messageId = message.timestamp.toString()
+                                messageId = message.timestamp.toString(),
+                                skipTypewriterEffect = messageIndex <= 1
                             )
                         }
 
