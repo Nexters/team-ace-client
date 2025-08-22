@@ -62,18 +62,27 @@ fun ChatBubbleText(
     textColor: Color,
     modifier: Modifier = Modifier,
     messageId: String? = null,
+    skipTypewriterEffect: Boolean = false,
 ) {
     when (type) {
-        // 상대방(AI)이 보낸 말풍선은 타이핑 애니메이션을 적용
         BubbleType.OTHER -> {
-            TypewriterText(
-                text = text,
-                modifier = modifier,
-                textStyle = textStyle,
-                textColor = textColor,
-                typingDelayMs = 50L,
-                messageId = messageId
-            )
+            if (skipTypewriterEffect) {
+                Text(
+                    text = text,
+                    modifier = modifier,
+                    color = textColor,
+                    style = textStyle,
+                )
+            } else {
+                TypewriterText(
+                    text = text,
+                    modifier = modifier,
+                    textStyle = textStyle,
+                    textColor = textColor,
+                    typingDelayMs = 50L,
+                    messageId = messageId
+                )
+            }
         }
 
         BubbleType.MINE -> {
@@ -115,6 +124,7 @@ fun ChatBubble(
     padding: Dp = 8.dp,
     screenHorizontalPadding: Dp = 8.dp,
     minOppositeMargin: Dp = 60.dp,
+    skipTypewriterEffect: Boolean = false,
 ) {
     val style = getBubbleStyle(type)
 
@@ -143,7 +153,8 @@ fun ChatBubble(
                 textStyle = style.textStyle,
                 textColor = style.textColor,
                 modifier = Modifier.padding(padding),
-                messageId = messageId
+                messageId = messageId,
+                skipTypewriterEffect = skipTypewriterEffect
             )
         }
     }
