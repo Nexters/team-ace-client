@@ -478,7 +478,7 @@ private fun CreateRoom(
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(horizontal = 100.dp),
+                        .padding(horizontal = 50.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (firstMessage.isNotEmpty()) {
