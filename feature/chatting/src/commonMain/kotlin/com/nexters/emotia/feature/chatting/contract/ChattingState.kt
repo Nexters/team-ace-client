@@ -18,6 +18,5 @@ data class ChattingState(
     val fairies: PersistentList<Fairy> = persistentListOf(),
     val showFairyPager: Boolean = false,
     val selectedFairyIndex: Int = 1,
-    val isRoomCreated: Boolean = false,
     val firstMessage: String = "",
 )
