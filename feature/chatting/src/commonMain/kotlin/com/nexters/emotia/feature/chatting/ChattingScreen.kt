@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -67,8 +68,10 @@ import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
 import emotia.core.designsystem.generated.resources.Res
+import emotia.core.designsystem.generated.resources.img_chatting_fairy
 import emotia.core.designsystem.generated.resources.img_letter_background
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
@@ -454,27 +457,53 @@ private fun CreateRoom(
     modifier: Modifier = Modifier,
 ) {
     val colors = LocalEmotiaColors.current
-
     Box(
         modifier = modifier.fillMaxSize()
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(Res.drawable.img_letter_background),
-                contentDescription = null,
+            // 배경 이미지 영역
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.img_letter_background),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.Crop
+                )
+
+                // Fairy 이미지
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(Res.drawable.img_chatting_fairy),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+            }
 
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(Color.Black)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF171E2D),
+                                Color(0xFF1A1A1B)
+                            )
+                        )
+                    )
             )
         }
 
@@ -520,3 +549,16 @@ private fun CreateRoom(
         }
     }
 }
+
+@Preview
+@Composable
+fun ChattingScreenPreview() {
+    CreateRoom(
+        firstMessage = "안녕하세요! 오늘 기분은 어떤가요?",
+        currentInputText = "",
+        onInputTextChange = {},
+        onSendClick = {},
+        isLoading = false
+    )
+}
+
