@@ -138,7 +138,7 @@ fun LetterScreen(
                 modifier = Modifier
                     .size(108.dp)
                     .align(Alignment.BottomCenter)
-                    .offset(y = (-56).dp)
+                    .offset(y = (-49).dp)
                     .clip(RoundedCornerShape(16.dp)),
                 error = {
                     // TODO : 에러 이미지 처리
