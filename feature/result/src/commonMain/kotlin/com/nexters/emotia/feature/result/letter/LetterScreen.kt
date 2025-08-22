@@ -190,7 +190,7 @@ fun LetterScreen(
                 onClick = {
                     viewModel.handleIntent(LetterIntent.SendLetter)
                 },
-                enabled = uiState.contents.isNotEmpty() && !uiState.isLoading,
+                enabled = uiState.contents.isNotBlank() && !uiState.isLoading,
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
 
