@@ -21,10 +21,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,8 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nexters.emotia.core.designsystem.component.TypingAnimatedSpeechBubble
@@ -54,6 +50,7 @@ import emotia.core.designsystem.generated.resources.seven
 import emotia.core.designsystem.generated.resources.six
 import emotia.core.designsystem.generated.resources.ten
 import emotia.core.designsystem.generated.resources.third
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -134,6 +131,23 @@ private fun StoryContent(
     val totalSteps = 12
     var currentStep by remember { mutableStateOf(0) }
 
+    // --- 리팩토링된 부분: 각 스텝에 해당하는 이미지를 리스트로 관리 ---
+    val storyImages: List<DrawableResource> = remember {
+        listOf(
+            // 0~2단계는 애니메이션이 복잡하여 별도 처리
+            Res.drawable.four,   // 3단계 (인덱스 0)
+            Res.drawable.five,   // 4단계 (인덱스 1)
+            Res.drawable.six,    // 5단계 (인덱스 2)
+            Res.drawable.six,    // 6단계 (인덱스 3)
+            Res.drawable.seven,  // 7단계 (인덱스 4)
+            Res.drawable.eight,  // 8단계 (인덱스 5)
+            Res.drawable.nine,   // 9단계 (인덱스 6)
+            Res.drawable.ten,    // 10단계 (인덱스 7)
+        )
+    }
+    // 단순 이미지 전환이 일어나는 스텝의 범위
+    val simpleImageTransitionSteps = 3..10
+
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -152,9 +166,10 @@ private fun StoryContent(
 
         // --- 애니메이션 상태 값 정의 ---
         val animationSpecFloat = tween<Float>(durationMillis = 600)
-        val animationSpecIntOffset = tween<IntOffset>(durationMillis = 600)
 
-        // first 이미지 애니메이션 (위로 이동 및 크기 축소)
+        // --- 각 스텝 별 UI 구성 (복잡한 애니메이션은 기존 로직 유지) ---
+
+        // Step 1 & 2: first 이미지 (위로 이동 및 크기 축소)
         val firstImageOffsetY by animateDpAsState(
             targetValue = if (currentStep >= 1) -(screenHeight / 4) else 0.dp,
             animationSpec = tween(600)
@@ -164,17 +179,8 @@ private fun StoryContent(
             animationSpec = tween(600)
         )
 
-        // second 이미지 애니메이션 (위로 이동)
-        val secondImageOffsetY by animateDpAsState(
-            targetValue = if (currentStep == 2) -(screenHeight / 2) else 0.dp,
-            animationSpec = tween(600)
-        )
-
-        // --- 각 스텝 별 UI 구성 ---
-
-        // Step 1 & 2: first 이미지
         AnimatedVisibility(
-            visible = currentStep <= 1, // Step 1과 2에서만 보임
+            visible = currentStep <= 1,
             exit = fadeOut(animationSpecFloat)
         ) {
             Image(
@@ -191,8 +197,8 @@ private fun StoryContent(
 
         // Step 2: second 이미지 (하단)
         AnimatedVisibility(
-            visible = currentStep == 1, // Step 2에서만 보임
-            enter = slideInVertically(animationSpecIntOffset) { it / 2 } + fadeIn(animationSpecFloat),
+            visible = currentStep == 1,
+            enter = slideInVertically(tween(600)) { it / 2 } + fadeIn(animationSpecFloat),
             exit = fadeOut(animationSpecFloat)
         ) {
             Image(
@@ -206,157 +212,44 @@ private fun StoryContent(
             )
         }
 
-// Step 3: third(하단) + second(상단) 스택
+        // Step 3: third(하단) + second(상단) 스택
         AnimatedVisibility(
-            visible = currentStep == 2, // Step 3에서만 보임
+            visible = currentStep == 2,
             enter = fadeIn(animationSpecFloat),
             exit = fadeOut(animationSpecFloat)
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                // 상단 절반 - second 이미지 (투명도 50%)
                 Image(
                     painter = painterResource(Res.drawable.second),
                     contentDescription = "Second screen (top half)",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f), // 절반 차지
+                    modifier = Modifier.fillMaxWidth().weight(1f),
                     contentScale = ContentScale.Crop,
                     alpha = 0.5f
                 )
-
-                // 하단 절반 - third 이미지
                 Image(
                     painter = painterResource(Res.drawable.third),
                     contentDescription = "Third screen (bottom half)",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f), // 절반 차지
+                    modifier = Modifier.fillMaxWidth().weight(1f),
                     contentScale = ContentScale.Crop
                 )
             }
         }
 
-
-        // Step 4: four 이미지로 전환
+        // --- 리팩토링된 부분: 3~10단계의 단순 이미지 전환을 하나의 블록으로 처리 ---
         AnimatedVisibility(
-            visible = currentStep == 3,
+            visible = currentStep in simpleImageTransitionSteps,
             enter = fadeIn(animationSpecFloat),
             exit = fadeOut(animationSpecFloat)
         ) {
+            val imageIndex = (currentStep - simpleImageTransitionSteps.first).coerceIn(storyImages.indices)
             Image(
-                painter = painterResource(Res.drawable.four),
-                contentDescription = "Fourth screen",
+                painter = painterResource(storyImages[imageIndex]),
+                contentDescription = "Story image for step ${currentStep + 1}",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         }
 
-        // Step 4
-        AnimatedVisibility(
-            visible = currentStep == 4,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.five),
-                contentDescription = "Fifth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        // Step 5
-        AnimatedVisibility(
-            visible = currentStep == 5,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.six),
-                contentDescription = "Fifth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-        // Step 6
-        AnimatedVisibility(
-            visible = currentStep == 6,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.six),
-                contentDescription = "Fifth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        // Step 7
-        AnimatedVisibility(
-            visible = currentStep == 7,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.seven),
-                contentDescription = "Fifth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        AnimatedVisibility(
-            visible = currentStep == 8,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.eight),
-                contentDescription = "Sixth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        AnimatedVisibility(
-            visible = currentStep == 9,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.nine),
-                contentDescription = "Sixth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        AnimatedVisibility(
-            visible = currentStep == 10,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.ten),
-                contentDescription = "Sixth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        AnimatedVisibility(
-            visible = currentStep == 11,
-            enter = fadeIn(animationSpecFloat),
-            exit = fadeOut(animationSpecFloat)
-        ) {
-            Image(
-                painter = painterResource(Res.drawable.ten),
-                contentDescription = "Sixth screen",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        }
 
         // 말풍선
         val (speechBubbleText, useAlternativeBackground) = when (currentStep) {
@@ -380,7 +273,6 @@ private fun StoryContent(
                 exit = fadeOut(tween(300)),
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                // 커스텀 말풍선 컴포넌트 호출 및 파라미터 전달
                 TypingAnimatedSpeechBubble(
                     fullText = speechBubbleText,
                     useAlternativeBackground = useAlternativeBackground
@@ -396,18 +288,18 @@ private fun StoryContent(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black), // 전체 배경 어둡게
+                    .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
                 // 원형 뷰포트
                 Box(
                     modifier = Modifier
-                        .size(150.dp) // 원 크기
-                        .clip(CircleShape) // 동그랗게 자름
-                        .background(Color.Transparent) // 원 안은 배경이 그대로 보이도록
+                        .size(150.dp)
+                        .clip(CircleShape)
+                        .background(Color.Transparent)
                 ) {
                     Image(
-                        painter = painterResource(Res.drawable.ten), // 보여줄 이미지
+                        painter = painterResource(Res.drawable.ten),
                         contentDescription = "마지막 배경",
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
@@ -438,26 +330,5 @@ private fun StoryContent(
                     .padding(top = 60.dp, end = 24.dp)
             )
         }
-    }
-}
-
-@Composable
-private fun SpeechBubble(
-    text: String,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier.padding(start = 24.dp, end = 24.dp, bottom = 100.dp),
-        color = Color.Black.copy(alpha = 0.7f),
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Text(
-            text = text,
-            color = Color.White,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-            lineHeight = 24.sp
-        )
     }
 }
