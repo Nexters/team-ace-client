@@ -1,6 +1,5 @@
 package com.nexters.emotia.core.data.chatting.datasource
 
-import com.nexters.emotia.network.EmotiaNetwork
 import com.nexters.emotia.network.dto.response.CreateRoomResponse
 import com.nexters.emotia.network.dto.response.GetFairiesResponse
 import com.nexters.emotia.network.dto.response.SendChatResponse
@@ -29,7 +28,6 @@ class ChattingRemoteDataSourceImpl(
     override suspend fun getFairies(chatRoomId: String): GetFairiesResponse {
         return apiService.getFairies(
             chatRoomId = chatRoomId,
-            token = EmotiaNetwork.TEST_TOKEN
         )
     }
 }
