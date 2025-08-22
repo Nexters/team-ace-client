@@ -241,7 +241,6 @@ fun ChattingScreen(
                             key = { message -> message.timestamp }
                         ) { message ->
                             val messageIndex = uiState.messages.indexOf(message)
-                            // 첫 번째(AI)와 두 번째(사용자) 메시지는 타자기 효과 스킵
                             ChatBubble(
                                 text = message.text,
                                 type = message.type,
@@ -503,9 +502,8 @@ private fun CreateRoom(
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                     }
-
                 }
-                // Fairy 이미지
+
                 Box(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -520,40 +518,40 @@ private fun CreateRoom(
                     )
                 }
             }
-        }
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF171E2D),
-                            Color(0xFF1A1A1B)
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF171E2D),
+                                Color(0xFF1A1A1B)
+                            )
                         )
                     )
-                )
-        )
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-            .imePadding()
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-
-        Box(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
-        ) {
-            EmotiaChatTextField(
-                value = currentInputText,
-                onValueChange = onInputTextChange,
-                onSendClick = onSendClick,
-                placeholder = "요정에게 지금 기분을 설명해보자",
-                enabled = !isLoading && firstMessage.isNotEmpty()
             )
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .imePadding()
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+
+            Box(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+            ) {
+                EmotiaChatTextField(
+                    value = currentInputText,
+                    onValueChange = onInputTextChange,
+                    onSendClick = onSendClick,
+                    placeholder = "요정에게 지금 기분을 설명해보자",
+                    enabled = !isLoading && firstMessage.isNotEmpty()
+                )
+            }
         }
     }
 }
