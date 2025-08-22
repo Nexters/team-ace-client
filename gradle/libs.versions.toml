@@ -30,6 +30,7 @@ orbit = "10.0.0"
 
 # navigation
 androidx-navigation = "2.9.0-beta02"
+androidx-splashscreen = "1.2.0-alpha02"
 kotlinStdlib = "2.2.0"
 runner = "1.7.0"
 core = "1.7.0"
@@ -54,6 +55,7 @@ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayo
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splashscreen" }
 
 # navigation
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
