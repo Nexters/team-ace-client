@@ -456,7 +456,6 @@ private fun CreateRoom(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val colors = LocalEmotiaColors.current
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -476,26 +475,49 @@ private fun CreateRoom(
                     contentScale = ContentScale.Crop
                 )
 
-                // Fairy 이미지
-                Box(
+                Column(
                     modifier = Modifier
-                        .size(72.dp)
-                        .align(Alignment.Center),
-                    contentAlignment = Alignment.Center
+                        .align(Alignment.Center)
+                        .padding(horizontal = 100.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.img_chatting_fairy),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
+                    if (firstMessage.isNotEmpty()) {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    Color(0xE62D2B38),
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 12.dp, vertical = 7.dp)
+                        ) {
+                            Text(
+                                text = firstMessage,
+                                color = Color.White,
+                                style = typography.emotia12M,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    // Fairy 이미지
+                    Box(
+                        modifier = Modifier.size(72.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(Res.drawable.img_chatting_fairy),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
                 }
             }
 
             Spacer(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
+                    .fillMaxSize()
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
@@ -513,27 +535,7 @@ private fun CreateRoom(
                 .safeDrawingPadding()
                 .imePadding()
         ) {
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
-
-            if (firstMessage.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 32.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = firstMessage,
-                        style = typography.emotia16M,
-                        color = colors.white,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
             Box(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
@@ -561,4 +563,3 @@ fun ChattingScreenPreview() {
         isLoading = false
     )
 }
-
