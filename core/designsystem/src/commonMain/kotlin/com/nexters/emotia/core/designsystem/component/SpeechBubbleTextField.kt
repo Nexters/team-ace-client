@@ -109,7 +109,7 @@ fun TypingAnimatedSpeechBubble(
         Text(
             text = displayedText,
             color = Color.White,
-            fontSize = 14.sp,
+            style = typography.emotia14M,
             textAlign = textAlign,
             modifier = textModifier,
             lineHeight = 20.sp
