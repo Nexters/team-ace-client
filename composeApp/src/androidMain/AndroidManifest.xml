@@ -6,11 +6,11 @@
     <application
         android:name=".EmotiaApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_xxxhdpi"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_xxxhdpi"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        android:theme="@style/Theme.Emotia.SplashScreen">
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing"
