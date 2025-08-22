@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -39,7 +40,6 @@ import coil3.compose.SubcomposeAsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.nexters.emotia.core.designsystem.component.TypingAnimatedSpeechBubble
-import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.colors
 import com.nexters.emotia.feature.result.fairy.contract.FairyIntent
 import com.nexters.emotia.feature.result.fairy.contract.FairySideEffect
 import emotia.core.designsystem.generated.resources.Res
@@ -95,15 +95,9 @@ fun FairyScreen(
     }
 
     Box(
-        modifier = modifier.fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        colors.backgroundBlue,
-                        Color.Black
-                    )
-                )
-            ).clickable(
+        modifier = modifier
+            .fillMaxSize()
+            .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
@@ -116,29 +110,45 @@ fun FairyScreen(
                 }
             }
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
-            Image(
-                painter = painterResource(Res.drawable.img_letter_background),
-                contentDescription = "Background Image",
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
-            )
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(Res.drawable.img_letter_background),
+                    contentDescription = "Background Image",
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth
+                )
 
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(fairyImage)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "$fairyImage image",
-                contentScale = ContentScale.Inside,
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(fairyImage)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "$fairyImage image",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier
+                        .size(108.dp)
+                        .align(Alignment.BottomCenter)
+                        .offset(y = (-49).dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    error = {
+                        // TODO : 에러 이미지 처리
+                    },
+                )
+            }
+
+            Box(
                 modifier = Modifier
-                    .size(108.dp)
-                    .align(Alignment.BottomCenter)
-                    .offset(y = (-49).dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                error = {
-                    // TODO : 에러 이미지 처리
-                },
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF171E2D),
+                                Color(0xFF1A1A1B)
+                            )
+                        )
+                    )
             )
         }
 
