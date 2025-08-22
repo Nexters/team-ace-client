@@ -62,18 +62,6 @@ jobs:
           }
           EOF
 
-      - name: network_security_config.xml 설정
-        run: |
-          BASE_DOMAIN=$(echo "${{ secrets.BASE_URL }}" | sed 's/:[0-9]*$//')
-          cat > composeApp/src/main/res/xml/network_security_config.xml << EOF
-          <?xml version="1.0" encoding="utf-8"?>
-          <network-security-config>
-            <domain-config cleartextTrafficPermitted="true">
-              <domain includeSubdomains="true">$BASE_DOMAIN</domain>
-            </domain-config>
-          </network-security-config>
-          EOF
-
       - name: 디버그 APK 빌드
         run: ./gradlew assembleDebug
 
