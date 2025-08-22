@@ -1,5 +1,6 @@
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -118,13 +119,18 @@ fun EmotiaChatTextField(
             .background(
                 color = colors.darkGray,
                 shape = RoundedCornerShape(200.dp)
+            )
+            .border(
+                width = 2.dp,
+                color = state.getBorderColor(),
+                shape = RoundedCornerShape(200.dp)
             ),
         enabled = enabled,
         placeholder = {
             if (placeholder.isNotEmpty() && value.isEmpty()) {
                 Text(
                     text = placeholder,
-                    style = typography.emotia14M,
+                    style = typography.emotia14R,
                     color = colors.lightGray
                 )
             }
