@@ -34,11 +34,9 @@ class ChatApiService(
 
     suspend fun getFairies(
         chatRoomId: String,
-        token: String,
     ): GetFairiesResponse {
         return network.get(
             path = "api/v1/fairies?chatRoomId=${chatRoomId}",
-            token = token
         )
     }
 }
