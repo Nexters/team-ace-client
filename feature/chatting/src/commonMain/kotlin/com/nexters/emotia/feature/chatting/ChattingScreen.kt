@@ -14,6 +14,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +34,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -297,63 +299,72 @@ fun ChattingScreen(
 
                                 Spacer(Modifier.height(84.dp))
 
-                                HorizontalPager(
-                                    state = pagerState,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 28.dp),
-                                    contentPadding = PaddingValues(horizontal = 80.dp),
-                                    pageSpacing = 24.dp
-                                ) { page ->
-                                    val fairy = uiState.fairies[page]
-                                    val isSelected =
-                                        page == pagerState.currentPage
-
-                                    val yOffset by animateFloatAsState(
-                                        targetValue = if (isSelected) 0f else 28f,
-                                        animationSpec = tween(
-                                            durationMillis = 300,
-                                            easing = FastOutSlowInEasing
-                                        )
+                                BoxWithConstraints {
+                                    val cardWidth = 200.dp
+                                    val horizontalPadding = maxOf(
+                                        0.dp,
+                                        (maxWidth - cardWidth) / 2
                                     )
 
-                                    FairyCard(
-                                        name = fairy.name,
-                                        image = fairy.silhouetteImage,
-                                        emotion = fairy.emotion,
-                                        emotionDescription = fairy.description,
-                                        isSelected = isSelected,
+                                    HorizontalPager(
+                                        state = pagerState,
                                         modifier = Modifier
-                                            .size(
-                                                width = 200.dp,
-                                                height = 280.dp
+                                            .fillMaxWidth()
+                                            .padding(vertical = 28.dp),
+                                        pageSize = PageSize.Fixed(cardWidth),
+                                        pageSpacing = 24.dp,
+                                        contentPadding = PaddingValues(horizontal = horizontalPadding)
+                                    ) { page ->
+                                        val fairy = uiState.fairies[page]
+                                        val isSelected =
+                                            page == pagerState.currentPage
+
+                                        val yOffset by animateFloatAsState(
+                                            targetValue = if (isSelected) 0f else 28f,
+                                            animationSpec = tween(
+                                                durationMillis = 300,
+                                                easing = FastOutSlowInEasing
                                             )
-                                            .offset(y = yOffset.dp)
-                                            .then(
-                                                if (isSelected) {
-                                                    Modifier.onGloballyPositioned { coordinates ->
-                                                        val position =
-                                                            coordinates.positionInRoot()
-                                                        val size =
-                                                            coordinates.size
-                                                        fairyCardCenter =
-                                                            Offset(
-                                                                x = position.x + size.width / 2,
-                                                                y = position.y + size.height / 2 - with(
-                                                                    density
-                                                                ) { 50.dp.toPx() }
-                                                            )
-                                                        fairyCardSize =
-                                                            minOf(
-                                                                size.width,
-                                                                size.height
-                                                            ) / 2f
+                                        )
+
+                                        FairyCard(
+                                            name = fairy.name,
+                                            image = fairy.silhouetteImage,
+                                            emotion = fairy.emotion,
+                                            emotionDescription = fairy.description,
+                                            isSelected = isSelected,
+                                            modifier = Modifier
+                                                .size(
+                                                    width = 200.dp,
+                                                    height = 280.dp
+                                                )
+                                                .offset(y = yOffset.dp)
+                                                .then(
+                                                    if (isSelected) {
+                                                        Modifier.onGloballyPositioned { coordinates ->
+                                                            val position =
+                                                                coordinates.positionInRoot()
+                                                            val size =
+                                                                coordinates.size
+                                                            fairyCardCenter =
+                                                                Offset(
+                                                                    x = position.x + size.width / 2,
+                                                                    y = position.y + size.height / 2 - with(
+                                                                        density
+                                                                    ) { 50.dp.toPx() }
+                                                                )
+                                                            fairyCardSize =
+                                                                minOf(
+                                                                    size.width,
+                                                                    size.height
+                                                                ) / 2f
+                                                        }
+                                                    } else {
+                                                        Modifier
                                                     }
-                                                } else {
-                                                    Modifier
-                                                }
-                                            )
-                                    )
+                                                )
+                                        )
+                                    }
                                 }
 
                                 Spacer(Modifier.height(60.dp))
