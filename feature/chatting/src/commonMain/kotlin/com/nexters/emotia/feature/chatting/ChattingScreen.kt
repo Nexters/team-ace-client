@@ -460,22 +460,13 @@ private fun CreateRoom(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF171E2D),
-                        Color(0xFF1A1A1B)
-                    )
-                )
-            )
             .safeDrawingPadding()
             .imePadding()
     ) {
-        // 배경 이미지
+        // 배경 이미지 영역
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
         ) {
             Image(
                 painter = painterResource(Res.drawable.img_letter_background),
@@ -529,7 +520,19 @@ private fun CreateRoom(
         }
 
         Box(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF171E2D),
+                            Color(0xFF1A1A1B)
+                        )
+                    )
+                )
+                .padding(horizontal = 16.dp, vertical = 24.dp),
+            contentAlignment = Alignment.BottomCenter
         ) {
             EmotiaChatTextField(
                 value = currentInputText,
