@@ -64,7 +64,9 @@ class ChattingViewModel(
                         messages = persistentListOf(firstMessage),
                         isLoading = false,
                         showEmotionChips = true,
-                        emotionOptions = persistentListOf()
+                        emotionOptions = persistentListOf(),
+                        isRoomCreated = true,
+                        firstMessage = chatRoom.firstMessage
                     )
                 }
             }
