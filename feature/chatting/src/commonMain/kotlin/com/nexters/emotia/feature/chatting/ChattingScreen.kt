@@ -211,7 +211,6 @@ fun ChattingScreen(
                         )
                     )
                     .padding(16.dp)
-                    .imePadding() // 키보드 패딩
                     .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
             ) {
                 if (uiState.isLoading && uiState.messages.isEmpty()) {
@@ -229,7 +228,7 @@ fun ChattingScreen(
                             top = 8.dp,
                             bottom = if (isKeyboardVisible) {
                                 // 키보드가 올라왔을 때 키보드 높이만큼 bottom padding 추가
-                                with(density) { imeHeight.toDp() / 2 }
+                                with(density) { imeHeight.toDp() }
                             } else {
                                 8.dp
                             }
@@ -458,100 +457,87 @@ private fun CreateRoom(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier.fillMaxSize()
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(
+                        Color(0xFF171E2D),
+                        Color(0xFF1A1A1B)
+                    )
+                )
+            )
+            .safeDrawingPadding()
+            .imePadding()
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        // 배경 이미지
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) {
-            // 배경 이미지 영역
+            Image(
+                painter = painterResource(Res.drawable.img_letter_background),
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+
+            // 요정 이미지를 고정 위치에 배치
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                    .align(Alignment.Center)
+                    .offset(y = 30.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(Res.drawable.img_letter_background),
+                    painter = painterResource(Res.drawable.img_chatting_fairy),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth(),
-                    contentScale = ContentScale.Crop
+                    modifier = Modifier.size(72.dp),
+                    contentScale = ContentScale.Fit
                 )
+            }
 
+            if (firstMessage.isNotEmpty()) {
                 Column(
                     modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 50.dp)
+                        .wrapContentHeight()
                         .align(Alignment.Center)
-                        .offset(y = (-70).dp)
-                        .padding(horizontal = 50.dp),
+                        .offset(y = (-50).dp), // 요정을 고정시키고 메시지 뜨도록
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (firstMessage.isNotEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    Color(0xE62D2B38),
-                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 12.dp, vertical = 7.dp)
-                        ) {
-                            Text(
-                                text = firstMessage,
-                                color = Color.White,
-                                style = typography.emotia12M,
-                                textAlign = TextAlign.Center
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                Color(0xE62D2B38),
+                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
                             )
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
+                            .padding(horizontal = 12.dp, vertical = 7.dp)
+                    ) {
+                        Text(
+                            text = firstMessage,
+                            color = Color.White,
+                            style = typography.emotia12M,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(72.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(Res.drawable.img_chatting_fairy),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Fit
-                    )
-                }
             }
-
-            Spacer(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFF171E2D),
-                                Color(0xFF1A1A1B)
-                            )
-                        )
-                    )
-            )
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .imePadding()
+        Box(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-
-            Box(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
-            ) {
-                EmotiaChatTextField(
-                    value = currentInputText,
-                    onValueChange = onInputTextChange,
-                    onSendClick = onSendClick,
-                    placeholder = "요정에게 지금 기분을 설명해보자",
-                    enabled = !isLoading && firstMessage.isNotEmpty()
-                )
-            }
+            EmotiaChatTextField(
+                value = currentInputText,
+                onValueChange = onInputTextChange,
+                onSendClick = onSendClick,
+                placeholder = "요정에게 지금 기분을 설명해보자",
+                enabled = !isLoading && firstMessage.isNotEmpty()
+            )
         }
     }
 }
