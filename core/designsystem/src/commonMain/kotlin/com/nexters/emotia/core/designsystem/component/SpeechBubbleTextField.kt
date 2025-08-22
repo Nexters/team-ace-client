@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.npcTextFieldBackground
 import emotia.core.designsystem.generated.resources.textFieldBackground
