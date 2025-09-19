@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
@@ -416,7 +417,8 @@ fun ChattingScreen(
                             viewModel.handleIntent(ChattingIntent.SendMessage)
                         },
                         placeholder = "요정에게 지금 기분을 설명해보자",
-                        enabled = !uiState.isLoading && uiState.error == null
+                        enabled = !uiState.isLoading && uiState.error == null,
+                        modifier = Modifier.navigationBarsPadding()
                     )
                 }
             }
@@ -539,7 +541,9 @@ private fun CreateRoom(
         }
 
         Box(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 24.dp)
+                .navigationBarsPadding(),
         ) {
             EmotiaChatTextField(
                 value = currentInputText,
