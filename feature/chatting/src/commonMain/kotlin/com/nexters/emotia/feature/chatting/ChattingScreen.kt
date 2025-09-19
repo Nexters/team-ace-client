@@ -470,89 +470,98 @@ private fun CreateRoom(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF171E2D),
-                        Color(0xFF1A1A1B)
-                    )
-                )
-            )
             .safeDrawingPadding()
             .imePadding()
     ) {
-        // 배경 이미지 영역
-        Box(
-            modifier = Modifier.fillMaxWidth().weight(1f)
-
+        Column(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(Res.drawable.img_letter_background),
-                contentDescription = null,
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-
-            // 요정 이미지를 고정 위치에 배치
+            // 배경 이미지 영역
             Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .offset(y = 30.dp),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxWidth()
+
             ) {
                 Image(
-                    painter = painterResource(Res.drawable.img_chatting_fairy),
+                    painter = painterResource(Res.drawable.img_letter_background),
                     contentDescription = null,
-                    modifier = Modifier.size(72.dp),
-                    contentScale = ContentScale.Fit
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.Crop
                 )
-            }
 
-            if (firstMessage.isNotEmpty()) {
-                Column(
+                // 요정 이미지를 고정 위치에 배치
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .wrapContentHeight()
                         .align(Alignment.Center)
-                        .offset(y = (-50).dp), // 요정을 고정시키고 메시지 뜨도록
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .offset(y = 30.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Box(
+                    Image(
+                        painter = painterResource(Res.drawable.img_chatting_fairy),
+                        contentDescription = null,
+                        modifier = Modifier.size(72.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                }
+
+                if (firstMessage.isNotEmpty()) {
+                    Column(
                         modifier = Modifier
-                            .background(
-                                Color(0xE62D2B38),
-                                shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 12.dp, vertical = 7.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 50.dp)
+                            .wrapContentHeight()
+                            .align(Alignment.Center)
+                            .offset(y = (-50).dp), // 요정을 고정시키고 메시지 뜨도록
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = firstMessage,
-                            color = Color.White,
-                            style = typography.emotia12M,
-                            textAlign = TextAlign.Center
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    Color(0xE62D2B38),
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 12.dp, vertical = 7.dp)
+                        ) {
+                            Text(
+                                text = firstMessage,
+                                color = Color.White,
+                                style = typography.emotia12M,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-                .navigationBarsPadding(),
-        ) {
-            EmotiaChatTextField(
-                value = currentInputText,
-                onValueChange = onInputTextChange,
-                onSendClick = onSendClick,
-                placeholder = "요정에게 지금 기분을 설명해보자",
-                enabled = !isLoading && firstMessage.isNotEmpty()
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF171E2D),
+                                Color(0xFF1A1A1B)
+                            )
+                        )
+                    )
+                    .navigationBarsPadding(),
             )
         }
+
+        EmotiaChatTextField(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 16.dp, vertical = 24.dp)
+                .navigationBarsPadding(),
+            value = currentInputText,
+            onValueChange = onInputTextChange,
+            onSendClick = onSendClick,
+            placeholder = "요정에게 지금 기분을 설명해보자",
+            enabled = !isLoading && firstMessage.isNotEmpty()
+        )
     }
 }
 
