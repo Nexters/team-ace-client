@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -61,6 +62,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.component.ChatBubble
 import com.nexters.emotia.core.designsystem.component.EmotiaButton
@@ -68,8 +70,10 @@ import com.nexters.emotia.core.designsystem.component.FairyCard
 import com.nexters.emotia.core.designsystem.component.TypingIndicator
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
+import com.nexters.emotia.core.domain.chatting.entity.Fairy
 import com.nexters.emotia.feature.chatting.contract.ChattingIntent
 import com.nexters.emotia.feature.chatting.contract.ChattingSideEffect
+import com.nexters.emotia.feature.chatting.contract.ChattingState
 import emotia.core.designsystem.generated.resources.Res
 import emotia.core.designsystem.generated.resources.img_chatting_fairy
 import emotia.core.designsystem.generated.resources.img_letter_background
@@ -185,277 +189,391 @@ fun ChattingScreen(
     Box(
         modifier = modifier.fillMaxSize()
     ) {
-        if (uiState.messages.size <= 1) {
-            // 첫 채팅 입력 화면
-            CreateRoom(
-                firstMessage = uiState.firstMessage,
-                currentInputText = uiState.currentInputText,
-                onInputTextChange = { text ->
-                    viewModel.handleIntent(
-                        ChattingIntent.InputTextChanged(text)
+        when {
+            uiState.messages.size <= 1 -> {
+                // 첫 메시지
+                FirstChatScreen(
+                    uiState = uiState,
+                    viewModel = viewModel
+                )
+            }
+
+            uiState.showFairyPager -> {
+                // 채팅 최대 횟수 진행 후, 요정 선택 화면
+                FairySelectionScreen(
+                    uiState = uiState,
+                    viewModel = viewModel,
+                    lazyListState = lazyListState,
+                    onFairyCardPositioned = { center, size ->
+                        fairyCardCenter = center
+                        fairyCardSize = size
+                    },
+                    onSpotlightAnimationStart = { isSpotlightAnimating = true }
+                )
+            }
+
+            else -> {
+                // 채팅 진행 화면
+                ChatConversationScreen(
+                    uiState = uiState,
+                    viewModel = viewModel,
+                    lazyListState = lazyListState,
+                    isKeyboardVisible = isKeyboardVisible
+                )
+            }
+        }
+
+        SpotlightOverlay(
+            animationPhase = animationPhase,
+            animatedRadius = animatedRadius,
+            fairyCardCenter = fairyCardCenter
+        )
+    }
+}
+
+@Composable
+private fun FirstChatScreen(
+    uiState: ChattingState,
+    viewModel: ChattingViewModel,
+    modifier: Modifier = Modifier,
+) {
+    CreateRoom(
+        firstMessage = uiState.firstMessage,
+        currentInputText = uiState.currentInputText,
+        onInputTextChange = { viewModel.handleIntent(ChattingIntent.InputTextChanged(it)) },
+        onSendClick = { viewModel.handleIntent(ChattingIntent.SendMessage) },
+        isLoading = uiState.isLoading,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun ChatConversationScreen(
+    uiState: ChattingState,
+    viewModel: ChattingViewModel,
+    lazyListState: LazyListState,
+    isKeyboardVisible: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val colors = LocalEmotiaColors.current
+    val density = LocalDensity.current
+    val imeHeight = WindowInsets.ime.getBottom(density)
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        colors.backgroundBlue,
+                        Color.Black
                     )
-                },
-                onSendClick = {
-                    viewModel.handleIntent(ChattingIntent.SendMessage)
-                },
-                isLoading = uiState.isLoading
+                )
             )
-        } else {
-            // 기존 채팅 화면
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                colors.backgroundBlue,
-                                Color.Black
-                            )
-                        )
-                    )
-                    .padding(16.dp)
-                    .safeDrawingPadding() // 화면 상단의 노치 등 안전 영역 패딩
+            .padding(16.dp)
+            .safeDrawingPadding()
+    ) {
+        if (uiState.isLoading && uiState.messages.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                if (uiState.isLoading && uiState.messages.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = colors.primaryLight)
+                CircularProgressIndicator(color = colors.primaryLight)
+            }
+        } else {
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(
+                    top = 8.dp,
+                    bottom = if (isKeyboardVisible) {
+                        with(density) { imeHeight.toDp() }
+                    } else {
+                        8.dp
                     }
-                } else {
-                    LazyColumn(
-                        state = lazyListState,
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(
-                            top = 8.dp,
-                            bottom = if (isKeyboardVisible) {
-                                // 키보드가 올라왔을 때 키보드 높이만큼 bottom padding 추가
-                                with(density) { imeHeight.toDp() }
-                            } else {
-                                8.dp
-                            }
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(
-                            items = uiState.messages,
-                            key = { message -> message.timestamp }
-                        ) { message ->
-                            val messageIndex = uiState.messages.indexOf(message)
-                            ChatBubble(
-                                text = message.text,
-                                type = message.type,
-                                messageId = message.timestamp.toString(),
-                                skipTypewriterEffect = messageIndex <= 1
-                            )
-                        }
-
-                        // 채팅 로딩 중
-                        if (uiState.isLoading && uiState.messages.isNotEmpty()) {
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .wrapContentWidth()
-                                        .padding(start = 16.dp, bottom = 4.dp),
-                                    contentAlignment = Alignment.CenterStart
-                                ) {
-                                    TypingIndicator(
-                                        modifier = Modifier
-                                            .height(40.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        item {
-                            val showFairyCards =
-                                uiState.showFairyPager && uiState.fairies.isNotEmpty()
-                            AnimatedVisibility(
-                                visible = showFairyCards,
-                                enter = slideInVertically(
-                                    initialOffsetY = { it },
-                                    animationSpec = tween(
-                                        durationMillis = 500,
-                                        easing = FastOutSlowInEasing
-                                    )
-                                ),
-                                exit = slideOutVertically(
-                                    targetOffsetY = { it },
-                                    animationSpec = tween(durationMillis = 300)
-                                )
-                            ) {
-                                val pagerState = rememberPagerState(
-                                    initialPage = if (uiState.fairies.size > 1) 1 else 0,
-                                    pageCount = { uiState.fairies.size }
-                                )
-
-                                LaunchedEffect(pagerState.currentPage) {
-                                    viewModel.handleIntent(
-                                        ChattingIntent.SelectFairy(
-                                            pagerState.currentPage
-                                        )
-                                    )
-                                }
-
-                                Spacer(Modifier.height(84.dp))
-
-                                BoxWithConstraints {
-                                    val cardWidth = 200.dp
-                                    val horizontalPadding = maxOf(
-                                        0.dp,
-                                        (maxWidth - cardWidth) / 2
-                                    )
-
-                                    HorizontalPager(
-                                        state = pagerState,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 28.dp),
-                                        pageSize = PageSize.Fixed(cardWidth),
-                                        pageSpacing = 24.dp,
-                                        contentPadding = PaddingValues(horizontal = horizontalPadding)
-                                    ) { page ->
-                                        val fairy = uiState.fairies[page]
-                                        val isSelected =
-                                            page == pagerState.currentPage
-
-                                        val yOffset by animateFloatAsState(
-                                            targetValue = if (isSelected) 0f else 28f,
-                                            animationSpec = tween(
-                                                durationMillis = 300,
-                                                easing = FastOutSlowInEasing
-                                            )
-                                        )
-
-                                        FairyCard(
-                                            name = fairy.name,
-                                            image = fairy.silhouetteImage,
-                                            emotion = fairy.emotion,
-                                            emotionDescription = fairy.description,
-                                            isSelected = isSelected,
-                                            modifier = Modifier
-                                                .size(
-                                                    width = 200.dp,
-                                                    height = 280.dp
-                                                )
-                                                .offset(y = yOffset.dp)
-                                                .then(
-                                                    if (isSelected) {
-                                                        Modifier.onGloballyPositioned { coordinates ->
-                                                            val position =
-                                                                coordinates.positionInRoot()
-                                                            val size =
-                                                                coordinates.size
-                                                            fairyCardCenter =
-                                                                Offset(
-                                                                    x = position.x + size.width / 2,
-                                                                    y = position.y + size.height / 2 - with(
-                                                                        density
-                                                                    ) { 50.dp.toPx() }
-                                                                )
-                                                            fairyCardSize =
-                                                                minOf(
-                                                                    size.width,
-                                                                    size.height
-                                                                ) / 2f
-                                                        }
-                                                    } else {
-                                                        Modifier
-                                                    }
-                                                )
-                                        )
-                                    }
-                                }
-
-                                Spacer(Modifier.height(60.dp))
-                            }
-                        }
-                    }
+                ),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(
+                    items = uiState.messages,
+                    key = { message -> message.timestamp }
+                ) { message ->
+                    val messageIndex = uiState.messages.indexOf(message)
+                    ChatBubble(
+                        text = message.text,
+                        type = message.type,
+                        messageId = message.timestamp.toString(),
+                        skipTypewriterEffect = messageIndex <= 1
+                    )
                 }
 
-                if (uiState.showFairyPager && uiState.fairies.isNotEmpty()) {
-                    val selectedIndex = uiState.selectedFairyIndex.coerceIn(
-                        0,
-                        uiState.fairies.size - 1
-                    )
-
-                    EmotiaButton(
-                        text = "내 감정은 ${uiState.fairies[selectedIndex].emotion}이야",
-                        modifier = Modifier.padding(16.dp),
-                        onClick = {
-                            isSpotlightAnimating = true
-                        }
-                    )
-
-                    Text(
-                        text = "다시 대화하기",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                // TODO : 채팅 내비게이션 다시 시작 구현
-                            },
-                        style = typography.emotia14M.copy(
-                            color = colors.lightGray,
-                            textDecoration = TextDecoration.Underline
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-
-                    Spacer(Modifier.height(24.dp))
-                } else {
-                    EmotiaChatTextField(
-                        value = uiState.currentInputText,
-                        onValueChange = { text ->
-                            viewModel.handleIntent(
-                                ChattingIntent.InputTextChanged(
-                                    text
-                                )
+                if (uiState.isLoading && uiState.messages.isNotEmpty()) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .padding(start = 16.dp, bottom = 4.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            TypingIndicator(
+                                modifier = Modifier.height(40.dp)
                             )
-                        },
-                        onSendClick = {
-                            viewModel.handleIntent(ChattingIntent.SendMessage)
-                        },
-                        placeholder = "요정에게 지금 기분을 설명해보자",
-                        enabled = !uiState.isLoading && uiState.error == null,
-                        modifier = Modifier.navigationBarsPadding()
-                    )
+                        }
+                    }
                 }
             }
         }
 
-        if (animationPhase > 0) {
-            Canvas(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        // 터치 이벤트 차단 (빈 람다)
-                    }
-            ) {
-                val centerPoint =
-                    if (fairyCardCenter != Offset.Zero) fairyCardCenter else Offset(
-                        size.width / 2,
-                        size.height / 2
-                    )
+        EmotiaChatTextField(
+            value = uiState.currentInputText,
+            onValueChange = { text ->
+                viewModel.handleIntent(ChattingIntent.InputTextChanged(text))
+            },
+            onSendClick = {
+                viewModel.handleIntent(ChattingIntent.SendMessage)
+            },
+            placeholder = "요정에게 지금 기분을 설명해보자",
+            enabled = !uiState.isLoading,
+            modifier = Modifier.navigationBarsPadding()
+        )
+    }
+}
 
-                val clipPath = Path().apply {
-                    addOval(
-                        androidx.compose.ui.geometry.Rect(
-                            center = centerPoint,
-                            radius = animatedRadius
+@Composable
+private fun FairySelectionScreen(
+    uiState: ChattingState,
+    viewModel: ChattingViewModel,
+    lazyListState: LazyListState,
+    onFairyCardPositioned: (Offset, Float) -> Unit,
+    onSpotlightAnimationStart: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = LocalEmotiaColors.current
+    val density = LocalDensity.current
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        colors.backgroundBlue,
+                        Color.Black
+                    )
+                )
+            )
+            .padding(16.dp)
+            .safeDrawingPadding()
+    ) {
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(
+                items = uiState.messages,
+                key = { message -> message.timestamp }
+            ) { message ->
+                val messageIndex = uiState.messages.indexOf(message)
+                ChatBubble(
+                    text = message.text,
+                    type = message.type,
+                    messageId = message.timestamp.toString(),
+                    skipTypewriterEffect = messageIndex <= 1
+                )
+            }
+
+            item {
+                FairyCardPager(
+                    fairies = uiState.fairies,
+                    selectedIndex = uiState.selectedFairyIndex,
+                    onFairySelected = { index ->
+                        viewModel.handleIntent(ChattingIntent.SelectFairy(index))
+                    },
+                    onFairyCardPositioned = onFairyCardPositioned,
+                    density = density
+                )
+            }
+        }
+
+        FairySelectionBottomSection(
+            selectedFairy = uiState.fairies.getOrNull(
+                uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
+            ),
+            onConfirmClick = onSpotlightAnimationStart,
+            onRetryClick = {
+                // TODO: 다시 대화하기 구현
+            }
+        )
+    }
+}
+
+@Composable
+private fun FairyCardPager(
+    fairies: List<Fairy>,
+    selectedIndex: Int,
+    onFairySelected: (Int) -> Unit,
+    onFairyCardPositioned: (Offset, Float) -> Unit,
+    density: Density,
+    modifier: Modifier = Modifier,
+) {
+    if (fairies.isEmpty()) return
+
+    val pagerState = rememberPagerState(
+        initialPage = if (fairies.size > 1) 1 else 0,
+        pageCount = { fairies.size }
+    )
+
+    LaunchedEffect(pagerState.currentPage) {
+        onFairySelected(pagerState.currentPage)
+    }
+
+    AnimatedVisibility(
+        visible = true,
+        enter = slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = FastOutSlowInEasing
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it },
+            animationSpec = tween(durationMillis = 300)
+        )
+    ) {
+        Column {
+            Spacer(Modifier.height(84.dp))
+
+            BoxWithConstraints {
+                val cardWidth = 200.dp
+                val horizontalPadding = maxOf(
+                    0.dp,
+                    (maxWidth - cardWidth) / 2
+                )
+
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 28.dp),
+                    pageSize = PageSize.Fixed(cardWidth),
+                    pageSpacing = 24.dp,
+                    contentPadding = PaddingValues(horizontal = horizontalPadding)
+                ) { page ->
+                    val fairy = fairies[page]
+                    val isSelected = page == pagerState.currentPage
+
+                    val yOffset by animateFloatAsState(
+                        targetValue = if (isSelected) 0f else 28f,
+                        animationSpec = tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
                         )
                     )
-                }
 
-                clipPath(clipPath, clipOp = ClipOp.Difference) {
-                    drawRect(
-                        color = Color.Black,
-                        size = size
+                    FairyCard(
+                        name = fairy.name,
+                        image = fairy.silhouetteImage,
+                        emotion = fairy.emotion,
+                        emotionDescription = fairy.description,
+                        isSelected = isSelected,
+                        modifier = Modifier
+                            .size(width = 200.dp, height = 280.dp)
+                            .offset(y = yOffset.dp)
+                            .then(
+                                if (isSelected) {
+                                    Modifier.onGloballyPositioned { coordinates ->
+                                        val position = coordinates.positionInRoot()
+                                        val size = coordinates.size
+                                        onFairyCardPositioned(
+                                            Offset(
+                                                x = position.x + size.width / 2,
+                                                y = position.y + size.height / 2 - with(density) { 50.dp.toPx() }
+                                            ),
+                                            minOf(size.width, size.height) / 2f
+                                        )
+                                    }
+                                } else {
+                                    Modifier
+                                }
+                            )
                     )
                 }
+            }
+
+            Spacer(Modifier.height(60.dp))
+        }
+    }
+}
+
+@Composable
+private fun FairySelectionBottomSection(
+    selectedFairy: Fairy?,
+    onConfirmClick: () -> Unit,
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = LocalEmotiaColors.current
+
+    if (selectedFairy != null) {
+        EmotiaButton(
+            text = "내 감정은 ${selectedFairy.emotion}이야",
+            modifier = Modifier.padding(16.dp),
+            onClick = onConfirmClick
+        )
+
+        Text(
+            text = "다시 대화하기",
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onRetryClick() },
+            style = typography.emotia14M.copy(
+                color = colors.lightGray,
+                textDecoration = TextDecoration.Underline
+            ),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun SpotlightOverlay(
+    animationPhase: Int,
+    animatedRadius: Float,
+    fairyCardCenter: Offset,
+) {
+    if (animationPhase > 0) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    // 터치 이벤트 차단
+                }
+        ) {
+            val centerPoint = if (fairyCardCenter != Offset.Zero) {
+                fairyCardCenter
+            } else {
+                Offset(size.width / 2, size.height / 2)
+            }
+
+            val clipPath = Path().apply {
+                addOval(
+                    androidx.compose.ui.geometry.Rect(
+                        center = centerPoint,
+                        radius = animatedRadius
+                    )
+                )
+            }
+
+            clipPath(clipPath, clipOp = ClipOp.Difference) {
+                drawRect(color = Color.Black, size = size)
             }
         }
     }
