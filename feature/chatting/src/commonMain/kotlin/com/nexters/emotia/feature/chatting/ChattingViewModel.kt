@@ -43,6 +43,7 @@ class ChattingViewModel(
             is ChattingIntent.ClearError -> clearError()
             is ChattingIntent.LoadFairies -> loadFairies()
             is ChattingIntent.SelectFairy -> selectFairy(intent.index)
+            is ChattingIntent.RestartChat -> restartChat()
         }
     }
 
@@ -181,6 +182,11 @@ class ChattingViewModel(
 
     private fun selectFairy(index: Int) = intent {
         reduce { state.copy(selectedFairyIndex = index) }
+    }
+
+    private fun restartChat() = intent {
+        reduce { ChattingState() }
+        createChatRoom()
     }
 
     private fun getUserMessageCount(messages: PersistentList<ChatMessage>): Int {

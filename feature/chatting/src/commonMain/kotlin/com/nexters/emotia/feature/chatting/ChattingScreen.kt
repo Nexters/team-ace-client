@@ -434,7 +434,7 @@ private fun FairySelectionScreen(
             ),
             onConfirmClick = onSpotlightAnimationStart,
             onRetryClick = {
-                // TODO: 다시 대화하기 구현
+                viewModel.handleIntent(ChattingIntent.RestartChat)
             }
         )
     }

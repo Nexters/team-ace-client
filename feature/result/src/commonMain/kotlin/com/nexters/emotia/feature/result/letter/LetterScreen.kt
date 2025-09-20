@@ -135,102 +135,102 @@ fun LetterScreen(
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-        Box {
-            Image(
-                painter = painterResource(Res.drawable.img_letter_background),
-                contentDescription = "Background Image",
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.FillWidth
-            )
+            Box {
+                Image(
+                    painter = painterResource(Res.drawable.img_letter_background),
+                    contentDescription = "Background Image",
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth
+                )
 
-            SubcomposeAsyncImage(
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(fairyImage)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "$fairyImage image",
-                contentScale = ContentScale.Inside,
-                modifier = Modifier
-                    .size(108.dp)
-                    .align(Alignment.BottomCenter)
-                    .offset(y = (-49).dp)
-                    .clip(RoundedCornerShape(16.dp)),
-                error = {
-                    // TODO : 에러 이미지 처리
-                },
-            )
-        }
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                        .data(fairyImage)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "$fairyImage image",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier
+                        .size(108.dp)
+                        .align(Alignment.BottomCenter)
+                        .offset(y = (-49).dp)
+                        .clip(RoundedCornerShape(16.dp)),
+                    error = {
+                        // TODO : 에러 이미지 처리
+                    },
+                )
+            }
 
-        Column(
-            modifier = Modifier
-                .let { modifier ->
-                    if (isKeyboardVisible) {
-                        modifier.fillMaxWidth()
-                    } else {
-                        modifier.weight(1f).fillMaxWidth()
-                    }
-                }
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF171E2D),
-                            Color(0xFF1A1A1B)
-                        )
-                    )
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(28.dp))
-
-            EmotiaMultiLineTextField(
-                value = uiState.contents,
-                onValueChange = { viewModel.handleIntent(LetterIntent.UpdateContents(it)) },
-                placeholder = "${fairyName}에게 위로의 말을 건네보자.",
+            Column(
                 modifier = Modifier
                     .let { modifier ->
                         if (isKeyboardVisible) {
-                            modifier.heightIn(min = 160.dp)
+                            modifier.fillMaxWidth()
                         } else {
-                            modifier.weight(1f)
+                            modifier.weight(1f).fillMaxWidth()
                         }
                     }
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-            )
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFF171E2D),
+                                Color(0xFF1A1A1B)
+                            )
+                        )
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(28.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
+                EmotiaMultiLineTextField(
+                    value = uiState.contents,
+                    onValueChange = { viewModel.handleIntent(LetterIntent.UpdateContents(it)) },
+                    placeholder = "${fairyName}에게 위로의 말을 건네보자.",
+                    modifier = Modifier
+                        .let { modifier ->
+                            if (isKeyboardVisible) {
+                                modifier.heightIn(min = 160.dp)
+                            } else {
+                                modifier.weight(1f)
+                            }
+                        }
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                )
 
-            EmotiaButton(
-                text = "위로 건네기",
-                onClick = {
-                    viewModel.handleIntent(LetterIntent.SendLetter)
-                },
-                enabled = uiState.contents.isNotBlank() && !uiState.isLoading,
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
+                Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "다시 대화하기",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onNavigateToChatting()
+                EmotiaButton(
+                    text = "위로 건네기",
+                    onClick = {
+                        viewModel.handleIntent(LetterIntent.SendLetter)
                     },
-                style = typography.emotia14M.copy(
-                    color = colors.lightGray,
-                    textDecoration = TextDecoration.Underline
-                ),
-                textAlign = TextAlign.Center
-            )
+                    enabled = uiState.contents.isNotBlank() && !uiState.isLoading,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            if (isKeyboardVisible) {
-                Spacer(modifier = Modifier.height(210.dp))
+                Text(
+                    text = "다시 대화하기",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onNavigateToChatting()
+                        },
+                    style = typography.emotia14M.copy(
+                        color = colors.lightGray,
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                if (isKeyboardVisible) {
+                    Spacer(modifier = Modifier.height(210.dp))
+                }
             }
-        }
 
             // TODO : 로딩이 빨라서 보류. 다른 정책 필요
 //            // 로딩 오버레이
