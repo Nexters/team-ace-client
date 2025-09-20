@@ -63,13 +63,13 @@ internal fun ChatTextFieldState.getBorderColor(): Color {
 }
 
 @Composable
-internal fun ChatTextFieldState.getTextColor(): Color {
+internal fun getTextColor(): Color {
     val colors = LocalEmotiaColors.current
     return colors.white
 }
 
 @Composable
-internal fun ChatTextFieldState.getPlaceholderColor(): Color {
+internal fun getPlaceholderColor(): Color {
     val colors = LocalEmotiaColors.current
     return colors.lightGray
 }
@@ -136,26 +136,31 @@ fun EmotiaChatTextField(
             }
         },
         trailingIcon = {
+            val clickable = enabled && state.isSendEnabled()
             Image(
                 painter = painterResource(state.getSendIconResource()),
                 contentDescription = "전송",
                 modifier = Modifier
                     .size(36.dp)
-                    .rippleClickable {
-                        if (value.isNotEmpty()) onSendClick()
+                    .let { base ->
+                        if (clickable)
+                            base.rippleClickable {
+                                if (value.isNotEmpty() && enabled) onSendClick()
+                            }
+                        else base
                     }
             )
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
         keyboardActions = KeyboardActions(
-            onSend = { if (value.isNotEmpty()) onSendClick() }
+            onSend = { if (enabled && value.isNotEmpty()) onSendClick() }
         ),
         shape = RoundedCornerShape(200.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = state.getTextColor(),
-            unfocusedTextColor = state.getTextColor(),
-            disabledTextColor = state.getTextColor(),
+            focusedTextColor = getTextColor(),
+            unfocusedTextColor = getTextColor(),
+            disabledTextColor = getTextColor(),
             focusedBorderColor = state.getBorderColor(),
             unfocusedBorderColor = state.getBorderColor(),
             disabledBorderColor = state.getBorderColor(),
