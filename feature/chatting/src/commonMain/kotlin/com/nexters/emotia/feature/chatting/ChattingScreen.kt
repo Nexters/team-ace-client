@@ -1,12 +1,9 @@
 package com.nexters.emotia.feature.chatting
 
 import EmotiaChatTextField
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,7 +30,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -90,7 +87,6 @@ fun ChattingScreen(
     viewModel: ChattingViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.collectAsState()
-    val colors = LocalEmotiaColors.current
     val lazyListState = rememberLazyListState()
     val density = LocalDensity.current
 
@@ -135,17 +131,18 @@ fun ChattingScreen(
             kotlinx.coroutines.delay(1000) // 2단계 애니메이션 완료 대기
 
             if (uiState.fairies.isNotEmpty()) {
-                val selectedFairy = uiState.fairies[uiState.selectedFairyIndex.coerceIn(
-                    0,
-                    uiState.fairies.size - 1
-                )]
-                onNavigateToFairy(
-                    selectedFairy.id,
-                    selectedFairy.name,
-                    selectedFairy.image,
-                    selectedFairy.silhouetteImage,
-                    uiState.roomId?.toInt() ?: 0
-                )
+                val selectedIndex = uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
+                val selectedFairy = uiState.fairies.getOrNull(selectedIndex)
+                selectedFairy?.let { fairy ->
+                    val roomId = uiState.roomId?.toIntOrNull() ?: 0
+                    onNavigateToFairy(
+                        fairy.id,
+                        fairy.name,
+                        fairy.image,
+                        fairy.silhouetteImage,
+                        roomId
+                    )
+                }
             }
         } else {
             animationPhase = 0 // 정지 상태로 리셋
@@ -294,16 +291,15 @@ private fun ChatConversationScreen(
                 ),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(
+                itemsIndexed(
                     items = uiState.messages,
-                    key = { message -> message.timestamp }
-                ) { message ->
-                    val messageIndex = uiState.messages.indexOf(message)
+                    key = { _, message -> message.timestamp }
+                ) { index, message ->
                     ChatBubble(
                         text = message.text,
                         type = message.type,
                         messageId = message.timestamp.toString(),
-                        skipTypewriterEffect = messageIndex <= 1
+                        skipTypewriterEffect = index <= 1
                     )
                 }
 
@@ -371,23 +367,21 @@ private fun FairySelectionScreen(
             contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(
+            itemsIndexed(
                 items = uiState.messages,
-                key = { message -> message.timestamp }
-            ) { message ->
-                val messageIndex = uiState.messages.indexOf(message)
+                key = { _, message -> message.timestamp }
+            ) { index, message ->
                 ChatBubble(
                     text = message.text,
                     type = message.type,
                     messageId = message.timestamp.toString(),
-                    skipTypewriterEffect = messageIndex <= 1
+                    skipTypewriterEffect = index <= 1
                 )
             }
 
             item {
                 FairyCardPager(
                     fairies = uiState.fairies,
-                    selectedIndex = uiState.selectedFairyIndex,
                     onFairySelected = { index ->
                         viewModel.handleIntent(ChattingIntent.SelectFairy(index))
                     },
@@ -412,11 +406,9 @@ private fun FairySelectionScreen(
 @Composable
 private fun FairyCardPager(
     fairies: List<Fairy>,
-    selectedIndex: Int,
     onFairySelected: (Int) -> Unit,
     onFairyCardPositioned: (Offset, Float) -> Unit,
     density: Density,
-    modifier: Modifier = Modifier,
 ) {
     if (fairies.isEmpty()) return
 
@@ -429,40 +421,27 @@ private fun FairyCardPager(
         onFairySelected(pagerState.currentPage)
     }
 
-    AnimatedVisibility(
-        visible = true,
-        enter = slideInVertically(
-            initialOffsetY = { it },
-            animationSpec = tween(
-                durationMillis = 500,
-                easing = FastOutSlowInEasing
+    Column {
+        Spacer(Modifier.height(84.dp))
+
+        BoxWithConstraints {
+            val cardWidth = 200.dp
+            val horizontalPadding = maxOf(
+                0.dp,
+                (maxWidth - cardWidth) / 2
             )
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = { it },
-            animationSpec = tween(durationMillis = 300)
-        )
-    ) {
-        Column {
-            Spacer(Modifier.height(84.dp))
 
-            BoxWithConstraints {
-                val cardWidth = 200.dp
-                val horizontalPadding = maxOf(
-                    0.dp,
-                    (maxWidth - cardWidth) / 2
-                )
-
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 28.dp),
-                    pageSize = PageSize.Fixed(cardWidth),
-                    pageSpacing = 24.dp,
-                    contentPadding = PaddingValues(horizontal = horizontalPadding)
-                ) { page ->
-                    val fairy = fairies[page]
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 28.dp),
+                pageSize = PageSize.Fixed(cardWidth),
+                pageSpacing = 24.dp,
+                contentPadding = PaddingValues(horizontal = horizontalPadding)
+            ) { page ->
+                val fairy = fairies.getOrNull(page)
+                if (fairy != null) {
                     val isSelected = page == pagerState.currentPage
 
                     val yOffset by animateFloatAsState(
@@ -502,9 +481,9 @@ private fun FairyCardPager(
                     )
                 }
             }
-
-            Spacer(Modifier.height(60.dp))
         }
+
+        Spacer(Modifier.height(60.dp))
     }
 }
 
@@ -513,7 +492,6 @@ private fun FairySelectionBottomSection(
     selectedFairy: Fairy?,
     onConfirmClick: () -> Unit,
     onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     val colors = LocalEmotiaColors.current
 
