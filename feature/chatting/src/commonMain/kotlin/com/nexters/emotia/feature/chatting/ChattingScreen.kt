@@ -65,6 +65,7 @@ import com.nexters.emotia.core.designsystem.component.ChatBubble
 import com.nexters.emotia.core.designsystem.component.EmotiaButton
 import com.nexters.emotia.core.designsystem.component.FairyCard
 import com.nexters.emotia.core.designsystem.component.TypingIndicator
+import com.nexters.emotia.core.designsystem.extension.rippleClickable
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
 import com.nexters.emotia.core.domain.chatting.entity.Fairy
@@ -506,7 +507,7 @@ private fun FairySelectionBottomSection(
             text = "다시 대화하기",
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onRetryClick() },
+                .rippleClickable(onClick = onRetryClick),
             style = typography.emotia14M.copy(
                 color = colors.lightGray,
                 textDecoration = TextDecoration.Underline

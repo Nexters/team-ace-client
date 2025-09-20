@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.nexters.emotia.core.designsystem.extension.rippleClickable
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme
 import com.nexters.emotia.core.designsystem.theme.EmotiaTheme.typography
 import com.nexters.emotia.core.designsystem.theme.LocalEmotiaColors
@@ -136,16 +136,15 @@ fun EmotiaChatTextField(
             }
         },
         trailingIcon = {
-            IconButton(
-                onClick = onSendClick,
-                enabled = state.isSendEnabled()
-            ) {
-                Image(
-                    painter = painterResource(state.getSendIconResource()),
-                    contentDescription = "전송",
-                    modifier = Modifier.size(36.dp)
-                )
-            }
+            Image(
+                painter = painterResource(state.getSendIconResource()),
+                contentDescription = "전송",
+                modifier = Modifier
+                    .size(36.dp)
+                    .rippleClickable {
+                        if (value.isNotEmpty()) onSendClick()
+                    }
+            )
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
