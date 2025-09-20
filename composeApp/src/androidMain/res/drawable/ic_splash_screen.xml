@@ -4,7 +4,7 @@
 
     <item android:gravity="center">
         <bitmap
-            android:src="@mipmap/ic_launcher_xxxhdpi"
+            android:src="@mipmap/ic_launcher_xxxhdpi_circled"
             android:gravity="center" />
     </item>
 </layer-list>
