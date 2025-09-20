@@ -11,4 +11,5 @@ sealed interface ChattingIntent {
     data object ClearError : ChattingIntent
     data object LoadFairies : ChattingIntent
     data class SelectFairy(val index: Int) : ChattingIntent
+    data object RestartChat : ChattingIntent
 }
