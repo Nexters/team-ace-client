@@ -4,6 +4,7 @@ import EmotiaMultiLineTextField
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -97,6 +99,7 @@ fun LetterScreen(
 
     val density = LocalDensity.current
     val imeHeight = WindowInsets.ime.getBottom(density)
+    val focusManager = LocalFocusManager.current
 
     LaunchedEffect(imeHeight) {
         val wasVisible = isKeyboardVisible
@@ -115,13 +118,23 @@ fun LetterScreen(
         }
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
-            .navigationBarsPadding()
-            .verticalScroll(scrollState),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                focusManager.clearFocus()
+            }
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .verticalScroll(scrollState),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
         Box {
             Image(
                 painter = painterResource(Res.drawable.img_letter_background),
@@ -219,21 +232,22 @@ fun LetterScreen(
             }
         }
 
-        // TODO : 로딩이 빨라서 보류. 다른 정책 필요
-//        // 로딩 오버레이
-//        if (uiState.isLoading) {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .background(Color.Black.copy(alpha = 0.5f))
-//                    .clickable { /* 터치 차단 */ },
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator(
-//                    color = colors.primaryDark
-//                )
+            // TODO : 로딩이 빨라서 보류. 다른 정책 필요
+//            // 로딩 오버레이
+//            if (uiState.isLoading) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(Color.Black.copy(alpha = 0.5f))
+//                        .clickable { /* 터치 차단 */ },
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    CircularProgressIndicator(
+//                        color = colors.primaryDark
+//                    )
+//                }
 //            }
-//        }
+        }
     }
 }
 
