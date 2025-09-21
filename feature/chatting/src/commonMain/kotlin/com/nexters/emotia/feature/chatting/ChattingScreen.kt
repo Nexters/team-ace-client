@@ -57,8 +57,10 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.nexters.emotia.core.designsystem.component.ChatBubble
@@ -263,6 +265,25 @@ private fun ChatConversationScreen(
     val colors = LocalEmotiaColors.current
     val density = LocalDensity.current
     val imeHeight = WindowInsets.ime.getBottom(density)
+    val textMeasurer = rememberTextMeasurer()
+
+    // 마지막 메시지의 최종 높이 계산
+    val lastMessageFinalHeight = remember(uiState.messages.lastOrNull()?.text) {
+        val lastMessage = uiState.messages.lastOrNull()
+        if (lastMessage != null) {
+            val textLayoutResult = textMeasurer.measure(
+                text = lastMessage.text,
+                constraints = Constraints(
+                    maxWidth = with(density) { (400.dp - 32.dp).toPx().toInt() } // 말풍선 최대 너비 - 패딩
+                )
+            )
+            with(density) {
+                (textLayoutResult.size.height + 60.dp.toPx()).toDp() // 텍스트 높이 + 말풍선 패딩
+            }
+        } else {
+            0.dp
+        }
+    }
 
     Column(
         modifier = modifier
@@ -286,48 +307,56 @@ private fun ChatConversationScreen(
                 CircularProgressIndicator(color = colors.primaryLight)
             }
         } else {
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(
-                    top = 8.dp,
-                    bottom = if (isKeyboardVisible) {
-                        with(density) { imeHeight.toDp() }
-                    } else {
-                        8.dp
+            Box(modifier = Modifier.weight(1f)) {
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    itemsIndexed(
+                        items = uiState.messages,
+                        key = { _, message -> message.timestamp }
+                    ) { index, message ->
+                        ChatBubble(
+                            text = message.text,
+                            type = message.type,
+                            messageId = message.timestamp.toString(),
+                            skipTypewriterEffect = index <= 1
+                        )
                     }
-                ),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                itemsIndexed(
-                    items = uiState.messages,
-                    key = { _, message -> message.timestamp }
-                ) { index, message ->
-                    ChatBubble(
-                        text = message.text,
-                        type = message.type,
-                        messageId = message.timestamp.toString(),
-                        skipTypewriterEffect = index <= 1
-                    )
-                }
 
-                if (uiState.isLoading && uiState.messages.isNotEmpty()) {
-                    item {
-                        Box(
-                            modifier = Modifier
-                                .wrapContentWidth()
-                                .padding(start = 16.dp, bottom = 4.dp),
-                            contentAlignment = Alignment.CenterStart
-                        ) {
-                            TypingIndicator(
-                                modifier = Modifier.height(40.dp)
-                            )
+                    if (uiState.isLoading && uiState.messages.isNotEmpty()) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .wrapContentWidth()
+                                    .padding(start = 16.dp, bottom = 4.dp),
+                                contentAlignment = Alignment.CenterStart
+                            ) {
+                                TypingIndicator(
+                                    modifier = Modifier.height(40.dp)
+                                )
+                            }
                         }
                     }
+
+                    // 키보드 높이 / 마지막 메시지 높이 중 더 큰 값을 아래 여백으로 추가 (애니메이션에 따른 대응)
+                    if (isKeyboardVisible) {
+                        item {
+                            val safetyMargin = 50.dp
+                            val keyboardPadding = maxOf(
+                                with(density) { imeHeight.toDp() },
+                                lastMessageFinalHeight + safetyMargin
+                            )
+                            Spacer(modifier = Modifier.height(keyboardPadding))
+                        }
+                    }
+
                 }
+
             }
         }
-
         EmotiaChatTextField(
             value = uiState.currentInputText,
             onValueChange = { text ->
