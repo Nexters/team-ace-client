@@ -115,7 +115,7 @@ fun ChattingScreen(
     val animatedRadius by animateFloatAsState(
         targetValue = when (animationPhase) {
             0 -> 2000f // 정지 상태
-            1 -> fairyCardSize // 1단계: 축소
+            1 -> fairyCardSize * 0.7f // 1단계: 축소 (70% 크기로 더 작게)
             2 -> 0f // 2단계: 완전 차단
             else -> 2000f
         },
