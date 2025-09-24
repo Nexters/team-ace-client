@@ -429,9 +429,13 @@ private fun FairySelectionScreen(
         }
 
         FairySelectionBottomSection(
-            selectedFairy = uiState.fairies.getOrNull(
-                uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
-            ),
+            selectedFairy = if (uiState.fairies.isNotEmpty()) {
+                uiState.fairies.getOrNull(
+                    uiState.selectedFairyIndex.coerceIn(0, uiState.fairies.size - 1)
+                )
+            } else {
+                null
+            },
             onConfirmClick = onSpotlightAnimationStart,
             onRetryClick = {
                 viewModel.handleIntent(ChattingIntent.RestartChat)
@@ -538,21 +542,22 @@ private fun FairySelectionBottomSection(
             modifier = Modifier.padding(16.dp),
             onClick = onConfirmClick
         )
-
-        Text(
-            text = "다시 대화하기",
-            modifier = Modifier
-                .fillMaxWidth()
-                .rippleClickable(onClick = onRetryClick),
-            style = typography.emotia14M.copy(
-                color = colors.lightGray,
-                textDecoration = TextDecoration.Underline
-            ),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(Modifier.height(24.dp))
     }
+
+    Text(
+        text = "다시 대화하기",
+        modifier = Modifier
+            .fillMaxWidth()
+            .rippleClickable(onClick = onRetryClick),
+        style = typography.emotia14M.copy(
+            color = colors.lightGray,
+            textDecoration = TextDecoration.Underline
+        ),
+        textAlign = TextAlign.Center
+    )
+
+    Spacer(Modifier.height(24.dp))
+
 }
 
 @Composable
