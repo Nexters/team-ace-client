@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -121,6 +123,7 @@ fun LetterScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
+            .background(colors.black)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -128,13 +131,18 @@ fun LetterScreen(
                 focusManager.clearFocus()
             }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
-                .verticalScroll(scrollState),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
         ) {
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 500.dp)
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .verticalScroll(scrollState),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             Box {
                 Image(
                     painter = painterResource(Res.drawable.img_letter_background),
@@ -247,6 +255,7 @@ fun LetterScreen(
 //                    )
 //                }
 //            }
+        }
         }
     }
 }
