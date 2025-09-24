@@ -534,7 +534,7 @@ private fun FairySelectionBottomSection(
 
     if (selectedFairy != null) {
         EmotiaButton(
-            text = "내 감정은 ${selectedFairy.emotion}이야",
+            text = "내 감정은 ${selectedFairy.emotion}인 것 같아",
             modifier = Modifier.padding(16.dp),
             onClick = onConfirmClick
         )
